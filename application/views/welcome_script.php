@@ -267,8 +267,6 @@
 
                     406: function(error) {
 
-
-
                         toastr.error(" One or more Input Fields Are Empty")
 
                     },

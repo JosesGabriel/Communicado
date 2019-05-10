@@ -53,15 +53,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                                                         <?php } ?>
 
+														
 														<!--
-
                                                         <div class="m-top-15" style="color: white">
 
                                                             Don't have account ? <a id="register" href="#" style="color: #ffa700;font-weight: bold">Sign Up</a>
 
                                                         </div>
-
 														-->
+														
 
 													</div>
 

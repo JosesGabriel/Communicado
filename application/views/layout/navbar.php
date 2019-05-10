@@ -18,10 +18,16 @@
                 <ul id="primary-menu">
                     <!-- #####Begin menu item-->
                     <li class="mega-menu">
+                        <!-- 
                         <a id="profileLink" href="<?=base_url('userview/profile')?>" target="_blank">
                             <span class="navUserImg"><img id="userImageTop" src="<?php echo base_url('assets/img/download.png') ?>"> </span>
                             <span id="userNameTop" class="bold">...</span>
                         </a>
+                        -->
+                        <span id="profileLink">
+                            <span class="navUserImg"><img id="userImageTop" src="<?php echo base_url('assets/img/download.png') ?>"> </span>
+                            <span id="userNameTop" class="bold">...</span>
+                        </span>
                     </li>
                     <!-- #####Begin menu item-->
                     <li class="mega-menu"><a href="<?=base_url('userview/logout')?>" title="Log Out" class="bold"><span>Log Out</span></a>

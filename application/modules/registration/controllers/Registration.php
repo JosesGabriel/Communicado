@@ -15,6 +15,7 @@ class Registration extends REST_Controller
 
     public function register_post()
     {
+
         $this->form_validation->set_rules('userEmail', 'userEmail', 'required|valid_email');
         $this->form_validation->set_rules('firstName', 'firstName', 'required');
         $this->form_validation->set_rules('userPassword', 'userPassword', 'required');
@@ -64,6 +65,10 @@ class Registration extends REST_Controller
                         "response" => $token,
                         "type"=>$type
                     );
+
+                    // add user in public group
+                    $this->User_Model->insertInPublicGroup($this->post('userEmail',true));
+
                     $this->response($response, REST_Controller::HTTP_OK);
 
                 } else {
@@ -96,6 +101,9 @@ class Registration extends REST_Controller
                     "response" => $token,
                     "type"=>$type
                 );
+
+                // add user in public group
+                $this->User_Model->insertInPublicGroup($this->post('userEmail',true));
 
                 $this->response($response, REST_Controller::HTTP_OK);
             }
@@ -147,7 +155,12 @@ class Registration extends REST_Controller
                                 "response" => $token,
                                 "type"=>$type
                             );
+                            
+                            // add user in public group
+                            $this->User_Model->insertInPublicGroup($this->post('userEmail',true));
+                            
                             $this->response($response, REST_Controller::HTTP_OK);
+                        
                         } else {
                             $response = array(
                                 "status" => array(

@@ -705,4 +705,19 @@ class User_Model extends CI_Model
 
     
     }
+
+    // Ralph 10/10/2019
+    public function insertInPublicGroup($email){
+        $privateGroupID = 1;
+        // check if user is already registered 
+        if(!intval($this->ifExist($email))) return;
+        // get user id
+        $user_id = $this->getUserId($email);
+        // check if user is already part of public group
+        $query = $this->db->query("SELECT u_id FROM `im_group_members` WHERE g_id = $privateGroupID AND u_id = $user_id");
+        if(!$query->num_rows()){
+            // insert in public group
+            $this->db->query("INSERT IGNORE INTO `im_group_members`(`g_id`, `u_id`) VALUES ($privateGroupID,$user_id);");
+        }
+    }
 }

@@ -266,6 +266,8 @@ class Userview extends CI_Controller {
 
     function profile(){
 
+        redirect(base_url('userview/im')); // added to to prevent editing profile
+
         $resToken=$this->session->userdata("responseToken");
 
         $data["demo"]=DEMO;
