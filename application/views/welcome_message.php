@@ -32,15 +32,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 											<div id="loginDiv" class="tab-pane active">
 
-												<h6 class="title">Login</h6>
 
-
+												<h5 class="title" id="vyndue_login_title">
+												<img src="https://arbitrage.ph/svg/ico_messager_blue.svg" style="height:20px;">
+												<span>Vyndue Messenger</span>
+												</h5>
+												
 
 													<div class="form-group">
 
-														<input id="loginEmail" type="email" name="email" value="" placeholder="email" class="form-control">
+														<input id="loginEmail" type="email" name="email" value="" placeholder="Email" class="form-control">
 
-														<input id="loginPassword" type="password" name="password" value="" placeholder="password" class="form-control">
+														<input id="loginPassword" type="password" name="password" value="" placeholder="Password" class="form-control">
 
 														<input type="submit" value="Login" id="loginSubmit" class="btn btn-small btn-block">
 
@@ -50,11 +53,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                                                         <?php } ?>
 
+														<!--
+
                                                         <div class="m-top-15" style="color: white">
 
                                                             Don't have account ? <a id="register" href="#" style="color: #ffa700;font-weight: bold">Sign Up</a>
 
                                                         </div>
+
+														-->
 
 													</div>
 
@@ -104,8 +111,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 								</div>
 
-								<div class="login-copyright" style="color: #f5f5f5">Copyrights © All Rights Reserved by Farhad Zaman.</div>
-
+								
+								<div class="login-copyright" style="color: #f5f5f5">Copyrights © All Rights Reserved by <a href="https://arbitrage.ph/" style="color:#fff; text-decoration:underline;" target="_blank" title="Open Arbitrage.ph">Arbitrage.ph</a></div>
+							    <!-- Farhad Zaman. -->
 								<!-- #####End tab element-->
 
 							</div>
@@ -131,6 +139,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </section>
 
 </div>
+
+<!--
 
 <div id="loginInfoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" class="modal fade in" style="display: none;padding-right: 17px;">
 
@@ -166,6 +176,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 </div>
 
+-->
 
 
 

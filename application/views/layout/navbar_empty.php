@@ -19,9 +19,9 @@
                     <div class="logo-wrapper" style="line-height: 90px;font-size: 23px;font-weight: bold; color: #d9f8fd">
 
                         <!-- standard Logo-->
-
+                        <!--
                         <span>Vyndue</span>
-
+                        -->
                     </div>
 
                     <!-- #####End logo wrapper-->
