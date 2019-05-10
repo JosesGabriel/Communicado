@@ -44,7 +44,9 @@ class Image extends CI_Controller {
         header("Cache-Control: maxage=". $cache_ends);
         header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $cache_ends).' GMT');*/
         //echo $imageData;*/
-        $image = preg_replace("/^http:/i", "https:", $image);
+        //$image = preg_replace("/^http:/i", "https:", $image); // live
+        $image = preg_replace("/^http:/i", "http:", $image);  // local
+        //die($image);
         header("Location: $image");
         exit;
     }

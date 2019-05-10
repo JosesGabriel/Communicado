@@ -4,6 +4,7 @@
 vendor/
 node_modules/
 application/cache/session/*
+assets/*
 composer.lock
 info.php
 

@@ -694,8 +694,7 @@
         }
         // this function prints group list on the left side
         function printGroupListAppend(groups) {
-            console.log('print group');
-            console.log(groups);
+            
             let html = "";
             groupIds = [];
             time = {};
@@ -946,6 +945,7 @@
             $("#attachmentList").html(strVar);
         }
         function printGroupImages(groupImages) {
+        
             if (groupImages.length > 0) {
                 if ($("#imageAttachment").hasClass("hidden")) {
                     $("#imageAttachment").removeClass("hidden");
@@ -2574,6 +2574,11 @@
             })
         });
         $("#block").on("click", function () {
+
+            if(!confirm("Are you sure to block this person?")){
+                return false;
+            }
+
             let groupId = activeGroupId;
             let form = new FormData();
             form.append("groupId", groupId);
@@ -2603,6 +2608,11 @@
             });
         });
         $("#unblock").on("click", function () {
+
+            if(!confirm("Are you sure to unblock this person?")){
+                return false;
+            }
+
             let groupId = activeGroupId;
             let form = new FormData();
             form.append("groupId", groupId);

@@ -45,7 +45,20 @@ class ImApi extends REST_Controller
                 return;
             }
         }
+        
     }
+
+
+    public function index_get(){
+        $g_id = $this->get("groupId",true);        
+        $groupFiles=$this->Im_message_Model->getGroupFiles($g_id);
+        $groupImages=$this->Im_message_Model->getGroupImages($g_id);
+        
+        
+
+        die('<br><br>'.$g_id);   
+    }
+
 
     private function getISODateTimeWithMilliSeconds(){
         $time = microtime(true);
@@ -148,6 +161,8 @@ class ImApi extends REST_Controller
         );
         $this->response($response, REST_Controller::HTTP_OK);
     }
+
+
 
     public function getGroupFiles_get()
     {

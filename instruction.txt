@@ -5,6 +5,7 @@ How to run Vyndue App in Local Machine
 # cd inside vyndue folder
 # install composer then run “composer update”
 # install npm then run “cd chatapp && npm install”
+# sudo chmod -R 777 application/cache/session/
 # Tweak database configuration
 
 Note: Use port 3000 in websocket 
@@ -16,6 +17,8 @@ Note: Use port 3000 in websocket
 
 # Run socket
  - run in chatapp folder “node server”
+ * if has error in running port run
+ sudo kill $(sudo lsof -t -i:3000)
 
 # View in browser 
 
@@ -30,5 +33,5 @@ U: admin@admin.com
 P: 123456
 
 
-sudo chmod 777 application/cache/session/
-sudo kill $(sudo lsof -t -i:3000)
+
+
