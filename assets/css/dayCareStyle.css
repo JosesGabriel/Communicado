@@ -1,0 +1,10 @@
+@font-face {
+    font-family: MysteryQuest-Regular;
+    src: url("../fonts/MysteryQuest-Regular.ttf");
+}
+
+.dayCare_Header_text{
+    font-family:MysteryQuest-Regular ;
+    font-size: x-large;
+
+}

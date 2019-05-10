@@ -1,0 +1,7 @@
+SSH 
+vynduessh
+KUcldfsFsdf4151dSSD
+
+Hostname: am173.sgded.com
+Port: 18765
+Protocol: SSH

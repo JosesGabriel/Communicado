@@ -1,0 +1,28 @@
+Social page
+- Add responsive structures
+- Re-code all areas part by part (plugin-n-play)
+- Implement new colors
+- Implement new icons
+- Fix Bull Bear button (Recover backup)
+
+Chart page
+- Link the ticker to stock chart
+- Implement slide-right icon & functionality on sidebar
+
+Files
+- divi-child/template-dashboard.php
+- divi-child/header-dashboard.php
+- divi-child/template-chart.php
+- plugin/social-activity.php
+
+Template Part Created
+- parts/sidebar-menu.php
+- parts/sidebar-traders.php
+- parts/sidebar-watchlist.php
+- parts/sidebar-trendingstocks.php
+- parts/sidebar-latestnews.php
+- parts/sidebar-adsbygoogle.php
+- parts/sidebar-sponsors.php
+- parts/global-nav.php
+- parts/global-footercopyright.php
+- parts/global-links.php

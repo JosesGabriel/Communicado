@@ -1,0 +1,258 @@
+/*
+==================================
+01 - HEADER
+==================================
+*/
+header{height:70px;width:100%;color:transparent;font-size:14px;position:fixed;top:0;line-height:0;z-index: 1000;
+    background: transparent;
+}
+header .row-header .brand-be{margin-top: 0px;float: left;}
+
+header .row-header .header-menu-block{
+    position: absolute;
+    top: 0px; left: 50%;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+
+
+
+}
+img.be_logo{text-align: left; width: 450px;height: inherit}
+img.be_logo2{text-align: left; width: 215px ;height: inherit}
+
+@media screen and (max-width: 767px){
+    img.be_logo{ width: 270px;
+        padding-right: 57px;
+    }
+    img.be_logo2{width: 173px;padding-top: 10px;}
+}
+
+/*
+==================================
+	02 - HEADER BACKGROUND
+==================================
+*/
+.head-bg{background: #000; position: relative; padding: 170px; margin-bottom:50px;}
+.head-bg-img{position: absolute; left: 0; top: 0; height: 100%; width: 100%; background-size: cover; opacity: 0.9; z-index: 1;
+    background: center center;
+}
+.head-bg-img div{
+    width: 100%; height: 100%;
+}
+#myCarousel div div img{
+    width: 100%; height: 100%;
+}
+.carousel-indicators li{
+    border: 11px solid rgba(0,0,0,.5);
+}
+.carousel-indicators .active{
+    background-color: #ffffff;
+    z-index: 400;
+}
+.scrolled {
+    background: rgba(67, 112, 105, 0.44);
+    -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+    /*padding: 0;*/
+    -webkit-transition: all 0.25s ease-in-out;
+    -moz-transition: all 0.25s ease-in-out;
+    -ms-transition: all 0.25s ease-in-out;
+    -o-transition: all 0.25s ease-in-out;
+    transition: all 0.25s ease-in-out;
+    height: 70px;
+}
+@media screen and ( max-width: 767px){
+    .head-bg{margin-bottom: 0px; padding: 0px;}
+}
+@media screen and (max-width: 1367px) and (min-width:768px){
+    .head-bg{margin-bottom: 0px; padding: 60px;}
+}
+/*
+==================================
+	03 - MAIN
+==================================
+*/
+#content-block{margin-top: -50px;margin-bottom:0px;}
+@media screen and (max-width: 1367px){
+    #content-block{margin-top: -1px;margin-bottom:0px;}
+}
+/*=========================================
+	09 - LARGE POPUPS
+==========================================
+*/
+.large-popup-container{
+    background: #1B210;
+    margin: 0;
+    width: 100%;
+    padding-top: 45px;
+    padding-bottom: 45px;
+}
+/*
+==================================
+	03 - Features
+==================================
+*/
+section {
+    position: relative;
+    padding-bottom: 90px;
+}
+.section-heading.inverse h1, .section-heading.inverse p {
+    color: #ffffff;
+}
+section#features { background: #f6f6f6; }
+
+section#features header h1:after { background: #66cdcc; }
+
+section#features .media i.fa { border: 2px solid #66cdcc; color: #66cdcc; }
+
+section#features .media:hover i.fa { color: #ffffff; background: #66cdcc; }
+
+section#features .media:hover h3 { color: #66cdcc; }
+
+section#features .media.active i.fa { color: #ffffff; background: #66cdcc; }
+
+section#features .media.active .media-heading { color: #66cdcc; }
+
+.section-heading { margin: 60px 0 80px; text-align: center; color: #666666; }
+
+.section-heading h1 { display: inline-block; font-size: 55px; font-weight: 300; margin-bottom: 0; }
+
+section .section-heading .divider:after { background: #66cdcc; }
+
+.section-heading .divider:after { content: ""; position: relative; height: 4px; width: 60px; display: block; text-align: center; margin: 13px auto; border-radius: 5em; }
+
+.section-heading p { font-size: 25px; color: #999999; font-weight: 300; margin: 0 0 10px; }
+
+section#features .media i.fa { border-radius: 50%; padding: 20px; -webkit-transition: all 0.25s ease-in-out; transition: all 0.25s ease-in-out; width: 2.6em; text-align: center; }
+
+section#features .media .media-heading { padding-top: 10px; font-weight: 300; }
+
+section#features .media .media-body { color: #999999; }
+
+section#features .media.feature { margin-top: 25px; }
+
+section#features .media.feature:first-child { margin-top: 0; }
+
+section#features img { margin: 0 auto 20px; }
+
+/*
+==================================
+	03 - screens
+==================================
+*/
+.swiper-wrapper{
+    height: 60px;
+}
+section#screens .slider { margin: 50px 0; }
+
+section#screens .slider div img { border-radius: 20px; padding: 10px; display: inline; }
+
+section#screens .slider div h4 { text-align: center; margin-top: 40px; font-size: 16px; }
+
+section#screens .slider .slick-dots li button { border-radius: 5em; }
+
+section#screens .slick-prev, section#screens .slick-next { width: 50px; height: 50px; top: 44%; }
+
+section#screens .slick-slide { text-align: center; }
+
+section#screens .slick-prev:before { content: "\f104"; }
+
+section#screens .slick-next:before { content: "\f105"; }
+
+section#screens .slick-prev:before, section#screens .slick-next:before { font-size: 34px; border-radius: 5em; line-height: 45px; color: #CCC; border: 2px solid #CCC; width: 50px; display: inline-block; height: 50px; text-align: center; }
+
+section#screens .filter { text-align: center; }
+
+section#screens .filter a { display: inline-block; padding: 7px 20px; text-decoration: none; border-radius: 5em; margin: 10px 5px; text-transform: uppercase; -webkit-transition: all 0.25s ease-in-out; transition: all 0.25s ease-in-out; }
+
+section#screens header h1:after { background: #66cdcc; }
+
+section#screens .slider div img { border: 2px solid #e5e5e5; }
+
+section#screens .slider div h4 { color: #999999; }
+
+section#screens .slider .slick-dots li button { background: #999999; }
+
+section#screens .slider .slick-dots li.slick-active button { background: #66cdcc; }
+
+section#screens .filter a { border: 2px solid #cccccc; color: #999999; }
+
+section#screens .filter a:hover { color: #ffffff; background: #66cdcc; border-color: #66cdcc; }
+
+section#screens .filter a.active { color: #ffffff; background: #66cdcc; border-color: #66cdcc; }
+/*
+==================================
+	03 - get App
+==================================
+*/
+section#getApp {
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    padding: 70px 0;
+}
+section#getApp .platforms {
+    margin: 5px auto 120px auto;
+    text-align: center;
+}
+section#getApp .platforms .btn {
+    margin-right: 10px;
+    margin-bottom: 20px;
+}
+
+section#getApp {
+    background: url("../ImagesMyBaby/bk-freeze.jpg");
+}
+section#getApp header {
+    color: #ffffff;
+}
+section#getApp header h1:after {
+    background: #ffffff;
+}
+section#getApp .platforms .media {
+    border: 2px solid #ffffff;
+    color: #ffffff;
+}
+section#getApp .platforms .media a i {
+    color: #ffffff;
+}
+section#getApp .platforms .media a div.media-body {
+    color: #ffffff;
+}
+section#getApp .platforms .media:hover {
+    background: #ffffff;
+}
+section#getApp .platforms .media:hover a i,
+section#getApp .platforms .media:hover a div.media-body {
+    color: #66cdcc;
+}
+.btn.btn-primary.inverse {
+    color: #ffffff;
+    border-color: #ffffff;
+}
+.btn.btn-primary.inverse:hover {
+    color: #ffffff;
+    background: #66cdcc;
+    border-color: #66cdcc;
+}
+.btn.btn-primary {
+    border: 2px solid #ffffff;
+    background: none;
+    color: #ffffff;
+}
+.btn {
+    -webkit-border-radius: 3em;
+    -moz-border-radius: 3em;
+    -ms-border-radius: 3em;
+    -o-border-radius: 3em;
+    border-radius: 3em;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    padding: 5px 25px;
+}

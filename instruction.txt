@@ -1,0 +1,31 @@
+How to run Vyndue App in Local Machine 
+
+# clone vydnue app in git 
+ - 
+# cd inside vyndue folder
+# install composer then run “composer update”
+# install npm then run “cd chatapp && npm install”
+# Tweak database configuration
+
+Note: Use port 3000 in websocket 
+- assets/newTheme/assets/js/si.js
+- application/config/config.php
+- ChatApp/serverConf.js
+- ChatApp/bin/www
+- ChatApp/server.js
+
+# Run socket
+ - run in chatapp folder “node server”
+
+# View in browser 
+
+// Vyndue 
+
+http://localhost/
+
+// Vyndue Admin
+
+http://localhost/admin
+U: admin@admin.com 
+P: 123456
+
