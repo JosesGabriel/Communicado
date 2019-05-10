@@ -4,7 +4,8 @@
 vendor/
 node_modules/
 application/cache/session/*
-assets/*
+assets/userimage/*
+assets/im/*
 composer.lock
 info.php
 
