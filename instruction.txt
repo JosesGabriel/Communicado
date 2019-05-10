@@ -29,3 +29,6 @@ http://localhost/admin
 U: admin@admin.com 
 P: 123456
 
+
+sudo chmod 777 application/cache/session/
+sudo kill $(sudo lsof -t -i:3000)
