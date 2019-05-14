@@ -81,10 +81,11 @@ class Im_group_members_Model extends CI_Model{
         $this->db->select("igm.g_id,ig.type,ig.lastActive");
         $this->db->from("im_group_members igm");
         $this->db->join("im_group ig","ig.g_id=igm.g_id","INNER");
-
         $this->db->where_in("igm.u_id",$u_ids);
         $this->db->order_by("ig.lastActive DESC");
+//        $this->db->order_by("field(ig.type, 2,0,1) ASC, ig.lastActive DESC");
         $query = $this->db->get("im_group_members",$limit,$start);
+        //return $this->db->last_query(); 
         return $query->result();
     }
 

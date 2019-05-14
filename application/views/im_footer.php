@@ -172,8 +172,9 @@
         let max_upload_size=20971520; //20mb
         let magicSuggestOption = {
             placeholder: 'Search for members...',
-            maxSelection: null,
             allowFreeEntries: false,
+            required:true,
+            maxSelection: 1,
             // data: q,
             renderer: function (data) {
                 return '<div style="padding: 5px; overflow:hidden;">' +
@@ -186,7 +187,7 @@
             }
         };
         let addmember = $('#addMemberInput').magicSuggest(magicSuggestOption);
-        let newMemberInput = $('#addNewMemberInput').magicSuggest(magicSuggestOption);
+        let newMemberInput = $('#addNewMemberInput').magicSuggest(magicSuggestOption); // right side, add member
         /*let momentOptions={
             sameDay: '[Today at] h:mm a',
             nextDay: '[Tomorrow at] at h:mm a',
@@ -694,7 +695,7 @@
         }
         // this function prints group list on the left side
         function printGroupListAppend(groups) {
-            
+        
             let html = "";
             groupIds = [];
             time = {};
@@ -756,6 +757,7 @@
             $("#groups").append(scrollYClone);
         }
         function printGroupList(groups) {
+            //console.log('style here');
             let html = "";
             groupIds = [];
             time = {};
@@ -805,6 +807,7 @@
                 }
                 html += "                    <\/li>";
             }
+            //console.log(html);
             $("#groups").html(html);
             for (let i = 0; i < groups.length; i++) {
                 createGroupImage( groups[i].groupId);
@@ -812,10 +815,12 @@
         }
         //This function is used to get the group list
         function getGroupList(callback) {
+            //console.log('Start Here!');
             let url = "<?php echo base_url('imApi/getGroups?limit=') ?>" + groupLimit + "&start=0";
             if (ID_BASED) {
                 url = "<?php echo base_url('imApi/getGroups?limit=') ?>" + groupLimit + "&start=0&userId=" + userId;
             }
+            // console.log(url);
             let settings = {
                 "async": true,
                 "crossDomain": true,
@@ -843,6 +848,9 @@
                 $(".page-contents").show();
                 init_twemoji();
                 let groups = response.response;
+
+                //console.log(groups);
+
                 totalGroup = parseInt(response.status.total);
                 if (totalGroup == 0) {
                     $('#addMember').attr('data-group', null);
@@ -913,9 +921,12 @@
                     html += "                        <img class='memberStatus' id='member_" + members[i].userId + "' src=\"" + members[i].profilePictureUrl + "\" alt=\"\" \/>";
                 }
                 html += "                        <span  class=\"name\"><div style='margin-top: 8px'>" + members[i].firstName + " " + members[i].lastName + "</div><\/span>";
-                if (parseInt(groupType) === 0) {
+                if (meCreator === true) {
                     html += "                        <span class=\"time\" style='padding-top: 5px' ><a href=\"#\" data-group=\"" + groupId + "\" data-member=\"" + members[i].userId + "\" class=\"btn-danger btn-extra-small btnMemberDelete\"><i class=\"fa fa-trash\"><\/i><\/a><\/span>";
                 }
+                /*if (parseInt(groupType) === 0) {
+                    html += "                        <span class=\"time\" style='padding-top: 5px' ><a href=\"#\" data-group=\"" + groupId + "\" data-member=\"" + members[i].userId + "\" class=\"btn-danger btn-extra-small btnMemberDelete\"><i class=\"fa fa-trash\"><\/i><\/a><\/span>";
+                }*/
                 html += "                    <\/li>";
             }
             $('#groupMembers').html(html);
@@ -1131,6 +1142,7 @@
             $.ajax(settings).done(function (response) {
                 let data = response.response.friends;
                 totalFriend = response.response.total;
+               // console.log(data);
                 callback(data);
             });
         }
@@ -2095,6 +2107,7 @@
         }
         //$(".rightSection").perfectScrollbar();
         $('#groups').on("click", ".person", function (e, update) {
+            //console.log('groups click');
             if ($(this).hasClass('active')) {
                 return false;
             }
@@ -2121,6 +2134,7 @@
             }
             let groupId = parseInt($(this).attr('data-group'));
             activeGroupId = groupId;
+
             notRequested = true;
             $('#chatBox').perfectScrollbar('destroy');
             $("#rightSection").scrollTop(0);
@@ -2130,15 +2144,82 @@
             mute = parseInt(groupObjects[groupId].mute);
             block = parseInt(groupObjects[groupId].block);
             meBlocker = parseInt(groupObjects[groupId].meBlocker);
-            if (groupType) {
+
+            // Ralph 2019-04-13
+            let meCreator = groupObjects[groupId].meCreator;
+            let info = groupObjects[groupId];
+    
+            if(groupType==1)
+            {
+                // Personal
                 if ($("#blockOptions").hasClass("hidden")) {
                     $("#blockOptions").removeClass("hidden");
                 }
-            } else {
+
+                if (!$('#addMember').hasClass('hidden')) {
+                    $('#addMember').addClass('hidden');
+                }
+                if (!$("#editGroupName").hasClass('hidden')) {
+                    $("#editGroupName").addClass('hidden');
+                }
+                if (!$("#changeGroupImage").hasClass('hidden')) {
+                    $("#changeGroupImage").addClass('hidden');
+                }
+                if (!$("#leaveGroup").hasClass('hidden')) {
+                    $("#leaveGroup").addClass('hidden');
+                }
+                $("#groupMembers").html("");
+
+            }else{
+                // Group
+                // blocking is not allowed in group chat
                 if (!$("#blockOptions").hasClass("hidden")) {
                     $("#blockOptions").addClass("hidden");
                 }
+                
+                if(groupType==2){
+                    if (!$("#leaveGroup").hasClass('hidden')) {
+                        $("#leaveGroup").addClass('hidden');
+                    }
+                }else{
+                    if(meCreator){
+                        if (!$("#leaveGroup").hasClass('hidden')) {
+                            $("#leaveGroup").addClass('hidden');
+                        }
+                    }else{
+                        if ($("#leaveGroup").hasClass('hidden')) {
+                            $("#leaveGroup").removeClass('hidden');
+                        }
+                    }
+                }
+                
+                
+                if(!meCreator){
+                    if (!$('#addMember').hasClass('hidden')) {
+                        $('#addMember').addClass('hidden');
+                    }
+                    if (!$("#editGroupName").hasClass('hidden')) {
+                        $("#editGroupName").addClass('hidden');
+                    }
+                    if (!$("#changeGroupImage").hasClass('hidden')) {
+                        $("#changeGroupImage").addClass('hidden');
+                    }
+                }else{
+                    if ($('#addMember').hasClass('hidden')) {
+                        $('#addMember').removeClass('hidden');
+                    }
+                    if ($("#editGroupName").hasClass('hidden')) {
+                        $("#editGroupName").removeClass('hidden');
+                    }
+                    if ($("#changeGroupImage").hasClass('hidden')) {
+                        $("#changeGroupImage").removeClass('hidden');
+                    }
+                }
+                
             }
+
+
+            // Block
             if (block) {
                 $("#messageForm").hide();
                 if ($("#blockmessage").hasClass("hidden")) {
@@ -2180,6 +2261,8 @@
                     }
                 }
             }
+
+            // Mute
             if (mute) {
                 if ($("#unmute").hasClass("hidden")) {
                     $("#unmute").removeClass("hidden");
@@ -2195,34 +2278,7 @@
                     $("#mute").removeClass("hidden");
                 }
             }
-            if (groupType == 1) {
-                if (!$('#addMember').hasClass('hidden')) {
-                    $('#addMember').addClass('hidden');
-                }
-                if (!$("#editGroupName").hasClass('hidden')) {
-                    $("#editGroupName").addClass('hidden');
-                }
-                if (!$("#changeGroupImage").hasClass('hidden')) {
-                    $("#changeGroupImage").addClass('hidden');
-                }
-                if (!$("#leaveGroup").hasClass('hidden')) {
-                    $("#leaveGroup").addClass('hidden');
-                }
-                $("#groupMembers").html("");
-            } else {
-                if ($('#addMember').hasClass('hidden')) {
-                    $('#addMember').removeClass('hidden');
-                }
-                if ($("#editGroupName").hasClass('hidden')) {
-                    $("#editGroupName").removeClass('hidden');
-                }
-                if ($("#changeGroupImage").hasClass('hidden')) {
-                    $("#changeGroupImage").removeClass('hidden');
-                }
-                if ($("#leaveGroup").hasClass('hidden')) {
-                    $("#leaveGroup").removeClass('hidden');
-                }
-            }
+
             let personName = groupObjects[groupId].groupName;
             if ($("#group_" + groupId).hasClass("font-bold-black")) {
                 $("#group_" + groupId).removeClass("font-bold-black");
@@ -2247,9 +2303,10 @@
             printGroupInfo(groupId, groupImages, personName);
             socket.emit("joinRoom", groupId);
         });
+
         $('#groupMembers').on("click", ".btnMemberDelete", function (e) {
             
-            if(!confirm('Are you sure to remove this participant?')){
+            if(!confirm('Are you sure to remove this member?')){
                 return;
             }
 
@@ -2293,6 +2350,8 @@
                 // getGroupMembers(groupId);
             });
         });
+
+        // add member at the right side bar
         $('#addMember').on("click", function (e) {
             getMembers(function (res) {
                 let q = [];
@@ -2307,6 +2366,8 @@
                         q.push(md);
                     }
                 }
+                // console.log('add member');
+                // console.log(q);
                 newMemberInput.setData(q);
                 newMemberInput.clear();
                 $('#addNewMemberModal').modal('show');
@@ -2358,6 +2419,8 @@
                 });
             }
         });
+
+        // getmembers creating a new conversation, found at the left side bar
         $('#newMessage').on("click", function (e) {
             resetNewMessage();
             getMembers(function (res) {

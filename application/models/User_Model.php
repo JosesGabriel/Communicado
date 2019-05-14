@@ -137,6 +137,7 @@ class User_Model extends CI_Model
         $users=[];
         $this->db->select("*");
         $this->db->where("userType=",1);
+        $this->db->where("userId<>",2);
         if($userIds!=null){
             $this->db->where_in("userId",$userIds);
         }
@@ -177,6 +178,7 @@ class User_Model extends CI_Model
         $users=[];
         $this->db->select("*");
         $this->db->where("userType=",1);
+        $this->db->where("userId<>",2);
         if($userIds!=null){
             $this->db->where_not_in("userId",$userIds);
         }
@@ -217,6 +219,7 @@ class User_Model extends CI_Model
         $users=[];
         $this->db->select("*");
         $this->db->where("userType=",1);
+        $this->db->where("userId <>",2);
         $this->db->where("userId <>",$userId);
         $this->db->where("userStatus <>",0);
         $this->db->where("userVerification <>",0);

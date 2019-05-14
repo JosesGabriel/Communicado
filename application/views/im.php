@@ -2,13 +2,14 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
 <section class="page-contents">
+        <!-- START LEFT SECTION -->
         <div class="leftSection col-xl-3 col-md-3 col-sm-12 col-xs-12" style="padding: 0;">
             <div class="chat-search col-md-12" id="convStart"  style="">
                 <div style="display:none;" class=" col-md-2 col-sm-2 col-xs-2" id="unreadMessage" title="Unread Messages">
                     <div class="col-md-12" style="padding: 0;font-size: 25px;font-weight: bold"><span class="" style="padding: 0;cursor: pointer;"><i class="ico-pending-message" style="color: #388ded" ></i></span></div>
                 </div>
                 <div class=" col-md-10 col-sm-10 col-xs-10" id="" style="padding: 6px 0 0 5px;text-align: left;">
-                    <div style="padding: 0;font-size: 16px;font-weight: bold">Vyndue</div>
+                    <div style="padding: 0;font-size: 16px;font-weight: bold">Vyndue Messenger</div>
                 </div>
                 <div class=" col-md-2 col-sm-2 col-xs-2" id="newMessage" title="New Message" style="padding: 0;text-align: right;">
                    <div class="col-md-12" style="padding: 0;font-size: 25px;font-weight: bold"><span class="" style="padding: 0;cursor: pointer;">
@@ -20,12 +21,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </ul>
             </div>
         </div>
+        <!-- END LEFT SECTION -->
         <div class="middleSection col-xl-6 col-md-6 col-sm-12 col-xs-12" style="padding: 0;border-left: 1px solid rgba(0, 0, 0, .10)"  id="dropZone">
            <div class="chat-search col-md-12 groupNameDiv" style="text-align: left; padding-bottom: 21px;">
            
                <div class="col-md-12 col-xl-12 col-xs-12 col-sm-12">
                     <span class="UserNames group-name group-name-style text-center">&nbsp;</span>
-               </div>
+               </div
+               >
            </div>
             <div class="chat col-md-12 col-xl-12 col-sm-12 col-xs-12 " style="overflow: scroll;overflow-x: hidden;" id="chatBox" ></div>
             <form id="messageForm">
@@ -100,6 +103,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
         </div>
 </section>
+
 <!-- Modals -->
 <div id="addNewMemberModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" class="modal fade in" style="display: none;padding-right: 17px;">
     <div role="document" class="modal-dialog">
@@ -120,6 +124,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         </div>
     </div>
 </div>
+
+
 <div id="changeNameModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" class="modal fade in" style="display: none;padding-right: 17px;">
     <div role="document" class="modal-dialog">
         <div class="modal-content" >
@@ -139,6 +145,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         </div>
     </div>
 </div>
+
+
 <div id="newMessageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" class="modal fade in" style="display: none;padding-right: 17px;">
     <div role="document" class="modal-dialog">
         <div class="modal-content">
@@ -168,6 +176,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         </div>
     </div>
 </div>
+
+
 <div id="connectionErrorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" class="modal fade in" style="display: none;padding-right: 17px;">
     <div role="document" class="modal-dialog">
         <div class="modal-content">

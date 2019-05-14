@@ -18,7 +18,7 @@ class ImApi extends REST_Controller
         $this->load->model("Im_receiver_Model");
         $this->load->model("Im_blocklist");
         $this->load->model("Im_mutelist");
-
+        
         if(!ID_LOGIN) {
             $headers = apache_request_headers();
             if (isset($headers["Authorizationkeyfortoken"])) {
@@ -46,6 +46,7 @@ class ImApi extends REST_Controller
             }
         }
         
+        
     }
 
 
@@ -54,7 +55,7 @@ class ImApi extends REST_Controller
         $groupFiles=$this->Im_message_Model->getGroupFiles($g_id);
         $groupImages=$this->Im_message_Model->getGroupImages($g_id);
         
-        
+        die('dasdasda');
 
         die('<br><br>'.$g_id);   
     }
@@ -743,7 +744,8 @@ class ImApi extends REST_Controller
 
     public function getGroups_get()
     {  //get all groups
-        if(ID_LOGIN){
+        
+        if(ID_LOGIN){            
             $userId=$this->get("userId",true);
             if ($userId == null) {
                 $response = array(
@@ -760,6 +762,8 @@ class ImApi extends REST_Controller
             $headers = apache_request_headers();
             $userId = $this->User_Model->getTokenToId($headers["Authorizationkeyfortoken"]);
         }
+        
+        //$userId = 3;
         $limit = $this->get("limit", true);
         $start = $this->get("start", true);
         if( $start==null || $limit==null){
@@ -773,7 +777,13 @@ class ImApi extends REST_Controller
             return;
         }
 
+
         $group_ids = $this->Im_group_members_Model->getGroups($userId, $limit, $start);
+        
+        // echo "<pre>";
+        // print_r($group_ids);
+        // die('EOF');
+        
         $groups = array();
         foreach ($group_ids as $g_id) {
             $membersInfo = array();
@@ -800,7 +810,9 @@ class ImApi extends REST_Controller
             foreach ($members as $u_id) {
                 $membersInfo[] = $this->User_Model->get_user($u_id->u_id, null, null);
             }
-            //$totalMember = $this->Im_group_members_Model->getTotalGroupMember($g_id->g_id);
+
+            $totalMember = $this->Im_group_members_Model->getTotalGroupMember($g_id->g_id);
+            
             if(count($membersInfo)==0) {
                 $groupImage[] = base_url() . "assets/img/download.png";
                 if ($groupName == null || $groupName == "" || $groupName == '""' || $groupName == "''") {
@@ -849,7 +861,7 @@ class ImApi extends REST_Controller
                     "groupImage" => $groupImage,
                     "groupName" => trim($groupName),
                     "groupType"=>(int)$groupType,
-                    //"totalMember"=>$totalMember,
+                    "totalMember"=>$totalMember,
                     "lastActive" => $lastActive,
                     "block"=>$block,
                     "meBlocker"=>$blocker,
@@ -877,7 +889,7 @@ class ImApi extends REST_Controller
                     "groupImage" => $groupImage,
                     "groupName" => trim($groupName),
                     "groupType"=>(int)$groupType,
-                    //"totalMember"=>$totalMember,
+                    "totalMember"=>$totalMember,
                     "lastActive" => $lastActive,
                     "block"=>$block,
                     "meBlocker"=>$blocker,

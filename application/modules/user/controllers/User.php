@@ -127,7 +127,7 @@ class User extends REST_Controller
         );*/
         //------------------ section 1 ends ----------------//
         //------------------section 2 starts ---------------//
-            $friends=$this->User_Model->getAllActiveUser($userId,$limit,$start);
+        $friends=$this->User_Model->getAllActiveUser($userId,$limit,$start);
         $responseData=array(
             "friends"=> $friends,
             "total"=>(int)$this->User_Model->getTotalUser(),
@@ -157,8 +157,8 @@ class User extends REST_Controller
         $friends=$this->User_Model->filterUser($friendsIds,$key);*/
 
         // for all user
-
         $friends=$this->User_Model->filterAllUser($userId,$key);
+        
         $response = array(
             "status" => array(
                 "code" => REST_Controller::HTTP_OK,
