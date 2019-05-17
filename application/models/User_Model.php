@@ -709,8 +709,9 @@ class User_Model extends CI_Model
     
     }
 
-    // Ralph 10/10/2019
-    public function insertInPublicGroup($email){
+    // Ralph 2019-05-10
+    public function insertInPublicGroup($email)
+    {
         $privateGroupID = 1;
         // check if user is already registered 
         if(!intval($this->ifExist($email))) return;
@@ -723,4 +724,86 @@ class User_Model extends CI_Model
             $this->db->query("INSERT IGNORE INTO `im_group_members`(`g_id`, `u_id`) VALUES ($privateGroupID,$user_id);");
         }
     }
+
+    // Ralph 2019-05-15
+    public function searchlistAll($userId,$limit,$start)
+    {
+        $records=[];
+        $picture = '';
+        $query = $this->db->query("SELECT A.id, A.name, A.picture, A.othername as email, 
+            A.type as type_id, B.description as type_description FROM
+            (select g.g_id as id,
+            if(!isnull(g.name),g.name,GROUP_CONCAT(u.firstName)) as name, 
+            g.custom_image as picture, g.type, NULL as othername
+            from im_group as g
+            left join im_group_members as gm on g.g_id = gm.g_id
+            left join users as u on gm.u_id = u.userid
+            where g.type<>1
+            group by g.g_id
+            having GROUP_CONCAT(u.userid) like '%$userId%'
+            UNION ALL
+            select u.userid as id, concat(u.firstName,' ',u.lastName) as name,
+            u.userProfilePicture as picture, 1 as type, u.userEmail as othername  
+            from users as u 
+            inner join friend_list as fl on u.userid = fl.friendId
+            where fl.userid = $userId and
+            u.userType=1 and u.userid not in (2)
+            and u.userVerification=1) as A
+            inner join group_type as B on A.type = B.id
+            ORDER BY FIELD(A.type,2,0,1)
+            LIMIT $start, $limit;");
+
+        //return $this->db->last_query();
+
+        foreach ($query->result() as $user){
+
+            switch ($user->type_id) {
+                case 2: // Group
+                case 0:
+                    if($user->picture!=null){
+                        $picture = base_url()."assets/im/group_".$user->id."/".$user->picture;
+                    }
+                    else{
+                        $picture = base_url()."assets/img/group.png";
+                    }
+                break;
+                
+                case 1: // Personal
+                    if($user->picture!=null){
+                        $picture = base_url()."assets/userImage/".$user->picture;
+                    }
+                    else{
+                        $picture = base_url()."assets/img/download.png";
+                    }
+                break;
+            }
+
+            $data = array(
+                'id' =>(int)$user->id,
+                'name' =>$user->name,
+                'type_id'=>(int)$user->type_id,
+                'type_description'=>$user->type_description,
+                'email'=>$user->email,
+                'picture' => $picture
+            );
+            $records[]=$data;
+        }
+        return $records;
+    }
+
+    public function hasConversation($friendId,$userId)
+    {
+            
+            $query = $this->db->query("SELECT g.g_id
+                from im_group as g
+                inner join im_group_members as gm on g.g_id = gm.g_id
+                where g.type=1
+                group by g.g_id
+                having group_concat(gm.u_id) like '%$friendId%' 
+                and group_concat(gm.u_id) like '%$userId%';");
+ 
+            return intval($query->row("g_id"));
+    
+    }
+
 }

@@ -1,7 +1,7 @@
 
 <div id="message">
-    <h1>Hi There!</b>
-    <p>Our mobile version will be launching very soon. :)<br />
+    <h1>Hello There!</b>
+    <p>Our mobile version <br />will be launching out<br />very soon. :)<br />
     <small>- System Administration</small>
     </p>
     

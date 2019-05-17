@@ -171,10 +171,14 @@
         let isDisconnected=false;
         let max_upload_size=20971520; //20mb
         let magicSuggestOption = {
-            placeholder: 'Search for members...',
+            placeholder: 'Search for people...',
             allowFreeEntries: false,
-            required:true,
-            maxSelection: 1,
+            maxSelection: null,
+            hideTrigger:true,
+            expandOnFocus: true,
+            selectionRenderer: function(data){
+                return '<img class="ms-thumbnail-image" src="' + data.picture + '"/>' + data.name;
+            },
             // data: q,
             renderer: function (data) {
                 return '<div style="padding: 5px; overflow:hidden;">' +
@@ -186,7 +190,7 @@
                     '</div><div style="clear:both;"></div>'; // make sure we have closed our dom stuff
             }
         };
-        let addmember = $('#addMemberInput').magicSuggest(magicSuggestOption);
+        let addmember = $('#addMemberInput').magicSuggest(magicSuggestOption); // start a new conversation
         let newMemberInput = $('#addNewMemberInput').magicSuggest(magicSuggestOption); // right side, add member
         /*let momentOptions={
             sameDay: '[Today at] h:mm a',
@@ -248,6 +252,7 @@
             pickerHeight: '150px',
             pickerWidth: '100%'
         };
+
         //----------start point-------------------
         if (responce != null && responce != '' && type == 1) {
             getGroupList(function (data) {
@@ -2350,6 +2355,124 @@
                 // getGroupMembers(groupId);
             });
         });
+
+
+        // Ralph 2019-05-15
+        let searchGroupInput = $('#searchGroupInput').magicSuggest({
+            placeholder: 'Search Vyndue...',
+            allowFreeEntries: false,
+            maxSelection: 1,
+            hideTrigger:true,
+            expandOnFocus: true,
+            cls: 'searchGroupInput',
+            groupBy: 'type_description',
+            maxDropHeight: 680, // max height of screen,
+            renderer: function (data) {
+                let html = '';
+                return `<div style="padding: 5px; overflow:hidden;">
+                    <div style="float: left;"><img style="width: 25px;height: 25px" src=" ${data.picture} " /></div> 
+                    <div style="float: left; margin-left: 5px"> 
+                    <div style="font-weight: bold; color: #333; font-size: 12px; line-height: 11px"> ${data.name} </div> 
+                    <div style="color: #999; font-size: 9px"> ${ data.email==null ? '&nbsp;' : data.email  } </div> 
+                    </div> 
+                    </div><div style="clear:both;"></div>`; 
+            }
+        });
+
+        $(searchGroupInput).on('focus', function(e){
+            resetFriendStart();
+            let url = "<?php echo base_url('user/searchList?start=') ?>" + friendStart + "&limit=" + friendLimit;
+            if (ID_BASED) {
+                url = "<?php echo base_url('user/searchList?start=') ?>" + friendStart + "&limit=" + friendLimit + "&userId=" + userId;
+            }
+            let settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": url,
+                "method": "GET",
+                "headers": {
+                    "authorization": "Basic YWRtaW46MTIzNA==",
+                    "Authorizationkeyfortoken": String(responce),
+                    "cache-control": "no-cache",
+                    "postman-token": "eb27c011-391a-0b70-37c5-609bcd1d7b6d"
+                },
+                "dataType": 'json'
+            };
+            $.ajax(settings).done(function (response) {
+               let res = response.response.friends;
+               let q = [];
+                for (i = 0; i < res.length; i++) {
+                    if (res[i].userStatus != 0) {
+                        let md = {
+                            id: parseInt(res[i].id),
+                            name: res[i].name,
+                            picture: res[i].picture,
+                            email: res[i].email,
+                            type_id: res[i].type_id,
+                            type_description: res[i].type_description
+                        };
+                        q.push(md);
+                    }
+                }
+                searchGroupInput.setData(q);
+                searchGroupInput.clear();
+            });
+        });
+
+        // if user selected an item
+        $(searchGroupInput).on('selectionchange', function(){
+            let data = this.getSelection()[0];
+            if(data===undefined) return;
+            switch (parseInt(data.type_id)) {
+                case 2:
+                case 0:
+                    $("li#group_"+data.id).first().trigger("click", [{update: true}]);
+                break;
+            
+                case 1:
+                    let url = "<?php echo base_url('user/hasConversation?friendId=') ?>" + data.id;
+                    if (ID_BASED) {
+                        url = "<?php echo base_url('user/hasConversation?friendId=') ?>" + data.id + "&userId=" + userId;
+                    }
+                    let settings = {
+                        "async": true,
+                        "crossDomain": true,
+                        "url": url,
+                        "method": "GET",
+                        "headers": {
+                            "authorization": "Basic YWRtaW46MTIzNA==",
+                            "Authorizationkeyfortoken": String(responce),
+                            "cache-control": "no-cache",
+                            "postman-token": "eb27c011-391a-0b70-37c5-609bcd1d7b6d"
+                        },
+                        "dataType": 'json'
+                    };
+                    $.ajax(settings).done(function (response) {
+                        let groupId = response.response.groupId;
+                        //console.log('response');
+                        if(groupId>0){
+                            $("li#group_"+groupId).first().trigger("click", [{update: true}]);
+                        }else{
+                            
+                            addmember.empty();
+                            addmember.clear();
+                            $("div#newMessage").first().trigger("click", [{update: true}]);
+
+                             setTimeout(() => {
+                                 
+                                addmember.setValue({id:data.id});
+
+                             }, 2000);
+                             
+                        }
+                    });
+                break;
+            }
+            searchGroupInput.clear();
+            searchGroupInput.collapse();
+
+        });
+
 
         // add member at the right side bar
         $('#addMember').on("click", function (e) {

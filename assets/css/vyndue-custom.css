@@ -1,0 +1,18 @@
+.searchGroupInput {
+  border-radius: 10px !important;
+}
+.ms-res-ctn .ms-res-group{
+  line-height: 23px;
+  text-align: left;
+  padding: 2px 5px;
+  font-weight: bold;
+  border-bottom: 1px dotted #41C4E0;
+  border-top: 1px solid #41C4E0;
+  background: #1C395A;
+  color: #fff;
+}
+.ms-thumbnail-image{
+  height: 20px;
+  margin-bottom: 3px;
+  margin-right: 5px
+}

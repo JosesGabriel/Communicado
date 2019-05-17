@@ -4,21 +4,53 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <section class="page-contents">
         <!-- START LEFT SECTION -->
         <div class="leftSection col-xl-3 col-md-3 col-sm-12 col-xs-12" style="padding: 0;">
+            
+            <!-- chat header start -->
             <div class="chat-search col-md-12" id="convStart"  style="">
-                <div style="display:none;" class=" col-md-2 col-sm-2 col-xs-2" id="unreadMessage" title="Unread Messages">
-                    <div class="col-md-12" style="padding: 0;font-size: 25px;font-weight: bold"><span class="" style="padding: 0;cursor: pointer;"><i class="ico-pending-message" style="color: #388ded" ></i></span></div>
+
+                <input type="text" id="searchGroupInput">
+                
+                <div class=" col-md-2 col-sm-2 col-xs-2" id="newMessage" title="New Message" style="padding: 0;text-align: right; display:none;">
+                    <div class="col-md-12" style="padding: 0;font-size: 25px;font-weight: bold">
+                        <span class="" style="padding: 0;cursor: pointer;">
+                                <i class="ico-new-message" style="color: #388ded" ></i>
+                        </span>
+                    </div>
                 </div>
+
+                <!--
+                <textarea style="max-height: 100px; height: 90px border: 0"  id="newMessageText" type="text" name="message" class="form-control" placeholder="Your message....."></textarea>
+                -->
+                <!-- 
+                <div style="display:none;" class=" col-md-2 col-sm-2 col-xs-2" id="unreadMessage" title="Unread Messages">
+                    <div class="col-md-12" style="padding: 0;font-size: 25px;font-weight: bold">
+                        <span class="" style="padding: 0;cursor: pointer;">
+                            <i class="ico-pending-message" style="color: #388ded" ></i>
+                        </span>
+                    </div>
+                </div>
+                -->
+                
+                <!--
                 <div class=" col-md-10 col-sm-10 col-xs-10" id="" style="padding: 6px 0 0 5px;text-align: left;">
                     <div style="padding: 0;font-size: 16px;font-weight: bold">Vyndue Messenger</div>
-                </div>
+               </div>
+               -->
+                
+                <!--
                 <div class=" col-md-2 col-sm-2 col-xs-2" id="newMessage" title="New Message" style="padding: 0;text-align: right;">
-                   <div class="col-md-12" style="padding: 0;font-size: 25px;font-weight: bold"><span class="" style="padding: 0;cursor: pointer;">
-                   <i class="ico-new-message" style="color: #388ded" ></i></span></div>
-                </div>
+                    <div class="col-md-12" style="padding: 0;font-size: 25px;font-weight: bold">
+                        <span class="" style="padding: 0;cursor: pointer;">
+                                <i class="ico-new-message" style="color: #388ded" ></i>
+                        </span>
+                    </div>
+                </div>-->
+               
             </div>
-            <div style="float:left; width: 100%"  id="groupDiv">
-                <ul class="persons" id="groups" >
-                </ul>
+            <!-- chat header end -->
+            
+            <div style="float:left; width: 100%" id="groupDiv">
+                <ul class="persons" id="groups"></ul>
             </div>
         </div>
         <!-- END LEFT SECTION -->
@@ -56,11 +88,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
             <div class="col-md-12 col-xl-12 col-xs-12 col-sm-12  pad-5 hidden optionHubar" id="editGroupName">
                 <div class="col-md-12 col-xl-12 col-xs-12 col-sm-12 pad-5"  style="cursor: pointer;color: #75aef3;padding-right: 0;"> 
-                <i class="fa fa-pencil"></i>Change Group Name</div>
+                <i class="fa fa-pencil"></i>Change Community Name</div>
             </div>
             <div class="col-md-12 col-xl-12 col-xs-12 col-sm-12  pad-5 hidden optionHubar" id="changeGroupImage">
                  <div class="col-md-12 col-xl-12 col-xs-12 col-sm-12 pad-5"  style="cursor: pointer;color: #75aef3;padding-right: 0;"> 
-                 <i class="fa fa-image"></i>Edit Group Thumbnail</div>
+                 <i class="fa fa-image"></i>Edit Community Thumbnail</div>
              </div>
              <input type="file" class="hidden" id="groupImageFile" name="documents" accept=".jpg,.jpeg,.png">
             <div class="col-md-12 col-xl-12 col-xs-12 col-sm-12  pad-5 hidden optionHubar" id="addMember" data-group="">
@@ -83,9 +115,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="col-md-12 col-xl-12 col-xs-12 col-sm-12 pad-5 hidden" id="unmute" style="cursor: pointer;color: #75aef3;padding-right: 0;">
                 <i class="fa fa-bell"></i>Unmute</div>
             </div>
-            <?php /*?><div class="col-md-12 col-xl-12 col-xs-12 col-sm-12 text-center pad-2 rightBorder" style="padding-bottom: 5px" >
+
+            <!--<div class="col-md-12 col-xl-12 col-xs-12 col-sm-12 text-center pad-2 rightBorder" style="padding-bottom: 5px" >
                 <div class="preview be-user-info" style="font-size: 10px; padding-bottom:5px;border-bottom:1px solid rgba(0, 0, 0, .10) "></div>
-            </div><?php */?>
+            </div>-->
+            
             <ul class="persons personsList" id="groupMembers" ></ul>
             <div class="col-md-12 col-xl-12 col-xs-12 col-sm-12 hidden" id="attachment">
                 <div class="pad10bgradius">
@@ -117,7 +151,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <input type="text" id="addNewMemberInput" multiple class="form-control" >
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-small btn-round btn-skin-green"  data-toggle="modal" id="newMemberAddBtn">Add</button>
+                        <button type="button" class="btn btn-small btn-round btn-skin-green"  data-toggle="modal" id="new~rAddBtn">Add</button>
                     </div>
                 </div>
             </div>
@@ -131,11 +165,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div class="modal-content" >
             <div class="modal-header">
                 <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="oli oli-delete_sign"></i></span></button>
-                <h4 class="modal-title myUpdateModalLabel" style="background-color: #75aef3">Change name </h4>
+                <h4 class="modal-title myUpdateModalLabel" style="background-color: #75aef3">Change name</h4>
                 <div class="modal-body" >
                     <p>Give a new name</p>
                     <div class="form-group">
-                        <input type="text" id="groupName" class="form-control" placeholder="Group Name" required="required">
+                        <input type="text" id="groupName" class="form-control" placeholder="Community Name" required="required">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-small btn-round btn-skin-green"  data-toggle="modal" id="changeNameBtn">Save</button>
@@ -156,7 +190,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="modal-body " id="newMModalBody" style="margin-bottom: 110px">
                     <form id="newMessageForm" role="form">
                         <div class="form-group m-bottom-20">
-                            <input type="text" id="addMemberInput" multiple class="form-control" >
+                            <input type="text" id="addMemberInput" class="form-control" >
                         </div>
                         <div class="form-group col-md-12 col-xl-12 col-sm-12 col-xs-12 m-bottom-20" style="padding-top: 5px;padding-right: 5px; height: 90px" >
                             <textarea style="max-height: 100px; height: 90px border: 0"  id="newMessageText" type="text" name="message" class="form-control" placeholder="Your message....."></textarea>
@@ -176,7 +210,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         </div>
     </div>
 </div>
-
 
 <div id="connectionErrorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" class="modal fade in" style="display: none;padding-right: 17px;">
     <div role="document" class="modal-dialog">

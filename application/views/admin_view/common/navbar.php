@@ -14,7 +14,7 @@
                 <i class="fa fa-bars"></i>
             </button>
 
-            <a class="navbar-brand" href="./"><span>Vyndue</span></a>
+            <a class="navbar-brand" href="./"><span><?=APPLICATION_NAME?></span></a>
 
         </div>
 

@@ -57,7 +57,8 @@
     error_reporting(E_ALL);
     define("ID_LOGIN",false); //id based login
     define("DEMO",false); //demo mode
-    define("MINIFY_SOURCE",false);    //minify javascript and html
+	define("MINIFY_SOURCE",false);    //minify javascript and html
+	define("APPLICATION_NAME","Vyndue");
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING

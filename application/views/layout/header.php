@@ -22,11 +22,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <link href="<?php echo base_url("assets/newTheme/assets2/mediaelementplayer.css") ?>" rel="stylesheet" type="text/css">
     <link href="<?php echo base_url("assets/newTheme/assets/css/toastr.min.css") ?>" rel="stylesheet" type="text/css">
     <!-- #####Begin load google fonts-->
+
+    <!-- favicon --->
+    <link rel="shortcut icon" href="<?php echo base_url('assets/img/favicon.ico');?>" type="image/x-icon">
+    <link rel="icon" href="<?php echo base_url('assets/img/favicon.ico');?>" type="image/x-icon">
+
     <link href="https://fonts.googleapis.com/css?family=Merriweather:300,300i,400,400i,700,700i|Play:400,700|Sintony:400,700&amp;subset=cyrillic,greek" rel="stylesheet">
     <!-- #####End load google fonts-->
-    <title>Vyndue</title>
-    <link rel="shortcut icon" href="<?php echo base_url('assets/img/pp.png') ?>">
+    <title><?=APPLICATION_NAME?></title>
     <link href="<?php echo base_url("assets/newTheme/assets/css/twemoji-picker.css") ?>" rel="stylesheet" type="text/css">
     <link href="<?php echo base_url("assets/newTheme/assets/css/perfect-scrollbar.css") ?>" rel="stylesheet" type="text/css">
     <link href="<?php echo base_url("assets/newTheme/assets2/custom2.css")?>" rel="stylesheet" type="text/css">
+    <link href="<?php echo base_url("assets/css/vyndue-custom.css")?>" rel="stylesheet" type="text/css">
 </head>
