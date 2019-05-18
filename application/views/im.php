@@ -10,13 +10,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                 <input type="text" id="searchGroupInput">
                 
-                <div class=" col-md-2 col-sm-2 col-xs-2" id="newMessage" title="New Message" style="padding: 0;text-align: right; display:none;">
-                    <div class="col-md-12" style="padding: 0;font-size: 25px;font-weight: bold">
-                        <span class="" style="padding: 0;cursor: pointer;">
-                                <i class="ico-new-message" style="color: #388ded" ></i>
-                        </span>
-                    </div>
-                </div>
 
                 <!--
                 <textarea style="max-height: 100px; height: 90px border: 0"  id="newMessageText" type="text" name="message" class="form-control" placeholder="Your message....."></textarea>
@@ -136,7 +129,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
             </div>
         </div>
+
+        <!--
+        <div class=" col-md-2 col-sm-2 col-xs-2" id="newMessage" title="New Message" style="padding: 0;text-align: right;">
+            <div class="col-md-12" style="padding: 0;font-size: 25px;font-weight: bold">
+                <span class="" style="padding: 0;cursor: pointer;">
+                        <i class="ico-new-message" style="color: #388ded" ></i>
+                </span>
+            </div>
+        </div>-->
+
+        <div id="vyndue-floatBtn-container">
+            <div title="Compose new message" id="newMessage">
+                <i class="ico-new-message"></i>
+            </div>
+        </div>
 </section>
+
 
 <!-- Modals -->
 <div id="addNewMemberModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" class="modal fade in" style="display: none;padding-right: 17px;">
@@ -203,7 +212,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div>
                 <div class="modal-footer" style="background-color: white;">
                     <div class="form-group col-md-12 col-xl-12 col-sm-12 col-xs-12">
-                        <a href="#" class="btn-primary btn-small btn-rounded btn-skin-green col-md-12 col-xl-12 col-sm-12 col-xs-12" id="newSendMessage"><i class="fa fa-envelope"></i>  Send</a>
+                        <a href="#" class="btn-primary btn-small btn-rounded btn-skin-green col-md-12 col-xl-12 col-sm-12 col-xs-12" id="newSendMessage"><i class="fa fa-send"></i>  Send</a>
                     </div>
                 </div>
             </div>

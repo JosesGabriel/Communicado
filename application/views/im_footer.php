@@ -2456,13 +2456,14 @@
                             
                             addmember.empty();
                             addmember.clear();
+                            addmember.disable();
                             $("div#newMessage").first().trigger("click", [{update: true}]);
 
                              setTimeout(() => {
                                  
                                 addmember.setValue({id:data.id});
-
-                             }, 2000);
+                                addmember.enable();
+                             }, 1000);
                              
                         }
                     });
