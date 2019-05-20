@@ -21,6 +21,35 @@ class User extends Api
         
         $this->respond($this->store($data));
     }
+
+    /**
+     * TODO Delete a user based on the user's id
+     */
+    public function delete_post()
+    {
+        $data = $this->post();
+
+        //region Data validation
+        if (!isset($data['id'])) {
+            $this->respond([
+                'status' => 500,
+                'message' => 'User ID is not set.',
+            ]);
+        }
+        //endregion Data validaiton
+
+        $this->respond($this->delete($data));
+    }
+
+    /**
+     * TODO Fetch a user
+     */
+    public function fetch_get()
+    {
+        $data = $this->get();
+
+        $this->respond($this->fetch($data));
+    }
     //endregion Route methods
 
     //region Repositories
@@ -131,6 +160,22 @@ class User extends Api
                 'user' => $data,
             ],
         ];
+    }
+
+    /**
+     * TODO Delete a user data
+     */
+    private function delete($data = [])
+    {
+
+    }
+
+    /**
+     * TODO Fetch a user data
+     */
+    private function fetch($data = [])
+    {
+
     }
     //endregion Repositories
 }
