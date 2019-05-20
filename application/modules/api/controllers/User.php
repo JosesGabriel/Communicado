@@ -19,7 +19,7 @@ class User extends Api
     {
         $data = $this->post();
         
-        $this->respond($this->store($data));
+        $this->respond($this->storeUser($data));
     }
 
     /**
@@ -38,7 +38,7 @@ class User extends Api
         }
         //endregion Data validaiton
 
-        $this->respond($this->delete($data));
+        $this->respond($this->deleteUser($data));
     }
 
     /**
@@ -48,7 +48,7 @@ class User extends Api
     {
         $data = $this->get();
 
-        $this->respond($this->fetch($data));
+        $this->respond($this->fetchUser($data));
     }
 
     /**
@@ -68,7 +68,7 @@ class User extends Api
         }
         //endregion Data validaiton
 
-        $this->respond($this->store($data));
+        $this->respond($this->storeUser($data));
     }
     //endregion Route methods
 
@@ -79,7 +79,7 @@ class User extends Api
      * @param Array $data
      * @return Array
      */
-    private function store($data = [])
+    private function storeUser($data = [])
     {
         //region Data validation
         if (!isset($data['id'])) {
@@ -176,7 +176,7 @@ class User extends Api
     /**
      * TODO Delete a user data
      */
-    private function delete($data = [])
+    private function deleteUser($data = [])
     {
 
     }
@@ -184,7 +184,7 @@ class User extends Api
     /**
      * TODO Fetch a user data
      */
-    private function fetch($data = [])
+    private function fetchUser($data = [])
     {
 
     }
