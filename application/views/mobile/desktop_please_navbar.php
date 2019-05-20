@@ -10,8 +10,8 @@
 
                 <!-- #####Begin logo wrapper-->
                 <div class="logo-wrapper" style="font-size: 23px;font-weight: bold; color: white">
-                    <!-- standard Logo--><!--<a href="<?/*=base_url('userview/im')*/?>"><img src="<?php /*echo base_url('assets/img/imt.png');*/?>" class="logo-light ol-retina" style="height: 30px;"></a>-->
-                    <img src="<?php echo base_url('assets/img/ico_messager_blue.svg');?>" style="width: 26px;height:auto;margin-top: -5px;">
+                    <img src="<?php echo base_url('assets/img/ico_messager_blue.svg');?>" style="width: 20px;height:auto;margin-top: -5px;"> 
+                    <span class="bold" style="font-size:20px; color: #fff"><?=APPLICATION_NAME?></span>
                 </div>
                 <!-- #####End logo wrapper-->
                 <!-- #####Begin primary menu-->

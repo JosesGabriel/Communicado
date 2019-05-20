@@ -34,8 +34,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 												<h5 class="title" id="vyndue_login_title">
-												<img src="https://arbitrage.ph/svg/ico_messager_blue.svg" style="height:20px;">
-												<span>Vyndue Messenger</span>
+												<img src="<?php echo base_url('assets/img/ico_messager_blue.svg');?>" style="height:20px;">
+												<span><?=APPLICATION_NAME?></span>
 												</h5>
 												
 

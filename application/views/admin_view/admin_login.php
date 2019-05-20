@@ -14,7 +14,8 @@
         <div class="login-content">
             <div class="login-logo">
                 <a href="<?php echo base_url("admin") ?>">
-                    <span>Vyndue</span>
+                <img src="<?php echo base_url('assets/img/ico_messager_blue.svg');?>" style="width: 20px;height:auto;margin-top: -5px;"> 
+                    <span><?=APPLICATION_NAME?></span>
                 </a>
             </div>
             <div class="login-form">

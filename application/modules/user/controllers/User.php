@@ -115,7 +115,7 @@ class User extends REST_Controller
         $start=$this->get("start");
         $limit=$this->get("limit",true);
         // ------------------- Section 1 starts----------------//
-        /*$friendIds = $this->FriendList_Model->getList($userId,$limit,$start);           // if you want friend list design uncomment
+        $friendIds = $this->FriendList_Model->getList($userId,$limit,$start);           // if you want friend list design uncomment
                                                                               // this section and comment out section 2
         $friends = array();
         foreach ($friendIds as $friendId) {
@@ -124,14 +124,14 @@ class User extends REST_Controller
         $responseData=array(
             "friends"=> $friends,
             "total"=>(int)$this->FriendList_Model->getTotalFriend($userId)
-        );*/
+        );
         //------------------ section 1 ends ----------------//
         //------------------section 2 starts ---------------//
-        $friends=$this->User_Model->getAllActiveUser($userId,$limit,$start);
+        /*$friends=$this->User_Model->getAllActiveUser($userId,$limit,$start);
         $responseData=array(
             "friends"=> $friends,
             "total"=>(int)$this->User_Model->getTotalUser(),
-        );
+        );*/
         //------------------ section 2 ends ----------------//
 
         $response = array(
@@ -153,11 +153,11 @@ class User extends REST_Controller
         }
         $key=$this->get("key",true);
 
-        /*$friendsIds=$this->FriendList_Model->getFriendsIdAsArray($userId); //only for friend LIST
-        $friends=$this->User_Model->filterUser($friendsIds,$key);*/
+        $friendsIds=$this->FriendList_Model->getFriendsIdAsArray($userId); //only for friend LIST
+        $friends=$this->User_Model->filterUser($friendsIds,$key);
 
         // for all user
-        $friends=$this->User_Model->filterAllUser($userId,$key);
+        //$friends=$this->User_Model->filterAllUser($userId,$key);
         
         $response = array(
             "status" => array(
@@ -373,4 +373,58 @@ class User extends REST_Controller
         }
 
     }
+
+    // Ralph 2019-05-15
+    public function searchList_get()
+    {
+        if(!ID_LOGIN) {
+            $headers = apache_request_headers();
+            $userId =(int) $this->User_Model->getTokenToId($headers["Authorizationkeyfortoken"]);
+        }else{
+            $userId=$this->get("userId");
+        }
+        $start=$this->get("start");
+        $limit=$this->get("limit",true);
+
+        $friends=$this->User_Model->searchlistAll($userId,$limit,$start);
+        $responseData=array(
+            "friends"=> $friends,
+           // "total"=>(int)$this->User_Model->getTotalUser(),
+        );
+
+        $response = array(
+            "status" => array(
+                "code" => REST_Controller::HTTP_OK,
+                "message" => true
+            ),
+            "response" => $responseData
+        );
+        $this->response($response, REST_Controller::HTTP_OK);
+    }
+
+    public function hasConversation_get()
+    {
+        if(!ID_LOGIN) {
+            $headers = apache_request_headers();
+            $userId =(int) $this->User_Model->getTokenToId($headers["Authorizationkeyfortoken"]);
+        }else{
+            $userId=$this->get("userId");
+        }
+        $friendId=$this->get("friendId",true);
+
+        $groupId=$this->User_Model->hasConversation($userId,$friendId);
+        $responseData=array(
+            "groupId"=> $groupId
+        );
+
+        $response = array(
+            "status" => array(
+                "code" => REST_Controller::HTTP_OK,
+                "message" => true
+            ),
+            "response" => $responseData
+        );
+        $this->response($response, REST_Controller::HTTP_OK);
+    }
+
 }

@@ -70,7 +70,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
     <!-- #####End load google fonts-->
 
-    <title>Vyndue</title>
+    <title><?=APPLICATION_NAME?></title>
 
     <link rel="shortcut icon" href="<?php echo base_url('assets/img/pp.png') ?>">
 
