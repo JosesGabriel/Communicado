@@ -50,6 +50,26 @@ class User extends Api
 
         $this->respond($this->fetch($data));
     }
+
+    /**
+     * TODO Update a user based on the user's email
+     */
+    public function update_post()
+    {
+        $data = $this->post();
+
+        //region Data validation
+        // check for the user's original email
+        if (!isset($data['email_id'])) {
+            $this->respond([
+                'status' => 500,
+                'message' => 'User email is not set.',
+            ]);
+        }
+        //endregion Data validaiton
+
+        $this->respond($this->store($data));
+    }
     //endregion Route methods
 
     //region Repositories
