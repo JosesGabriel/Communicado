@@ -83,15 +83,6 @@ class User extends Api
     {
         //region Data validation
         if (!isset($data['id'])) {
-
-            if (!isset($data['username']) ||
-                trim($data['username']) == '') {
-                return [
-                    'status' => 500,
-                    'message' => 'Username is invalid or not set.',
-                ];
-            }
-    
             if (!isset($data['email']) ||
                 trim($data['email']) == '') {
                 return [
