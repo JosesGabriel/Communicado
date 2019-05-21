@@ -806,4 +806,11 @@ class User_Model extends CI_Model
     
     }
 
+    //region For API
+    public function fetchByEmail($email = '')
+    {
+        return $this->db->where('userEmail', $email)->get('users')->result_array();
+    }
+    //endregion For API
+
 }
