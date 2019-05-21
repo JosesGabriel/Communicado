@@ -149,7 +149,30 @@ class User extends Api
                 //endregion Create new user
             } else {
                 //region Update user
+                $map_keys = [
+                    'first_name' => 'firstName',
+                    'last_name' => 'lastName',
+                    'email' => 'userEmail',
+                    'password' => 'userPassword',
+                    'address' => 'userAddress',
+                    'mobile' => 'userMobile',
+                ];
+
+                $update = [];
+
+                foreach ($data as $field => $value) {
+                    if (isset($map_keys[ $field ])) {
+                        $table_col = $map_keys[ $field ];
+
+                        if ($field == 'password') {
+                            $value = password_hash($value, PASSWORD_BCRYPT);
+                        }
+
+                        $update[$table_col] = $value;
+                    }
+                }
                 
+                $this->User_Model->db->update('users', $update, ['userEmail' => $data['email_id']]);
                 //endregion Update user
             }
         } catch (Exception $e) {
