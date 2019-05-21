@@ -7,9 +7,61 @@ class User extends Api
     public function __construct(){
         parent::__construct();
         $this->load->model("User_Model");
+        $this->load->model('FriendList_Model');
     }
 
     //region Route methods
+    /**
+     * Add friends
+     */
+    public function add_friend_post()
+    {
+        $data = $this->post();
+
+        //region Data validation
+        if (!isset($data['requester']) ||
+            trim($data['requester']) == '') {
+            $this->respond([
+                'status' => 500,
+                'message' => 'Missing argumennts.',
+            ]);
+        }
+
+        if (!isset($data['responder']) ||
+            trim($data['responder']) == '') {
+            $this->respond([
+                'status' => 500,
+                'message' => 'Missing argumennts.',
+            ]);
+        } 
+        //endregion Data validation
+
+        //region User fetching
+        $requester = $this->fetchUser($data['requester']);
+        $responder = $this->fetchUser($data['responder']);
+
+        if (!$this->isResponseSuccess($requester['status'])) {
+            $this->respond($requester);
+        }
+
+        if (!$this->isResponseSuccess($responder['status'])) {
+            $this->respond($responder);
+        } 
+        //endregion User fetching
+
+        //region Add friend relation
+        $requester_id = $requester['data']['user']['userId'];
+        $responder_id = $responder['data']['user']['userId'];
+
+        $this->FriendList_Model->insert($requester_id, $responder_id);
+        //endregion Add friend relation
+
+        $this->respond([
+            'status' => 200,
+            'message' => 'Successfully added friend',
+        ]);
+    }
+
     /**
      * Create a user
      * 
@@ -42,13 +94,22 @@ class User extends Api
     }
 
     /**
-     * TODO Fetch a user
+     * Fetch a user by email
      */
     public function fetch_get()
     {
         $data = $this->get();
 
-        $this->respond($this->fetchUser($data));
+        //region Data validation
+        if (!isset($data['email'])) {
+            $this->respond([
+                'status' => 500,
+                'message' => 'Email is not set.',
+            ]);
+        }
+        //endregion Data validation
+
+        $this->respond($this->fetchUser($data['email']));
     }
 
     /**
@@ -207,11 +268,38 @@ class User extends Api
     }
 
     /**
-     * TODO Fetch a user data
+     * Fetch a user data by email
      */
-    private function fetchUser($data = [])
+    private function fetchUser($email = '')
     {
+        //region Data validation
+        if (!is_string($email) ||
+            trim($email) == '') {
+            return [
+                'status' => 500,
+                'message' => 'Email is invalid.',
+            ];
+        }
+        //endregion Data validation
 
+        //region Data query
+        $user = $this->User_Model->fetchByEmail($email);
+
+        if (!isset($user[0])) {
+            return [
+                'status' => 404,
+                'message' => 'User not found.',
+            ];
+        }
+
+        return [
+            'status' => 200,
+            'message' => 'Successfully fetched user.',
+            'data' => [
+                'user' => $user[0],
+            ],
+        ];
+        //endregion Data query
     }
     //endregion Repositories
 }

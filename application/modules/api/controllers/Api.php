@@ -14,7 +14,7 @@ class Api extends REST_Controller
 
         $response = [
             'status' => $status,
-            'success' => $status >= 200 || $status <= 299,
+            'success' => $this->isResponseSuccess($status),
             'message' => $data['message'] ?? '',
             'data' => $data['data'] ?? [],
         ];
@@ -27,5 +27,10 @@ class Api extends REST_Controller
         }
 
         $this->response($response, $status);
+    }
+
+    public function isResponseSuccess($status)
+    {
+        return $status >= 200 && $status <= 299;
     }
 }
