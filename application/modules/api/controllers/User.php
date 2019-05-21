@@ -82,7 +82,7 @@ class User extends Api
     private function storeUser($data = [])
     {
         //region Data validation
-        if (!isset($data['id'])) {
+        if (!isset($data['email_id'])) {
             if (!isset($data['email']) ||
                 trim($data['email']) == '') {
                 return [
@@ -118,17 +118,19 @@ class User extends Api
         //endregion Data validation
 
         //region Existence check
-        if ($this->User_Model->ifExist($data['email'])) {
-            return[
-                'status' => 500,
-                'message' => 'Email already exists.',
-            ];
+        if (!isset($data['email_id'])) {
+            if ($this->User_Model->ifExist($data['email'])) {
+                return[
+                    'status' => 500,
+                    'message' => 'Email already exists.',
+                ];
+            }
         }
         //endregion Existence check
 
         //region Data insertion
         try {
-            if (!isset($data['id'])) {
+            if (!isset($data['email_id'])) {
                 //region Create new user
                 $CONSUMER_KEY = $this->User_Model->generateRandomString();
         
