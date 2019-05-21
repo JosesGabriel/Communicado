@@ -233,11 +233,18 @@ class User extends Api
         //region Data query
         $user = $this->User_Model->fetchByEmail($email);
 
+        if (!isset($user[0])) {
+            return [
+                'status' => 404,
+                'message' => 'User not found.',
+            ];
+        }
+
         return [
             'status' => 200,
             'message' => 'Successfully fetched user.',
             'data' => [
-                'user' => $user,
+                'user' => $user[0],
             ],
         ];
         //endregion Data query
