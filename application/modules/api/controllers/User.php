@@ -82,7 +82,7 @@ class User extends Api
     private function storeUser($data = [])
     {
         //region Data validation
-        if (!isset($data['id'])) {
+        if (!isset($data['email_id'])) {
             if (!isset($data['email']) ||
                 trim($data['email']) == '') {
                 return [
@@ -118,17 +118,19 @@ class User extends Api
         //endregion Data validation
 
         //region Existence check
-        if ($this->User_Model->ifExist($data['email'])) {
-            return[
-                'status' => 500,
-                'message' => 'Email already exists.',
-            ];
+        if (!isset($data['email_id'])) {
+            if ($this->User_Model->ifExist($data['email'])) {
+                return[
+                    'status' => 500,
+                    'message' => 'Email already exists.',
+                ];
+            }
         }
         //endregion Existence check
 
         //region Data insertion
         try {
-            if (!isset($data['id'])) {
+            if (!isset($data['email_id'])) {
                 //region Create new user
                 $CONSUMER_KEY = $this->User_Model->generateRandomString();
         
@@ -147,7 +149,30 @@ class User extends Api
                 //endregion Create new user
             } else {
                 //region Update user
+                $map_keys = [
+                    'first_name' => 'firstName',
+                    'last_name' => 'lastName',
+                    'email' => 'userEmail',
+                    'password' => 'userPassword',
+                    'address' => 'userAddress',
+                    'mobile' => 'userMobile',
+                ];
+
+                $update = [];
+
+                foreach ($data as $field => $value) {
+                    if (isset($map_keys[ $field ])) {
+                        $table_col = $map_keys[ $field ];
+
+                        if ($field == 'password') {
+                            $value = password_hash($value, PASSWORD_BCRYPT);
+                        }
+
+                        $update[$table_col] = $value;
+                    }
+                }
                 
+                $this->User_Model->db->update('users', $update, ['userEmail' => $data['email_id']]);
                 //endregion Update user
             }
         } catch (Exception $e) {
