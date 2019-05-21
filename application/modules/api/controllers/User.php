@@ -42,13 +42,22 @@ class User extends Api
     }
 
     /**
-     * TODO Fetch a user
+     * Fetch a user by email
      */
     public function fetch_get()
     {
         $data = $this->get();
 
-        $this->respond($this->fetchUser($data));
+        //region Data validation
+        if (!isset($data['email'])) {
+            $this->respond([
+                'status' => 500,
+                'message' => 'Email is not set.',
+            ]);
+        }
+        //endregion Data validation
+
+        $this->respond($this->fetchUser($data['email']));
     }
 
     /**
@@ -207,11 +216,31 @@ class User extends Api
     }
 
     /**
-     * TODO Fetch a user data
+     * Fetch a user data by email
      */
-    private function fetchUser($data = [])
+    private function fetchUser($email = '')
     {
+        //region Data validation
+        if (!is_string($email) ||
+            trim($email) == '') {
+            return [
+                'status' => 500,
+                'message' => 'Email is invalid.',
+            ];
+        }
+        //endregion Data validation
 
+        //region Data query
+        $user = $this->User_Model->fetchByEmail($email);
+
+        return [
+            'status' => 200,
+            'message' => 'Successfully fetched user.',
+            'data' => [
+                'user' => $user,
+            ],
+        ];
+        //endregion Data query
     }
     //endregion Repositories
 }
