@@ -196,6 +196,14 @@ class User extends Api
     {
         //region Data validation
         if (!isset($data['email_id'])) {
+            if (!isset($data['user_secret']) ||
+                trim($data['user_secret'])) {
+                return [
+                    'status' => 500,
+                    'message' => 'User secret is invalid or not set.',
+                ];
+            }
+
             if (!isset($data['email']) ||
                 trim($data['email']) == '') {
                 return [
@@ -244,11 +252,9 @@ class User extends Api
         //region Data insertion
         try {
             if (!isset($data['email_id'])) {
-                //region Create new user
-                $CONSUMER_KEY = $this->User_Model->generateRandomString();
-        
+                //region Create new user]
                 $this->User_Model->insert_entry(
-                    $CONSUMER_KEY, 
+                    $data['user_secret'], 
                     $data['first_name'], 
                     $data['last_name'], 
                     $data['email'],
