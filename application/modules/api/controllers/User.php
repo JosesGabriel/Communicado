@@ -113,6 +113,58 @@ class User extends Api
     }
 
     /**
+     * Remove friend link
+     */
+    public function remove_friend_post()
+    {
+        $data = $this->post();
+
+        //region Data validation
+        if (!isset($data['requester']) ||
+            trim($data['requester']) == '') {
+            $this->respond([
+                'status' => 500,
+                'message' => 'Missing argumennts.',
+            ]);
+        }
+
+        if (!isset($data['responder']) ||
+            trim($data['responder']) == '') {
+            $this->respond([
+                'status' => 500,
+                'message' => 'Missing argumennts.',
+            ]);
+        } 
+        //endregion Data validation
+
+        //region User fetching
+        $requester = $this->fetchUser($data['requester']);
+        $responder = $this->fetchUser($data['responder']);
+
+        if (!$this->isResponseSuccess($requester['status'])) {
+            $this->respond($requester);
+        }
+
+        if (!$this->isResponseSuccess($responder['status'])) {
+            $this->respond($responder);
+        } 
+        //endregion User fetching
+
+        //region Add friend relation
+        $requester_id = $requester['data']['user']['userId'];
+        $responder_id = $responder['data']['user']['userId'];
+
+        $this->FriendList_Model->delete($requester_id, $responder_id);
+        $this->FriendList_Model->delete($responder_id, $requester_id);
+        //endregion Add friend relation
+
+        $this->respond([
+            'status' => 200,
+            'message' => 'Successfully removed friend',
+        ]);
+    }
+
+    /**
      * TODO Update a user based on the user's email
      */
     public function update_post()
