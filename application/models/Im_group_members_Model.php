@@ -158,4 +158,38 @@ class Im_group_members_Model extends CI_Model{
             return $d;
         }
     }
+
+    // Ralph 2019-05-21
+    public function getMentionlist($u_id,$g_id){
+
+        $records=[];
+        $picture = '';
+        $query = $this->db->query("SELECT u.userid as id, concat(u.firstName,' ',u.lastName) as name,
+        u.userEmail as email, u.userProfilePicture as picture  
+        FROM im_group_members as gm 
+        inner join users as u on gm.u_id = u.userid
+        where gm.g_id=$g_id and gm.u_id not in ($u_id,2)");
+
+        //return $this->db->last_query();
+
+        foreach ($query->result() as $user){
+
+            if($user->picture!=null){
+                $picture = base_url()."assets/userImage/".$user->picture;
+            }   
+            else{
+                $picture = base_url()."assets/img/download.png";
+            }
+
+            $data = array(
+                'id' =>(int)$user->id,
+                'name' =>$user->name,
+                'email'=>$user->email,
+                'picture' => $picture
+            );
+            $records[]=$data;
+        }
+        return $records;
+
+    }
 }

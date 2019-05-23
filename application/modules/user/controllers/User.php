@@ -11,6 +11,7 @@ class User extends REST_Controller
         parent::__construct();
         $this->load->model('User_Model');
         $this->load->model('FriendList_Model');
+        $this->load->model('Im_group_members_Model');
         if(!ID_LOGIN) {
             $headers = apache_request_headers();
             if (isset($headers["Authorizationkeyfortoken"])) {
@@ -415,6 +416,31 @@ class User extends REST_Controller
         $groupId=$this->User_Model->hasConversation($userId,$friendId);
         $responseData=array(
             "groupId"=> $groupId
+        );
+
+        $response = array(
+            "status" => array(
+                "code" => REST_Controller::HTTP_OK,
+                "message" => true
+            ),
+            "response" => $responseData
+        );
+        $this->response($response, REST_Controller::HTTP_OK);
+    }
+
+    public function mentionList_get()
+    {
+        if(!ID_LOGIN) {
+            $headers = apache_request_headers();
+            $userId =(int) $this->User_Model->getTokenToId($headers["Authorizationkeyfortoken"]);
+        }else{
+            $userId=$this->get("userId");
+        }
+        $groupId=$this->get("groupId");
+
+        $data=$this->Im_group_members_Model->getMentionlist($userId,$groupId);
+        $responseData=array(
+            "data"=> $data,
         );
 
         $response = array(

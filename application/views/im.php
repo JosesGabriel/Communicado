@@ -6,9 +6,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div class="leftSection col-xl-3 col-md-3 col-sm-12 col-xs-12" style="padding: 0;">
             
             <!-- chat header start -->
-            <div class="chat-search col-md-12" id="convStart"  style="">
-
-                <input type="text" id="searchGroupInput">
+            <div class="chat-search col-md-12" id="convStart">
+ 
+            <input type="text" id="searchGroupInput">
                 
 
                 <!--
@@ -58,7 +58,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <div class="chat col-md-12 col-xl-12 col-sm-12 col-xs-12 " style="overflow: scroll;overflow-x: hidden;" id="chatBox" ></div>
             <form id="messageForm">
                  <div class="form-group col-md-10 col-xl-10 col-sm-10 col-xs-8 " style="padding-top: 5px;padding-right: 5px" >
-                   <textarea style="max-height: 50px; border: 0"  id="message" type="text" name="message" class="form-control" placeholder="Your message....."></textarea>
+                 <div id="divMentionDiv">
+                        <input type="text" id="inputMentionSearch">
+                </div>  
+                 <textarea style="max-height: 50px; border: 0"  id="message" type="text" name="message" class="form-control" placeholder="Your message..."></textarea>    
                 </div>
                 <div class="form-group col-md-2 col-xl-2 col-sm-2 col-xs-4 pad-1" style="margin-top: 10px">
                     <img title="Send File/Audio" src="<?php echo base_url('assets/img/fileAttach.png')?>" id="fileIV1" style="float:left;cursor: pointer; width: 25px;height: 22px;margin-left: 0px;">
@@ -139,9 +142,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
         </div>-->
 
-        <div id="vyndue-floatBtn-container">
+        <div id="vyndue-floatBtn-container_1">
             <div title="Compose new message" id="newMessage">
                 <i class="ico-new-message"></i>
+            </div>
+        </div>
+
+        <div id="vyndue-floatBtn-container_2">
+            <div title="Get messages" id="unreadMessage">
+                <i class="fa fa-refresh"></i>
+            </div>
+        </div>
+
+        <div style="display:none;" id="vyndue-floatBtn-container_3">
+            <div id="btnSettings">
+                <i class="fa fa-gear"></i>
             </div>
         </div>
 </section>
@@ -220,7 +235,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     </div>
 </div>
 
-<div id="connectionErrorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" class="modal fade in" style="display: none;padding-right: 17px;">
+<div id="_connectionErrorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" class="modal fade in" style="display: none;padding-right: 17px;">
     <div role="document" class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header" style="border-radius: 6px;">

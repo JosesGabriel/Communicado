@@ -8,8 +8,10 @@
 <script src="<?php echo base_url("assets/newTheme/assets/js/perfect-scrollbar.jquery.min.js") ?>"></script>
 <!--<script type="text/javascript" src="<?php /*echo base_url("assets/newTheme/twemoji/2/twemoji.min.js")."?".rand(5,50000) */ ?>"></script>-->
 <script src="<?php echo base_url("assets/newTheme/assets/js/twemoji/2/twemoji.min.js") ?>"></script>
+
 <!--<script type="text/javascript" src="<?php /*echo base_url("assets/newTheme/assets/js/perfect-scrollbar.jquery.js")."?".rand(5,50000) */ ?>"></script>-->
 <!--<script type="text/javascript" src="<?php /*echo base_url("assets/newTheme/assets/js/perfect-scrollbar.jquery.min.js") */ ?>"></script>-->
+
 <script>
     $(document).ready(function () {
         let t = null;
@@ -33,6 +35,15 @@
             }
             $("#userNameTop").html(name);
             $("#userImageTop").attr("src", pic);
+
+            // set all mention link 
+            let hrefAll = $('.fw-im-message-text').find('a[class="mention"]');
+            $(hrefAll).each(function(){
+                var href = "<?=ARBITRAGE.'/user/'?>" + $(this).attr('data-username')+"/";
+                $(this).attr("href",href);
+                $(this).attr("target","_blank");
+            });
+
         }, 1000);
     });
 </script>
@@ -292,8 +303,19 @@
                 });
             }
         }
+
+        /* // working notification
+        let icm = [
+            'http://dev.vyndue.com/assets/im/group_9/05172019124118impHCVn9.jpg',
+        ];
+        notifyMe('Header Notification','Hello there!',icm);
+        */
+        
         function notifyMe(header, message, icon ) {
+           // console.log('Notify me');
+           // console.log(Notification.permission);
             if (notificationPermission && (icon !== undefined || icon !== null)) {
+               // console.log(icon);
                 let image = null;
                 let c = document.createElement("canvas");
                 let ctx = c.getContext("2d");
@@ -362,7 +384,7 @@
             typing = false;
             socket.emit("notTyping", JSON.stringify(data));
         }
-        function onKeyDownNotEnter() {
+        function onKeyDownNotEnter(e) {
             let data = {
                 userId: userId,
                 groupId: activeGroupId
@@ -372,10 +394,99 @@
                 socket.emit("typing", JSON.stringify(data));
                 typingTimeout = setTimeout(typingTimeoutFunction, 3000);
             } else {
+                userTypeSomething(e);
                 clearTimeout(typingTimeout);
                 typingTimeout = setTimeout(typingTimeoutFunction, 3000);
             }
         }
+
+        // Ralph 2019-05-20
+        function userTypeSomething(e){
+            var text = e.target.innerText;
+            var char = text[text.length-1];
+            if(char=='@' && parseInt(groupType)!=1){
+                show_divMentionDiv(); 
+            } 
+        }
+
+        // Start of Mention Form
+        // inputMentionSearch
+        let inputMentionSearch = $('#inputMentionSearch').magicSuggest({
+            placeholder: 'Type Member Name...',
+            allowFreeEntries: false,
+            maxSelection: 1,
+            hideTrigger:true,
+            useTabKey:true,
+            strictSuggest: true,
+            expandOnFocus: true,
+            sortOrder:"name",
+            maxDropHeight: 60, // max height of screen,
+            renderer: function (data) {
+                let html = '';
+                return `<div style="padding: 5px; overflow:hidden;">
+                    <div style="float: left;"><img style="width: 25px;height: 25px" src=" ${data.picture} " /></div> 
+                    <div style="float: left; margin-left: 5px"> 
+                    <div style="font-weight: bold; color: #333; font-size: 12px; line-height: 11px"> ${data.name} </div> 
+                    <div style="color: #999; font-size: 9px"> ${ data.email==null ? '&nbsp;' : data.email  } </div> 
+                    </div> 
+                    </div><div style="clear:both;"></div>`; 
+            }
+        });
+
+        $(inputMentionSearch).on('focus', function(e){
+            getMention(function (res) {
+              //  console.log('result');
+             //   console.log(res);
+                let q = [];
+                for (i = 0; i < res.length; i++) {    
+                    let md = {
+                        id: parseInt(res[i].id),
+                        name: res[i].name,
+                        picture: res[i].picture,
+                        email: res[i].email
+                    };
+                    q.push(md);
+                }
+                inputMentionSearch.setData(q);
+                inputMentionSearch.clear();
+            });
+        });
+
+        $(inputMentionSearch).on('selectionchange', function(){
+            let data = this.getSelection()[0];
+            let input = $('#message_twemoji')[0];
+            if(data===undefined) return;
+            hide_divMentionDiv();
+            input.focus();
+            setTimeout(() => {
+                let content = input.innerHTML.slice(0, input.innerHTML.length-1);
+                let newcontent = content + '<m><a href="#" data-username="'+ data.id +'" class="mention">@' + data.name + '</a></m>&nbsp;';                
+                input.innerHTML = newcontent;
+            }, 150);
+        });
+
+        $(inputMentionSearch).on('blur', function(c){
+            hide_divMentionDiv();
+        });
+
+        function hide_divMentionDiv(){
+            $('#divMentionDiv').hide(200);
+            inputMentionSearch.disable();
+            inputMentionSearch.clear();
+            inputMentionSearch.empty();
+        }
+
+        function show_divMentionDiv(){
+            $('#divMentionDiv').show(200);
+            setTimeout(() => {
+                inputMentionSearch.enable();
+                $('#inputMentionSearch :input[type=text]')[0].focus();
+            }, 200);
+        }
+
+        hide_divMentionDiv();
+        // End of Mention Form
+
         function initVideo(id, isme) {
             $("#" + id).mediaelementplayer({
                 // Do not forget to put a final slash (/)
@@ -1122,6 +1233,30 @@
             });
             $('.clamp-title').each(function (index, element) {
                 $clamp(element, {clamp: 3, useNativeClamp: false});
+            });
+        }
+        //This function is userd to get memntion person in a group
+        function getMention(callback) {
+            let url = "<?php echo base_url('user/mentionList?groupId=') ?>" + activeGroupId;
+            if (ID_BASED) {
+                url = "<?php echo base_url('user/mentionList?groupId=') ?>" + activeGroupId + "&userId=" + userId;
+            }
+            let settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": url,
+                "method": "GET",
+                "headers": {
+                    "authorization": "Basic YWRtaW46MTIzNA==",
+                    "Authorizationkeyfortoken": String(responce),
+                    "cache-control": "no-cache",
+                    "postman-token": "eb27c011-391a-0b70-37c5-609bcd1d7b6d"
+                },
+                "dataType": 'json'
+            };
+            $.ajax(settings).done(function (response) {
+               let res = response.response.data;
+               callback(res);
             });
         }
         //This function is used to  get friend list of user
@@ -2544,6 +2679,7 @@
             }
         });
 
+     
         // getmembers creating a new conversation, found at the left side bar
         $('#newMessage').on("click", function (e) {
             resetNewMessage();
@@ -2589,7 +2725,7 @@
                 if (e.which == 13) {
                     $('#sendMessage').trigger('click');
                 } else {
-                    onKeyDownNotEnter();
+                    onKeyDownNotEnter(e);
                 }
                 if (isUnicode($(this).text())) {
                     $(this).css('direction', 'rtl');
@@ -2629,6 +2765,7 @@
                 }
             });
         }
+
         $('#sendMessage').on("click mouseup", function (event) {
             if(!messageTyping){
                 return;
@@ -2647,6 +2784,7 @@
                 }
             });
             let message = $('#message').text();
+            //return;
             let mainFileObject = null;
             let file = $("#messageFile").val();
             if (file === null || file === "") {
@@ -2656,7 +2794,8 @@
             else {
                 mainFileObject = $("#messageFile")[0].files[0];
             }
-            let modmessage = message.replace(/(<([^>]+)>)/ig, "").replace(/&nbsp;/gi, " ").replace(/&nbsp;/gi, " ").trim();
+            //let modmessage = message.replace(/(<([^>]+)>)/ig, "").replace(/&nbsp;/gi, " ").replace(/&nbsp;/gi, " ").trim();            
+            let modmessage = message.replace(/(<\/?(?:a)[^>]*>)|<[^>]+>/ig, '$1').replace(/&nbsp;/gi, " ").replace(/&nbsp;/gi, " ").trim();
             if ((modmessage === null || modmessage === "") && (file === null || file === "")) {
                 reset();
                 return;
@@ -2671,7 +2810,7 @@
             socketData.groupId = receiverId;
             form.append("groupId", receiverId);
             form.append("file", mainFileObject);
-            reset();
+            reset();    
             if (file === null || file === "") {
                 sendMessage(form, false, false, socketData);
             }
@@ -2944,6 +3083,11 @@
             });
         });
         $("#unreadMessage").on("click", function () {
+            // spin the refresh
+            let progress1 = new LoadingOverlayProgress();
+            const icon = $(this).find('i');
+            icon.toggleClass('fa-spin');
+            $("body").LoadingOverlay("show");
             let settings = {
                 "async": true,
                 "crossDomain": true,
@@ -2964,8 +3108,71 @@
                     }
                     addNewGroup(groups[i]);
                 }
+                delete progress1;
+                $("body").LoadingOverlay("hide");
+                icon.toggleClass('fa-spin');
             });
         });
+    
+        // Ralph 2019-05-22
+        $('#btnSettings').on("click", function (e) {
+            // console.log($("#message_76").offsetParent().offsetParent()[0].offsetHeight);
+            // console.log($("#message_3").offsetParent().offsetParent()[0].offsetHeight);
+            // console.log($("#message_76").offsetParent().0.offsetParent());
+            // var position = (chatBox[0].scrollHeight - 200) - $("#message_76").offset().top;
+            // console.log(position);
+            // console.log($(window).height());
+            // console.log(chatBox[0].scrollHeight);
+            console.log('start');
+            console.log(chatBox[0].scrollTop);
+            var m3 = parseInt($("#message_3").offset().top);
+            m3 = Math.max(0, m3);
+            var m76 = parseInt($("#message_76").offset().top);
+            m76 = Math.max(0, m76);
+            console.log(m3);
+            console.log(m76);
+            
+            // $(chatBox).animate({scrollTop: 300});
+            return;
+            //var myElement = document.getElementById('message_76');
+            //var topPos = myElement.offsetTop;
+            console.log(chatBox[0]);
+            //return;
+            $(chatBox[0]).animate({scrollTop: $('div#message_3').position().top});
+            return;
+
+            var h1Top = $('div#message_76').position().top;
+            console.log(h1Top);
+	        $chatBox[0].animate({scrollTop: h1Top});
+            console.log($chatBox[0]);
+            return;
+
+            var elementTop = $('div#message_76');
+            var divTop = chatBox[0].scrollHeight;
+            var elementRelativeTop = elementTop - divTop;
+
+            console.log(elementRelativeTop);
+            console.log(divTop);
+            console.log(elementTop)
+
+            return;
+            
+            let height = chatBox[0].scrollHeight;
+            //scrollPosition=height;
+            //chatBox.scrollTop( chatBox.prop( "scrollHeight" ) );
+            console.log(height);
+            //chatBox.scrollTop(height);
+
+            return;
+            var position = $('#chatBox').offset().top;
+
+            $("body, html").animate({
+                scrollTop: position
+            } /* speed */ );    
+            
+        });
+
+
 //-------------------- Drop Zone ---------------------------------------
         //dropZone
         function preventDefaults (e) {
@@ -3613,6 +3820,7 @@
             }
         });
         socket.on("pendingMessage", function (res) {
+                
             let currentGroupId = parseInt(activeGroupId);
             let data = JSON.parse(res);
             let groupData = data.groupData;
