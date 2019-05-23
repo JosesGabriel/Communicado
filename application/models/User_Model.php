@@ -811,6 +811,11 @@ class User_Model extends CI_Model
     {
         return $this->db->where('userEmail', $email)->get('users')->result_array();
     }
+
+    public function fetchBySecret($secret = '')
+    {
+        return $this->db->where('userSecret', $secret)->get('users')->result_array();
+    }
     //endregion For API
 
 }
