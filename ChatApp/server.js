@@ -609,7 +609,7 @@ io.on("connection", function (socket) {
         });
 
     });
-
+ 
     socket.on("sendText", function (response) {
         let data = null;
         if (typeof response === 'object') {
@@ -644,6 +644,24 @@ io.on("connection", function (socket) {
                     if (_.has(data, "groupId")) {
                         receiverId = data.groupId;
                     }
+
+                    // Raplh Mention;
+                    if(data.message.includes('class="mention"')==true){
+                        let m = null;
+                        let mention_id = null; 
+                        let rex = /<a\s+(?:[^>]*?\s+)?data-username=(["'])(.*?)\1/g;
+                        let arrMention = [];
+                        while ( m = rex.exec( data.message ) ) {
+                            let mention_id = await sMM.Im_group_members_Model.getMemberIdByUserSecret(m[2]);
+                            if(parseInt(mention_id)>0 && (arrMention.indexOf(mention_id)==-1)){
+                                await sMM.Im_group_members_Model.insertUserMention(senderId,mention_id,receiverId,date_time);
+                                arrMention.push(mention_id);
+                                // trigger a push notification
+                            }
+                        }
+                    }
+
+
                     if (receiverId == null) {
                         if (_.has(data, "memberId") && _.isArray(data.memberId) && !empty(data.memberId)) {
                             userIds = data.memberId;
@@ -668,8 +686,10 @@ io.on("connection", function (socket) {
                         }
 
                         if (userIds.length == 2) {
+                            // chat
                             groupsIds = await sMM.Im_group_members_Model.getPersonalGroups(userIds, null, null)
                         } else {
+                            // community
                             groupsIds = await sMM.Im_group_members_Model.getNonPersonalGroups(userIds, null, null);
                         }
 
@@ -710,6 +730,7 @@ io.on("connection", function (socket) {
 
                     }
                     else {
+                        // Here
                         let groupMembers = await sMM.Im_group_members_Model.getMembers(receiverId);
                         let groupMembersIds = [];
                         for (let i = 0; i < groupMembers.length; i++) {

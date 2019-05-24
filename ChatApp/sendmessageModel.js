@@ -58,6 +58,21 @@ Im_group_members_Model.insert=async function (g_id,u_id){
     await mysqlCon.execute(query,[g_id,u_id]);
 };
 
+// ralph 2019-05-24
+Im_group_members_Model.getMemberIdByUserSecret=async function (usersecret){
+    let query="select userid from users where usersecret=?";
+    let [result,err]=await mysqlCon.execute(query,[usersecret]);
+    return parseInt(result[0].userid);
+};
+
+
+Im_group_members_Model.insertUserMention=async (u_id,r_id,g_id,date_time)=>{
+    let query="INSERT INTO im_mention (u_id,r_id,g_id,date_time) VALUES (?,?,?,?)";
+    let[res,err]=await mysqlCon.execute(query,[u_id,r_id,g_id,date_time]);
+    return res.insertId;
+};
+
+
 //-------------- Im_group_Model -----------//
 
 Im_group_Model.insert=async (name,lastActive,type,createdBy)=>{
