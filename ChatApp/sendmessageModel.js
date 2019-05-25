@@ -72,7 +72,6 @@ Im_group_members_Model.insertUserMention=async (u_id,r_id,g_id,date_time)=>{
     return res.insertId;
 };
 
-
 //-------------- Im_group_Model -----------//
 
 Im_group_Model.insert=async (name,lastActive,type,createdBy)=>{

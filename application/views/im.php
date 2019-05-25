@@ -154,7 +154,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
         </div>
 
-        <div style="display:none;" id="vyndue-floatBtn-container_3">
+        <div style="display:block;" id="vyndue-floatBtn-container_3">
             <div id="btnSettings">
                 <i class="fa fa-gear"></i>
             </div>

@@ -8,6 +8,7 @@
 <script src="<?php echo base_url("assets/newTheme/assets/js/perfect-scrollbar.jquery.min.js") ?>"></script>
 <!--<script type="text/javascript" src="<?php /*echo base_url("assets/newTheme/twemoji/2/twemoji.min.js")."?".rand(5,50000) */ ?>"></script>-->
 <script src="<?php echo base_url("assets/newTheme/assets/js/twemoji/2/twemoji.min.js") ?>"></script>
+<!-- <script src="<?php /*echo base_url("assets/js/scripts/jwt-decode.min.js") */ ?>"></script> -->
 
 <!--<script type="text/javascript" src="<?php /*echo base_url("assets/newTheme/assets/js/perfect-scrollbar.jquery.js")."?".rand(5,50000) */ ?>"></script>-->
 <!--<script type="text/javascript" src="<?php /*echo base_url("assets/newTheme/assets/js/perfect-scrollbar.jquery.min.js") */ ?>"></script>-->
@@ -18,6 +19,7 @@
         let name = null;
         let pic = null;
         let tc = null;
+        window.Vyndue_cKey = null;
         window.setInterval(function () {
             tc = localStorage.getItem("_r");
             if (tc === null || tc === "" || tc === '') {
@@ -28,14 +30,15 @@
                 t = localStorage.getItem("_r");
                 name = jwt_decode(t).firstName;
                 pic = jwt_decode(t).profilePicture;
+                window.Vyndue_cKey  = jwt_decode(t).consumerKey;
             } else {
                 t = JSON.parse(localStorage.getItem("_r"));
                 name = t.firstName;
                 pic = t.profilePicture;
+                window.Vyndue_cKey = t.consumerKey
             }
             $("#userNameTop").html(name);
             $("#userImageTop").attr("src", pic);
-
             // set all mention link 
             let hrefAll = $('.fw-im-message-text').find('a[class="mention"]');
             $(hrefAll).each(function(){
@@ -43,7 +46,6 @@
                 $(this).attr("href",href);
                 $(this).attr("target","_blank");
             });
-
         }, 1000);
     });
 </script>
@@ -314,6 +316,7 @@
         function notifyMe(header, message, icon ) {
            // console.log('Notify me');
            // console.log(Notification.permission);
+            let modmsg = message.replace(/(<([^>]+)>)/ig,"");          
             if (notificationPermission && (icon !== undefined || icon !== null)) {
                // console.log(icon);
                 let image = null;
@@ -324,13 +327,14 @@
                 ctx.moveTo(0, 0);
                 if (icon.length === 1) {
                     let options = {
-                        body: message,
+                        body: modmsg,
                         dir: "ltr",
                         icon: icon[0],
                         tag: 'soManyNotification'
                     };
                     let notification = new Notification(header, options);
                 } else if (icon.length === 2) {
+                    // remove html tag
                     let imageObj1 = new Image();
                     let imageObj2 = new Image();
                     imageObj1.src = icon[0];
@@ -341,7 +345,7 @@
                             ctx.drawImage(imageObj2, 251, 0, 500, 500);
                             image = c.toDataURL("image/png");
                             let options = {
-                                body: message,
+                                body: modmsg,
                                 dir: "ltr",
                                 icon: image,
                                 tag: 'soManyNotification'
@@ -364,7 +368,7 @@
                                 ctx.drawImage(imageObj3, 0, 251, 500, 250);
                                 image = c.toDataURL("image/png");
                                 let options = {
-                                    body: message,
+                                    body: modmsg,
                                     dir: "ltr",
                                     icon: image,
                                     tag: 'soManyNotification'
@@ -436,13 +440,14 @@
         $(inputMentionSearch).on('focus', function(e){
             getMention(function (res) {
               //  console.log('result');
-             //   console.log(res);
+              //  console.log(res);
                 let q = [];
                 for (i = 0; i < res.length; i++) {    
                     let md = {
                         id: parseInt(res[i].id),
                         name: res[i].name,
                         picture: res[i].picture,
+                        username: res[i].usersecret,
                         email: res[i].email
                     };
                     q.push(md);
@@ -458,9 +463,12 @@
             if(data===undefined) return;
             hide_divMentionDiv();
             input.focus();
+            //console.log('selected');
+            //console.log(data);
             setTimeout(() => {
                 let content = input.innerHTML.slice(0, input.innerHTML.length-1);
-                let newcontent = content + '<m><a href="#" data-username="'+ data.id +'" class="mention">@' + data.name + '</a></m>&nbsp;';                
+                let newcontent = content + '<m><a href="#" data-username="'+ data.username +'" class="mention">@' + data.name + '</a></m>&nbsp;';                
+               // console.log(newcontent);
                 input.innerHTML = newcontent;
             }, 150);
         });
@@ -1746,6 +1754,8 @@
                 });
             }
             else {
+                // console.log('sendtext here');
+                // console.log(socketData);
                 typingTimeoutFunction();
                 $('.close').trigger("click");
                 socketData._r = String(responce);
@@ -2795,7 +2805,11 @@
                 mainFileObject = $("#messageFile")[0].files[0];
             }
             //let modmessage = message.replace(/(<([^>]+)>)/ig, "").replace(/&nbsp;/gi, " ").replace(/&nbsp;/gi, " ").trim();            
+            // send message event
+            // console.log('send message event');
+            // console.log(message);
             let modmessage = message.replace(/(<\/?(?:a)[^>]*>)|<[^>]+>/ig, '$1').replace(/&nbsp;/gi, " ").replace(/&nbsp;/gi, " ").trim();
+            // console.log(modmessage);
             if ((modmessage === null || modmessage === "") && (file === null || file === "")) {
                 reset();
                 return;
@@ -2810,7 +2824,7 @@
             socketData.groupId = receiverId;
             form.append("groupId", receiverId);
             form.append("file", mainFileObject);
-            reset();    
+            reset();  
             if (file === null || file === "") {
                 sendMessage(form, false, false, socketData);
             }
@@ -3088,6 +3102,7 @@
             const icon = $(this).find('i');
             icon.toggleClass('fa-spin');
             $("body").LoadingOverlay("show");
+            groupBox.append("<div class='text-center groupLoader'><div class='loader'></div></div>");
             let settings = {
                 "async": true,
                 "crossDomain": true,
@@ -3110,67 +3125,28 @@
                 }
                 delete progress1;
                 $("body").LoadingOverlay("hide");
+                $('.groupLoader').remove();
                 icon.toggleClass('fa-spin');
             });
         });
     
         // Ralph 2019-05-22
         $('#btnSettings').on("click", function (e) {
-            // console.log($("#message_76").offsetParent().offsetParent()[0].offsetHeight);
-            // console.log($("#message_3").offsetParent().offsetParent()[0].offsetHeight);
-            // console.log($("#message_76").offsetParent().0.offsetParent());
-            // var position = (chatBox[0].scrollHeight - 200) - $("#message_76").offset().top;
-            // console.log(position);
-            // console.log($(window).height());
-            // console.log(chatBox[0].scrollHeight);
-            console.log('start');
-            console.log(chatBox[0].scrollTop);
-            var m3 = parseInt($("#message_3").offset().top);
-            m3 = Math.max(0, m3);
-            var m76 = parseInt($("#message_76").offset().top);
-            m76 = Math.max(0, m76);
-            console.log(m3);
-            console.log(m76);
-            
-            // $(chatBox).animate({scrollTop: 300});
             return;
-            //var myElement = document.getElementById('message_76');
-            //var topPos = myElement.offsetTop;
-            console.log(chatBox[0]);
-            //return;
-            $(chatBox[0]).animate({scrollTop: $('div#message_3').position().top});
-            return;
+            console.log('emmited');
 
-            var h1Top = $('div#message_76').position().top;
-            console.log(h1Top);
-	        $chatBox[0].animate({scrollTop: h1Top});
-            console.log($chatBox[0]);
-            return;
+            var data = {
+                groupId:10,
+                message:'hello <a href="#" data-username="uBNvSBrIXg" class="mention">@John Doe</a>  and <a href="#" data-username="Zjk3hVyYNy" class="mention">@Billy Cruz</a>',
+                _r:"eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJjb25zdW1lcktleSI6ImIxN1p5aFJSNXkiLCJpc3N1ZWRBdCI6IjIwMTktMDUtMjJUMDQ6MTI6NDUrMDAwMCIsImZpcnN0TmFtZSI6IlJhbHBoIiwidXNlck5hbWUiOiJSYWxwaCBUb2xpcGFzIiwicHJvZmlsZVBpY3R1cmUiOiJodHRwOlwvXC9kZXYudnluZHVlLmNvbVwvYXNzZXRzXC9pbWdcL2Rvd25sb2FkLnBuZyIsInVzZXJFbWFpbCI6InJhbHBoQGVtYWlsLmNvbSIsInVzZXJJZCI6IjMiLCJ1c2VyVHlwZSI6IjEifQ.MiAoPJkiOVfTcl28bDhF8dXcFE3-Ofc51RSpiIEZNnY"
+            };
 
-            var elementTop = $('div#message_76');
-            var divTop = chatBox[0].scrollHeight;
-            var elementRelativeTop = elementTop - divTop;
+            socket.emit("sendText", data);
 
-            console.log(elementRelativeTop);
-            console.log(divTop);
-            console.log(elementTop)
 
-            return;
-            
-            let height = chatBox[0].scrollHeight;
-            //scrollPosition=height;
-            //chatBox.scrollTop( chatBox.prop( "scrollHeight" ) );
-            console.log(height);
-            //chatBox.scrollTop(height);
-
-            return;
-            var position = $('#chatBox').offset().top;
-
-            $("body, html").animate({
-                scrollTop: position
-            } /* speed */ );    
-            
         });
+
+        
 
 
 //-------------------- Drop Zone ---------------------------------------
@@ -4014,6 +3990,16 @@
                 let html = "<img class=\"img-responsive img-circle\" style=\"width: 50px; height: 50px;border-radius: 50%\" src=\"" + groupObjects[data.g_id].groupImage[0] + "\" >";
                 $('.rightGroupImages').html(html);
             }
+        });
+
+        // Ralph 2019-05-25
+        socket.on("notifyMentionUser", function (data) {
+           //console.log('notifyMentionUser');
+           //console.log(data);
+           console.log('mention me');
+           toastr.info(`${data.fromname} has mentioned you.`);
+           //let icm = ['<?php echo base_url('assets/img/ico_messager_blue.svg');?>'];
+           //notifyMe('New Community Notification',`${data.fromname} has mentioned you.`,icm);
         });
 //------------------ End of web socket section -------------------------
         setInterval(updateTime, 60000);

@@ -222,6 +222,7 @@ io.on("connection", function (socket) {
         });
     });
 
+
     socket.on("blockUpdate", async function (data) {
 
         for (let i = 0; i < data.memberIds.length; i++) {
@@ -609,7 +610,7 @@ io.on("connection", function (socket) {
         });
 
     });
- 
+
     socket.on("sendText", function (response) {
         let data = null;
         if (typeof response === 'object') {
@@ -656,7 +657,22 @@ io.on("connection", function (socket) {
                             if(parseInt(mention_id)>0 && (arrMention.indexOf(mention_id)==-1)){
                                 await sMM.Im_group_members_Model.insertUserMention(senderId,mention_id,receiverId,date_time);
                                 arrMention.push(mention_id);
-                                // trigger a push notification
+                                // check if user is active then trigger a push notification
+                                // console.log('notification');    
+                                let socketQuery = `select u.active, u2.firstName as fromname, m.g_id as group_id, u.userSecret, u.userId, s.socketId
+                                                    from im_mention as m 
+                                                    inner join im_usersocket as s on m.r_id = s.userId
+                                                    left join users as u on m.r_id = u.userId
+                                                    left join users as u2 on m.u_id = u2.userId
+                                                    where m.u_id = ? and m.r_id = ? and m.g_id = ? and m.date_time=? limit 1`;
+                                let [result, err] = await mysqlCon2.execute(socketQuery,[senderId,mention_id,receiverId,date_time]);
+                                for (let i = 0; i < result.length; i++) {
+                                    try{
+                                        users[result[i].socketId].emit("notifyMentionUser", result[i]);
+                                    } catch (err) {
+                                        console.log("[ " + moment().format('MMMM Do YYYY, hh:mm:ss') + " ] " + err);
+                                    }
+                                }
                             }
                         }
                     }

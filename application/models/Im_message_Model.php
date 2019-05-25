@@ -174,4 +174,10 @@ class Im_message_Model extends CI_Model{
             return $d;
         }
     }
+
+    // ralph 2019-05-24
+    public function insertMention($u_id,$r_id,$g_id,$date_time){
+        
+    }
+
 }
