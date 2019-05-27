@@ -164,4 +164,15 @@ class Im_group_Model extends CI_Model{
         $this->db->where("g_id",$g_id);
         return $this->db->update("im_group",$update);
     }
+
+    public function geGroupAdminEmailbyId($g_id)
+    {
+        
+        $query = $this->db->query("SELECT u.userEmail from im_group as ig
+                        left join users as u on ig.createdBy=u.userId
+                        where ig.g_id=$g_id limit 1");
+
+        return $query->row()->userEmail;
+    }
+
 }

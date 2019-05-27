@@ -133,11 +133,26 @@ class Im_receiver_Model extends CI_Model{
     }
 
     public function getTotalPendingMessage($u_id){
+        //return $u_id;
         $this->db->select("(CASE WHEN COUNT(m_id) >= 100 THEN 99 ELSE COUNT(m_id) END) as pending")
             ->where("r_id",$u_id)
             ->where("received",0)
             ->group_by("g_id");
+    
         return (int)$this->db->get("im_receiver")->result();
+        //return $this->db->last_query();
+    }
+
+    // Ralph 2019-05-27
+    public function getTotalPendingMessages($u_id){
+        //return $u_id;
+        $this->db->select("(CASE WHEN COUNT(m_id) >= 100 THEN 99 ELSE COUNT(m_id) END) as pending")
+            ->where("r_id",$u_id)
+            ->where("received",0);
+           // ->group_by("g_id");
+        
+        return (int)$this->db->get("im_receiver")->result();
+        //return $this->db->last_query();
     }
 
     public function arrayToObject($d){

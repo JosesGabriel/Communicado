@@ -44,19 +44,27 @@ class ImApi extends REST_Controller
                 $this->response($response, REST_Controller::HTTP_UNAUTHORIZED);
                 return;
             }
-        }
-        
+        }        
         
     }
 
 
     public function index_get(){
+
         $g_id = $this->get("groupId",true);        
-        $groupFiles=$this->Im_message_Model->getGroupFiles($g_id);
-        $groupImages=$this->Im_message_Model->getGroupImages($g_id);
+        //$groupFiles=$this->Im_message_Model->getGroupFiles($g_id);
+        //$groupImages=$this->Im_message_Model->getGroupImages($g_id);
+
+        //$u_id = $this->get("userId",true);
+        //$total = $this->Im_receiver_Model->getTotalPendingMessage($u_id);
+
+        /*
+        echo "<pre>";
+
+        print_r($total);
         
         die('dasdasda');
-
+        */
         die('<br><br>'.$g_id);   
     }
 
@@ -142,6 +150,7 @@ class ImApi extends REST_Controller
         }
 
         $meCreator = $this->Im_group_Model->ifThisUserCreator($g_id, $userId);
+        $creatorEmail = $this->Im_group_Model->geGroupAdminEmailbyId($g_id);
         //$groupFiles=$this->Im_message_Model->getGroupFiles($g_id);
         //$groupImages=$this->Im_message_Model->getGroupImages($g_id);
 
@@ -157,6 +166,7 @@ class ImApi extends REST_Controller
                 //"groupImages"=>$groupImages,
                 "mute"=>(int)$this->Im_mutelist->ifExist($userId,$g_id),
                 "block"=>(int)$this->Im_group_Model->isBlocked($g_id),
+                "creatorEmail"=>$creatorEmail
             )
 
         );

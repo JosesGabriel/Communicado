@@ -86,7 +86,7 @@ div#divMentionDiv
 {
   position: absolute;
   margin-top: -60px;
-  width: 100%;
+  width: 88%;
   display: block;
   border: #1C395A solid 10px;
   border-radius: 5px;
@@ -95,4 +95,14 @@ div#divMentionDiv
 a.mention{
   font-weight: bold;
   color: #fff;
+}
+
+span.vyndue_email > div{
+  padding-left: 49px;
+    font-size: smaller;
+    font-style: italic;
+    color: gray;
+    letter-spacing: 1px;
+    font-family: monospace;
+    margin-top: 2px;
 }

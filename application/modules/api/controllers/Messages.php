@@ -39,7 +39,7 @@ class Messages extends Api
         $user = $user[0];
         //endregion Existence check
 
-        $unread = $this->Im_receiver_Model->getTotalPendingMessage($user['userId']);
+        $unread = $this->Im_receiver_Model->getTotalPendingMessages($user['userId']);
 
         $this->respond([
             'status' => 200,

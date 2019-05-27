@@ -154,7 +154,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
         </div>
 
-        <div style="display:block;" id="vyndue-floatBtn-container_3">
+        <div style="display:none;" id="vyndue-floatBtn-container_3">
             <div id="btnSettings">
                 <i class="fa fa-gear"></i>
             </div>
@@ -175,7 +175,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <input type="text" id="addNewMemberInput" multiple class="form-control" >
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-small btn-round btn-skin-green"  data-toggle="modal" id="new~rAddBtn">Add</button>
+                        <button type="button" class="btn btn-small btn-round btn-skin-green"  data-toggle="modal" id="newMemberAddBtn">Add</button>
                     </div>
                 </div>
             </div>

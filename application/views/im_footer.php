@@ -477,6 +477,13 @@
             hide_divMentionDiv();
         });
 
+        $(inputMentionSearch).on('keyup', function(e, m, v){
+              if(v.keyCode===27){
+                hide_divMentionDiv();
+                $('#message_twemoji')[0].focus();
+              } 
+        })
+
         function hide_divMentionDiv(){
             $('#divMentionDiv').hide(200);
             inputMentionSearch.disable();
@@ -1024,7 +1031,7 @@
             return defaultIcon;
         }
         //this function is used to print the group member list on the right side
-        function printGroupMembers(members, meCreator, groupId) {
+        function printGroupMembers(members, meCreator, groupId, creatorEmail=null) {
             let html = "";
             membersId = [];
             if (members.length <= 0) {
@@ -1038,15 +1045,25 @@
             }
             for (let i = 0; i < members.length; i++) {
                 membersId.push(members[i].userId);
+                // console.log(members[i].userEmail);
+                // console.log(creatorEmail);
+               
+
                 html += "<li class=\"person\"  style=\"padding-top: 5px;padding-bottom: 0px;height:50px;cursor: default;\">";
                 if (members[i].active === 1) {
                     html += "                        <img class='memberStatus memberActive' id='member_" + members[i].userId + "' src=\"" + members[i].profilePictureUrl + "\" alt=\"\" \/>";
                 } else {
                     html += "                        <img class='memberStatus' id='member_" + members[i].userId + "' src=\"" + members[i].profilePictureUrl + "\" alt=\"\" \/>";
                 }
-                html += "                        <span  class=\"name\"><div style='margin-top: 8px'>" + members[i].firstName + " " + members[i].lastName + "</div><\/span>";
+                html += "                        <span  class=\"name\"><div>" + members[i].firstName + " " + members[i].lastName +"</div><\/span>";
+                html += "                        <span  class=\"vyndue_email\"><div>" + members[i].userEmail +"<\/div><\/span>";                
+                
                 if (meCreator === true) {
                     html += "                        <span class=\"time\" style='padding-top: 5px' ><a href=\"#\" data-group=\"" + groupId + "\" data-member=\"" + members[i].userId + "\" class=\"btn-danger btn-extra-small btnMemberDelete\"><i class=\"fa fa-trash\"><\/i><\/a><\/span>";
+                }
+                
+                if(members[i].userEmail==creatorEmail){
+                    html += "<span class=\"time\" style='padding-top: 5px' ><div class=\"btn-primary btn-extra-small disabled \" style=\"cursor: default;\"><i class=\"fa fa-star fa-fw\" title=\"Community Administrator\"><\/i><\/div><\/span>";                  
                 }
                 /*if (parseInt(groupType) === 0) {
                     html += "                        <span class=\"time\" style='padding-top: 5px' ><a href=\"#\" data-group=\"" + groupId + "\" data-member=\"" + members[i].userId + "\" class=\"btn-danger btn-extra-small btnMemberDelete\"><i class=\"fa fa-trash\"><\/i><\/a><\/span>";
@@ -1133,9 +1150,10 @@
             $.ajax(settings).done(function (response) {
                 let members = response.response.memberList;
                 let meCreator = response.response.meCreator;
+                let creatorEmail = response.response.creatorEmail;
                 //let groupFiles = response.response.groupFiles;
                 //let groupImages = response.response.groupImages;
-                printGroupMembers(members, meCreator, groupId);
+                printGroupMembers(members, meCreator, groupId, creatorEmail);
                 //printGroupFiles(groupFiles);
                 //printGroupImages(groupImages);
             });
