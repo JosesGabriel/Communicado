@@ -7,6 +7,7 @@ const app = express();
 const serverConf = require("./serverConf");
 const server = serverConf.createServer(app);
 const io = require("socket.io").listen(server, {'pingTimeout': 5000, 'pingInterval': 1000});
+const socketApi = require("socket.io-client")('https://socket.vyndue.com');
 //const jwt_decode = require("jwt-decode");
 const jwt = require('jwt-simple');
 const moment = require('moment');
@@ -170,6 +171,8 @@ function generateRandomString(length = 60) {
     }
     return randomString;
 }
+
+// socketApi.em()
 
 io.on("connection", function (socket) {
 
@@ -611,6 +614,12 @@ io.on("connection", function (socket) {
 
     });
 
+    socket.on('testSend', function (res){
+        console.log('hitted');
+        console.log(res);
+        console.log((socketApi.emit('notifyMentionUser',res)));
+    });
+
     socket.on("sendText", function (response) {
         let data = null;
         if (typeof response === 'object') {
@@ -659,7 +668,7 @@ io.on("connection", function (socket) {
                                 arrMention.push(mention_id);
                                 // check if user is active then trigger a push notification
                                 // console.log('notification');    
-                                let socketQuery = `select u.active, u2.firstName as fromname, m.g_id as group_id, u.userSecret, u.userId, s.socketId
+                                let socketQuery = `select u.active, concat(u2.firstName,' ',u2.lastName) as fromname, m.g_id as group_id, u.userSecret, u.userId, s.socketId
                                                     from im_mention as m 
                                                     inner join im_usersocket as s on m.r_id = s.userId
                                                     left join users as u on m.r_id = u.userId

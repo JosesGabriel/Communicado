@@ -17,69 +17,54 @@
   margin-right: 5px
 }
 
+div.floatBtn-Wrapper{
+  background: #2096F3;
+    padding: 15px;
+    border-radius: 8px;
+    border-color: #46b8da;
+    cursor: pointer;
+    box-shadow: 0px 0px 5px #CCC;
+    /*width:40px !important;*/
+    min-height: 40px !important;
+    /*font-size:20px;*/
+}
+
+div.floatBtn-Wrapper > span{
+  display: none;
+  position:fixed;
+  margin-left:12px;
+}
+
 /* New Message */
 div#vyndue-floatBtn-container_1 {
   position: fixed;
-    bottom: -10px;
-    right: 15px;
+  bottom: 60px;
+  right: -5px;
 }
 
-div#vyndue-floatBtn-container_1 > div{
-  background: #2096F3;
-    padding: 15px 25px;
-    border-radius: 8px;
-    border-color: #46b8da;
-    cursor: pointer;
-    box-shadow: 0px 0px 5px #CCC;
-    font-size:20px;
-}
-
-div#vyndue-floatBtn-container_1 > div:hover{
-  background:#1C395A;
-}
-
-/* Notification */
+/* Pending Messages */
 div#vyndue-floatBtn-container_2 {
   position: fixed;
-    bottom: -10px;
-    right: 99px;
+    bottom: 114px;
+    right: -5px;
 }
 
-div#vyndue-floatBtn-container_2 > div{
-  background: #2096F3;
-    padding: 15px 25px;
-    border-radius: 8px;
-    border-color: #46b8da;
-    cursor: pointer;
-    box-shadow: 0px 0px 5px #CCC;
-    font-size:20px;
-}
-
-div#vyndue-floatBtn-container_2 > div:hover{
-  background:#1C395A;
-}
-
-/* Blank */
+/* Notifications */
 div#vyndue-floatBtn-container_3 {
   position: fixed;
-    bottom: -10px;
-    right: 180px;
+    bottom: 5px;
+    right: -5px;
+}
+/* Settings */
+div#vyndue-floatBtn-container_4 {
+  position: fixed;
+    bottom: 168px;
+    right: -5px;
 }
 
-div#vyndue-floatBtn-container_3 > div{
-  background: #2096F3;
-    padding: 15px 25px;
-    border-radius: 8px;
-    border-color: #46b8da;
-    cursor: pointer;
-    box-shadow: 0px 0px 5px #CCC;
-    font-size:20px;
+.hasNotifications{
+  background: red !important;
 }
-
-div#vyndue-floatBtn-container_3 > div:hover{
-  background:#1C395A;
-}
-
 
 /* Mention Form */
 div#divMentionDiv
@@ -105,4 +90,9 @@ span.vyndue_email > div{
     letter-spacing: 1px;
     font-family: monospace;
     margin-top: 2px;
+}
+
+div#notificationBox{
+  height: 400px;
+  overflow-x: auto;
 }

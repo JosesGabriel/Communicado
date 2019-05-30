@@ -12,6 +12,7 @@ class User extends REST_Controller
         $this->load->model('User_Model');
         $this->load->model('FriendList_Model');
         $this->load->model('Im_group_members_Model');
+        $this->load->model('Im_receiver_Model');
         if(!ID_LOGIN) {
             $headers = apache_request_headers();
             if (isset($headers["Authorizationkeyfortoken"])) {
@@ -438,9 +439,53 @@ class User extends REST_Controller
         }
         $groupId=$this->get("groupId");
 
-        $data=$this->Im_group_members_Model->getMentionlist($userId,$groupId);
+    $data=$this->Im_group_members_Model->getMentionlist($userId,$groupId);
         $responseData=array(
             "data"=> $data,
+        );
+
+        $response = array(
+            "status" => array(
+                "code" => REST_Controller::HTTP_OK,
+                "message" => true
+            ),
+            "response" => $responseData
+        );
+        $this->response($response, REST_Controller::HTTP_OK);
+    }
+
+
+    public function notificationList_get()
+    {
+        if(!ID_LOGIN) {
+            $headers = apache_request_headers();
+            $userId =(int) $this->User_Model->getTokenToId($headers["Authorizationkeyfortoken"]);
+        }else{
+            $userId=$this->get("userid");
+        }
+
+        $limit=intval($this->get("limit",true));
+        $page=intval($this->get("page",true));
+        $pagemod = ($page>0) ? $page*$limit : 0;
+        
+        $data=$this->Im_receiver_Model->notificationList($userId,$limit,$pagemod);
+        $data['counttotal'] = $this->Im_receiver_Model->notificationTotaluser($userId);
+        // pagination
+        if($data['count']>0){
+            $data['prev'] = $page<>0 ? 1 : 0 ;
+            $data['next'] = ( $data['count'] + max($pagemod,1) ) >= $data['counttotal'] ? 0 : 1; 
+        }else{
+            $data['prev'] = 0;
+            $data['next'] = 0;
+        }
+        
+
+        $responseData=array(
+            "data"=> $data['data'],
+            "prev"=> (int)$data['prev'],
+            "next"=> (int)$data['next'],
+            "prev_page" =>intval(max($page-1,0)),
+            "next_page" =>intval($page+1)
         );
 
         $response = array(

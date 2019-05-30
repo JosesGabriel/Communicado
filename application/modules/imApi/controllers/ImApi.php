@@ -141,16 +141,25 @@ class ImApi extends REST_Controller
             $this->response($response, REST_Controller::HTTP_NOT_ACCEPTABLE);
             return;
         }
-        $membersInfo = array();
+        
 
         $members = $this->Im_group_members_Model->getMembersWihoutSender($g_id, $userId);
-
-        foreach ($members as $u_id) {
-            $membersInfo[] = $this->User_Model->get_user($u_id->u_id, null, null);
-        }
-
         $meCreator = $this->Im_group_Model->ifThisUserCreator($g_id, $userId);
-        $creatorEmail = $this->Im_group_Model->geGroupAdminEmailbyId($g_id);
+        $creator = $this->Im_group_Model->getGroupAdminInfobyGroupId($g_id);
+        $membersInfo = array();
+        $creatorInfo = null;
+        foreach ($members as $u_id) {
+            if(intval($u_id->u_id)==intval($creator->userId)){
+                $creatorInfo = $this->User_Model->get_user($creator->userId, null, null);
+            }else{
+                $membersInfo[] = $this->User_Model->get_user($u_id->u_id, null, null);
+            }
+        }
+        // push admin on top
+        if($creatorInfo!=null){
+            array_unshift($membersInfo,$creatorInfo);
+        }
+        
         //$groupFiles=$this->Im_message_Model->getGroupFiles($g_id);
         //$groupImages=$this->Im_message_Model->getGroupImages($g_id);
 
@@ -162,11 +171,13 @@ class ImApi extends REST_Controller
             "response" => array(
                 "meCreator" => $meCreator,
                 "memberList" => $membersInfo,
+                //"creatorInfo" => $creatorInfo,
                 //"groupFiles"=>$groupFiles,
                 //"groupImages"=>$groupImages,
                 "mute"=>(int)$this->Im_mutelist->ifExist($userId,$g_id),
                 "block"=>(int)$this->Im_group_Model->isBlocked($g_id),
-                "creatorEmail"=>$creatorEmail
+                "creatorEmail"=>$creator->userEmail,
+                //"creatorId"=>$creator >userId
             )
 
         );
@@ -1141,6 +1152,11 @@ class ImApi extends REST_Controller
 
         }
 
+        // check if mentioned user per group
+        if($this->Im_receiver_Model->checkMentionedMessages($r_id,$g_id)){
+            $this->Im_receiver_Model->updateMentionAsRead($r_id, $g_id); 
+        }
+
         foreach ($messages as $message) {
             //$seen=null;
             $message->m_id=(int)$message->m_id;
@@ -1190,30 +1206,30 @@ class ImApi extends REST_Controller
 
         //$client->emit("updateMember",$response);
 
-if($recentMessage!=null){
-    $response = array(
-        "status" => array(
-            "code" => REST_Controller::HTTP_OK,
-            "message" => "Success"
-        ),
-        "totalMessage" =>(int)$totalMessage,
-        "recentMessageId"=>(int)$recentMessage->m_id,
-        "response" => array_reverse($data)
+        if($recentMessage!=null){
+            $response = array(
+                "status" => array(
+                    "code" => REST_Controller::HTTP_OK,
+                    "message" => "Success"
+                ),
+                "totalMessage" =>(int)$totalMessage,
+                "recentMessageId"=>(int)$recentMessage->m_id,
+                "response" => array_reverse($data)
 
-    );
-}
-else{
-    $response = array(
-        "status" => array(
-            "code" => REST_Controller::HTTP_OK,
-            "message" => "Success"
-        ),
-        "totalMessage" =>(int)$totalMessage,
-        "recentMessageId"=>null,
-        "response" => array_reverse($data)
+            );
+        }
+        else{
+            $response = array(
+                "status" => array(
+                    "code" => REST_Controller::HTTP_OK,
+                    "message" => "Success"
+                ),
+                "totalMessage" =>(int)$totalMessage,
+                "recentMessageId"=>null,
+                "response" => array_reverse($data)
 
-    );
-}
+            );
+        }
 
         $this->response($response, REST_Controller::HTTP_OK);
 

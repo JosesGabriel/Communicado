@@ -47,6 +47,20 @@
                 $(this).attr("target","_blank");
             });
         }, 1000);
+
+        // Make Side Button Animate
+        $( ".floatBtn-Wrapper" ).mouseenter(function() {
+            $(this).animate({ width: "150px" },150,"linear",() => {
+                $(this).find('span').show(100,'linear');
+            });
+        });
+
+        $( ".floatBtn-Wrapper" ).mouseleave(function() {
+            $(this).animate({ width: "40px" },100,"linear",() => {
+                $(this).find('span').hide(50,'linear');
+            });
+        });
+
     });
 </script>
 <script type="text/javascript">
@@ -131,6 +145,7 @@
         twemoji.base = "<?php echo base_url("assets/newTheme/assets/js/twemoji/2/") ?>";
         let chatBox = $('#chatBox');
         let groupBox = $("#groups");
+        let notificationBox = $("#notificationBox");
         let videoObjects = [];
         let responce = null;
         let userId = null;
@@ -147,6 +162,8 @@
         }
         let start = 0;
         let limit = 30;
+        let pageNotif = 0;
+        let limitNotif = 6;
         let groupLimit = 30;
         let groupStart = 0;
         let totalGroup = null;
@@ -379,6 +396,7 @@
                     };
                 }
             }
+            pingNotificationButton();
         }
         function typingTimeoutFunction() {
             let data = {
@@ -501,6 +519,100 @@
 
         hide_divMentionDiv();
         // End of Mention Form
+
+        // Ralph 2019-05-29
+        // This function is to fecth and list a sorts of notification;
+        function getNotification(page) {
+            let pageNotif = (parseInt(page)>0) ? page : 0;
+            let url = "<?php echo base_url('user/notificationList?limit=') ?>" + limitNotif + "&page=" + pageNotif;
+            if (ID_BASED) {
+                url = "<?php echo base_url('user/notificationList?limit=') ?>" + limitNotif + "&page=" + pageNotif + "&userid=" + userId;
+            }
+            //console.log(url);
+            let settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": url,
+                "method": "GET",
+                "headers": {
+                    "authorization": "Basic YWRtaW46MTIzNA==",
+                    "Authorizationkeyfortoken": String(responce),
+                    "cache-control": "no-cache",
+                    "postman-token": "eb27c011-391a-0b70-37c5-609bcd1d7b6d"
+                },
+                "processData": false,
+                "contentType": false,
+                "beforeSend": function () {
+                    notificationBox.html('<br><br><br><p align="center"><i class="fa fa-spinner fa-spin fa-4x fa-fw" aria-hidden="true"></i></p>');
+                },
+                "success": function () {
+                    notificationBox.html('');
+                }
+            };
+            $.ajax(settings).done(function (response) {
+                let data = response.response.data;
+                let prev = response.response.prev;
+                let next = response.response.next;
+                let next_page = response.response.next_page;
+                let prev_page = response.response.prev_page;
+                notificationBox.html("");
+                if(data.length===0){
+                    notificationBox.html("<h4>Notification box is empty.</h4>");
+                    return;
+                }
+                let html = '';
+                // pages
+                html += `<span class="list-group-item list-group-item-info">
+                            <ul class="pager" style="margin:0;">
+                                <li ${ (!prev) ? 'class="disabled"' : ''  }><a href="#" data-page="${prev_page}" data-prev="${ (prev) ? 1 : 0  }" id="notifPrev">Previous</a></li>
+                                <li ${ (!next) ? 'class="disabled"' : ''  }><a href="#" data-page="${next_page}" data-next="${ (next) ? 1 : 0  }" id="notifNext">Next</a></li>
+                            </ul>
+                            </nav>
+                        </span>`;
+                // list
+                for (let i = 0; i < data.length; i++) {
+                   html += `<a style="color:black" data-id="${data[i].group_id}" class="list-group-item"> 
+                        <span class="badge"><i class="fa fa-2x fa-${ (parseInt(data[i].msg_type)) ? 'at' : 'info-circle' }" aria-hidden="true"></i></span>      
+                        <small>         
+                        <label class="label label-default">${ moment(data[i].date_time).fromNow() }</label>  
+                        <b><i class="fa fa-fw fa-${ (parseInt(data[i].group_type)==1) ? 'user' : 'users' }" aria-hidden="true"></i> ${data[i].group_name}</b>
+                        </small>
+                        <br>
+                        <code>${data[i].sender_name} has ${ (parseInt(data[i].msg_type)) ? 'mentioned you' : 'a new message' }</code>
+                        </a>`;
+                }
+                notificationBox.html(html);
+            });
+        }
+
+        $(document).on('click', '#notificationBox a.list-group-item', function (e) {
+            let group = $(this).attr('data-id');
+            $("li#group_"+group).first().trigger("click", [{update: true}]);
+            $("#modalNotifications").modal('hide');
+            e.preventDefault();
+        });
+
+        $(document).on('click', 'a#notifPrev', function (e) {
+            let page = $(this).attr('data-page');
+            let prev = parseInt($(this).attr('data-prev'));
+            //console.log(prev);
+            if(prev){
+                getNotification(page);
+                return;
+            } 
+            e.preventDefault();
+        });
+
+        $(document).on('click', 'a#notifNext', function (e) {
+            let page = $(this).attr('data-page');
+            let next = parseInt($(this).attr('data-next'));
+            //console.log(next);
+            if(next){
+                getNotification(page);
+                return;
+            } 
+            e.preventDefault();
+        });
 
         function initVideo(id, isme) {
             $("#" + id).mediaelementplayer({
@@ -1127,6 +1239,7 @@
             if (ID_BASED) {
                 url = "<?php echo base_url('imApi/getMembers?groupId=') ?>" + groupId + "&userId=" + userId;
             }
+            //console.log(url);
             let settings = {
                 "async": true,
                 "crossDomain": true,
@@ -1148,6 +1261,7 @@
                 }
             };
             $.ajax(settings).done(function (response) {
+                //console.log(response);
                 let members = response.response.memberList;
                 let meCreator = response.response.meCreator;
                 let creatorEmail = response.response.creatorEmail;
@@ -1436,6 +1550,7 @@
             if (ID_BASED) {
                 url = "<?php echo base_url('imApi/getMessage?groupId=') ?>" + groupId + "&limit=" + limit + "&start=" + start + "&userId=" + userId;
             }
+           // console.log(url);
             let settings = {
                 "async": true,
                 "crossDomain": true,
@@ -2127,6 +2242,7 @@
                         let senderId = data[i].sender.userId;
                         let messageDate = moment(data[i].message.ios_date_time, moment.ISO_8601);
                         if (currentDate.date() - messageDate.date() >= 1 || currentDate.date() - messageDate.date() <= -1) {
+                            
                             if (currentDate !== messageDate) {
                                 html += "<div class=\"fw-im-message  text-center fw-im-othersender\" data-og-container=\"\">";
                                 html += moment(message.ios_date_time, moment.ISO_8601).calendar(null, momentOptions2);
@@ -3150,7 +3266,7 @@
     
         // Ralph 2019-05-22
         $('#btnSettings').on("click", function (e) {
-            return;
+            //return;
             console.log('emmited');
 
             var data = {
@@ -3159,8 +3275,18 @@
                 _r:"eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJjb25zdW1lcktleSI6ImIxN1p5aFJSNXkiLCJpc3N1ZWRBdCI6IjIwMTktMDUtMjJUMDQ6MTI6NDUrMDAwMCIsImZpcnN0TmFtZSI6IlJhbHBoIiwidXNlck5hbWUiOiJSYWxwaCBUb2xpcGFzIiwicHJvZmlsZVBpY3R1cmUiOiJodHRwOlwvXC9kZXYudnluZHVlLmNvbVwvYXNzZXRzXC9pbWdcL2Rvd25sb2FkLnBuZyIsInVzZXJFbWFpbCI6InJhbHBoQGVtYWlsLmNvbSIsInVzZXJJZCI6IjMiLCJ1c2VyVHlwZSI6IjEifQ.MiAoPJkiOVfTcl28bDhF8dXcFE3-Ofc51RSpiIEZNnY"
             };
 
-            socket.emit("sendText", data);
+            console.log(socket.emit("testSend", data));
 
+            return;
+
+        });
+
+
+        $('#btnNotifications').on("click", function (e) {
+
+            $("#modalNotifications").modal("show");
+            $("#btnNotifications").removeClass('hasNotifications');
+            getNotification();
 
         });
 
@@ -4014,11 +4140,28 @@
         socket.on("notifyMentionUser", function (data) {
            //console.log('notifyMentionUser');
            //console.log(data);
-           console.log('mention me');
+           //console.log('mention me');
            toastr.info(`${data.fromname} has mentioned you.`);
            //let icm = ['<?php echo base_url('assets/img/ico_messager_blue.svg');?>'];
            //notifyMe('New Community Notification',`${data.fromname} has mentioned you.`,icm);
+           pingNotificationButton();
         });
+
+        function pingNotificationButton(){
+            if($('#modalNotifications').is(':visible')){
+                // console.log('open');
+                $('#btnNotifications').addClass('hasNotifications');
+                setTimeout(function(){
+                    $('#btnNotifications').removeClass('hasNotifications');
+                },1500)
+                // request
+                getNotification(0);
+           }else{   
+                // console.log('close');
+                $('#btnNotifications').addClass('hasNotifications');
+           }
+        }
+        //$('#connectionErrorModal').show();
 //------------------ End of web socket section -------------------------
         setInterval(updateTime, 60000);
         setInterval(disconnectModal,9999);

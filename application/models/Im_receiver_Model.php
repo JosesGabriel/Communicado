@@ -155,6 +155,88 @@ class Im_receiver_Model extends CI_Model{
         //return $this->db->last_query();
     }
 
+    // ralph 2019-05-29
+    public function notificationTotaluser($u_id)
+    {
+        $SQL = "SELECT im.g_id as group_id, concat(u.firstName,' ',u.lastName) as sender_name,
+            date_format(im.date_time,'%Y-%m-%dT%H:%i:%s.000Z') as date_time,
+            if(g.type=1,'Personal Chat',if(!isnull(g.name),g.name,'Unnamed Community')) as group_name,
+            g.type as group_type, 1 as msg_type
+            from im_mention as im 
+            left join im_group as g on im.g_id = g.g_id
+            left join users as u on im.u_id = u.userId
+            left join im_blocklist as bl on bl.g_id = im.g_id
+            left join im_mutelist as ml on ml.g_id = im.g_id
+            where im.r_id=$u_id and im.seen=0 and isnull(ml.g_id) and isnull(bl.g_id)
+            UNION ALL
+            select ir.g_id as group_id, concat(u.firstName,' ',u.lastName) as sender_name,
+            date_format(concat(m.date,' ',m.time),'%Y-%m-%dT%H:%i:%s.000Z') as date_time,
+            if(g.type=1,'Personal Chat',if(!isnull(g.name),g.name,'Unnamed Community')) as group_name, 
+            g.type as group_type, 0 as msg_type
+            from im_receiver as ir
+            left join im_group as g on ir.g_id = g.g_id
+            left join im_message as m using(m_id)
+            left join users as u on m.sender = u.userId
+            left join im_blocklist as bl on bl.g_id = ir.g_id
+            left join im_mutelist as ml on ml.g_id = ir.g_id
+            where ir.r_id=$u_id and ir.received=0 
+            and isnull(ml.g_id) and isnull(bl.g_id)";
+            $query = $this->db->query($SQL);
+            return $query->num_rows();
+    }
+
+    public function notificationList($u_id,$limit,$offset)
+    {
+        
+        $return = [];
+        $SQL = "SELECT im.g_id as group_id, concat(u.firstName,' ',u.lastName) as sender_name,
+            date_format(im.date_time,'%Y-%m-%dT%H:%i:%s.000Z') as date_time,
+            if(g.type=1,'Personal Chat',if(!isnull(g.name),g.name,'Unnamed Community')) as group_name,
+            g.type as group_type, 1 as msg_type
+            from im_mention as im 
+            left join im_group as g on im.g_id = g.g_id
+            left join users as u on im.u_id = u.userId
+            left join im_blocklist as bl on bl.g_id = im.g_id
+            left join im_mutelist as ml on ml.g_id = im.g_id
+            where im.r_id=$u_id and im.seen=0 and isnull(ml.g_id) and isnull(bl.g_id)
+            UNION ALL
+            select ir.g_id as group_id, concat(u.firstName,' ',u.lastName) as sender_name,
+            date_format(concat(m.date,' ',m.time),'%Y-%m-%dT%H:%i:%s.000Z') as date_time,
+            if(g.type=1,'Personal Chat',if(!isnull(g.name),g.name,'Unnamed Community')) as group_name, 
+            g.type as group_type, 0 as msg_type
+            from im_receiver as ir
+            left join im_group as g on ir.g_id = g.g_id
+            left join im_message as m using(m_id)
+            left join users as u on m.sender = u.userId
+            left join im_blocklist as bl on bl.g_id = ir.g_id
+            left join im_mutelist as ml on ml.g_id = ir.g_id
+            where ir.r_id=$u_id and ir.received=0 
+            and isnull(ml.g_id) and isnull(bl.g_id)
+            ORDER BY date_time DESC LIMIT $limit OFFSET $offset";
+
+        $query = $this->db->query("$SQL");
+        
+        $return['data'] = $query->result();
+        $return['count'] = $query->num_rows();
+        //return $this->db->last_query();
+        return $return;
+
+    }
+
+    public function checkMentionedMessages($r_id,$g_id)
+    {
+        $SQL = "SELECT r_id from im_mention where r_id=$r_id and g_id=$g_id and seen=0;";
+        $query = $this->db->query($SQL);
+        return $query->num_rows();
+    }
+
+    public function updateMentionAsRead($r_id,$g_id)
+    {
+        $SQL = "UPDATE im_mention SET seen=1, seen_tstamp=now() where r_id=$r_id and g_id=$g_id";
+        $query = $this->db->query($SQL);
+    }
+
+
     public function arrayToObject($d){
         if(is_array($d)){
             return (object)array_map(__FUNCTION__,$d);

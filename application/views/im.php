@@ -143,34 +143,60 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         </div>-->
 
         <div id="vyndue-floatBtn-container_1">
-            <div title="Compose new message" id="newMessage">
-                <i class="ico-new-message"></i>
+            <div title="New Message" id="newMessage" class="floatBtn-Wrapper">
+                <i class="fa fa-envelope" aria-hidden="true"></i>
+                <span>New Message</span>
             </div>
         </div>
 
         <div id="vyndue-floatBtn-container_2">
-            <div title="Get messages" id="unreadMessage">
-                <i class="fa fa-refresh"></i>
+        <div title="Notifications" id="btnNotifications" class="floatBtn-Wrapper">
+                <i class="fa fa-bullhorn" aria-hidden="true"></i>
+                <span>Notifications</span>
             </div>
         </div>
 
-        <div style="display:none;" id="vyndue-floatBtn-container_3">
-            <div id="btnSettings">
-                <i class="fa fa-gear"></i>
+        <div id="vyndue-floatBtn-container_3">   
+            <div title="Settings" id="btnSettings" class="floatBtn-Wrapper">
+                <i class="fa fa-gear" aria-hidden="true"></i>
+                <span>Settings</span>
+            </div>
+        </div>
+
+        <div style="display:none;" id="vyndue-floatBtn-container_4">
+            <div title="Get Messages" id="unreadMessage" class="floatBtn-Wrapper">
+                <i class="fa fa-refresh" aria-hidden="true"></i>
+                <span>Get Messages</span>
             </div>
         </div>
 </section>
 
 
 <!-- Modals -->
+<div id="modalNotifications" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" class="modal fade in" style="display: none;padding-right: 17px;" data-backdrop="static" data-keyboard="false">
+    <div role="document" class="modal-dialog" style="width:400px !important;">
+        <div class="modal-content" >
+            <div class="modal-header" style="padding-bottom: 0 !important;">
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="oli oli-delete_sign"></i></span></button>
+                <h4 class="modal-title myUpdateModalLabel" style="background-color: #75aef3">  <i class="fa fa-bullhorn" aria-hidden="true"></i> Notifications</h4>
+                <div class="modal-body">
+                    <div id="notificationBox" class="list-group">
+                        <h4>Notification box is empty.</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="addNewMemberModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" class="modal fade in" style="display: none;padding-right: 17px;">
     <div role="document" class="modal-dialog">
         <div class="modal-content" >
             <div class="modal-header">
                 <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="oli oli-delete_sign"></i></span></button>
-                <h4 class="modal-title myUpdateModalLabel" style="background-color: #75aef3">Add new member </h4>
+                <h4 class="modal-title myUpdateModalLabel" style="background-color: #75aef3"><i class="fa fa-plus"></i> Add People</h4>
                 <div class="modal-body" >
-                    <p>Search members by there name</p>
+                    <p>Search people by there name</p>
                     <div class="form-group">
                         <input type="text" id="addNewMemberInput" multiple class="form-control" >
                     </div>
@@ -189,7 +215,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div class="modal-content" >
             <div class="modal-header">
                 <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="oli oli-delete_sign"></i></span></button>
-                <h4 class="modal-title myUpdateModalLabel" style="background-color: #75aef3">Change name</h4>
+                <h4 class="modal-title myUpdateModalLabel" style="background-color: #75aef3"><i class="fa fa-pencil"></i> Change Community Name</h4>
                 <div class="modal-body" >
                     <p>Give a new name</p>
                     <div class="form-group">
@@ -205,12 +231,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </div>
 
 
-<div id="newMessageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" class="modal fade in" style="display: none;padding-right: 17px;">
+<div id="newMessageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" class="modal fade in" style="display: none;padding-right: 17px;" data-backdrop="static" data-keyboard="false">
     <div role="document" class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header" style="border-radius: 6px;">
                 <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="oli oli-delete_sign"></i></span></button>
-                <h4 id="myModalLabel" class="modal-title" style="background-color: #75aef3">Start a new conversation</h4>
+                <h4 id="myModalLabel" class="modal-title" style="background-color: #75aef3"> <i class="fa fa-envelope" aria-hidden="true"></i> New Message</h4>
                 <div class="modal-body " id="newMModalBody" style="margin-bottom: 110px">
                     <form id="newMessageForm" role="form">
                         <div class="form-group m-bottom-20">
@@ -235,21 +261,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     </div>
 </div>
 
-<div id="_connectionErrorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" class="modal fade in" style="display: none;padding-right: 17px;">
+<div id="connectionErrorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" class="modal fade in" style="display: none;padding-right: 17px;">
     <div role="document" class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header" style="border-radius: 6px;">
                 <!--<button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="oli oli-delete_sign"></i></span></button>-->
-                <h4 id="myModalLabel" class="modal-title" style="background-color: #bc0200">Connection lost</h4>
-                <div class="modal-body " >
+                <h4 id="myModalLabel" class="modal-title" style="background-color: #bc0200">
+                    <span class="fa-stack">
+                        <i class="fa fa-wifi fa-stack-1x"></i>
+                        <i class="fa fa-ban fa-stack-2x"></i>
+                    </span>
+                    Connection Lost
+                </h4>
+                <div class="modal-body" style="text-align:center" >
                     <p>Connecting...</p>
+                    <p><i class="fa fa-spinner fa-spin fa-4x fa-fw" aria-hidden="true"></i></p>
+                    <br />
                 </div>
-                <!--<div class="modal-footer" style="background-color: white;">
-                    <div class="form-group col-md-12 col-xl-12 col-sm-12 col-xs-12">
-                        <a href="#" class="btn-primary btn-small btn-rounded btn-skin-green col-md-12 col-xl-12 col-sm-12 col-xs-12" id="newSendMessage"><i class="fa fa-envelope"></i>  Send</a>
-                    </div>
-                </div>-->
             </div>
         </div>
     </div>
 </div>
+
