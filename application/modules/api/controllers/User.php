@@ -197,7 +197,7 @@ class User extends Api
         //region Data validation
         if (!isset($data['email_id'])) {
             if (!isset($data['user_secret']) ||
-                trim($data['user_secret'])) {
+                trim($data['user_secret']) == '') {
                 return [
                     'status' => 500,
                     'message' => 'User secret is invalid or not set.',
