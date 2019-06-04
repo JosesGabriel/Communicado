@@ -15,13 +15,13 @@ class Im_group_members_Model extends CI_Model{
     public function insert($g_id,$u_id)
     {
 
-            if($this->ifExist($g_id,$u_id)){
-                return;
-            }
-            $this->g_id=$g_id;
-            $this->u_id=$u_id;
-            $this->db->insert("im_group_members",$this);
-            $this->Im_group_Model->updateLastActiveDate($g_id,null);
+        if($this->ifExist($g_id,$u_id)){
+            return;
+        }
+        $this->g_id=$g_id;
+        $this->u_id=$u_id;
+        $this->db->insert("im_group_members",$this);
+        $this->Im_group_Model->updateLastActiveDate($g_id,null);
 
     }
 

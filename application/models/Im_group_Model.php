@@ -175,6 +175,40 @@ class Im_group_Model extends CI_Model{
         return $query->row();
     }
 
+    public function getCommunitylist($u_id){
 
+        $records=[];
+        $query = $this->db->query("SELECT g.g_id as id, if(!isnull(g.name),g.name,'Unnamed Community') as name, 
+            g.custom_image as picture, 
+            if(g.createdBy=$u_id,3,if(isnull(r.g_id),0,if(isnull(gm.g_id),1,2))) as status_id
+            FROM im_group AS g 
+            LEFT JOIN im_group_requests as r ON g.g_id = r.g_id and r.u_id=$u_id
+            LEFT JOIN im_group_members as gm ON r.g_id = gm.g_id and gm.u_id=$u_id
+            WHERE g.type=0
+            GROUP BY g.g_id");
+
+        //return $this->db->last_query();
+        foreach ($query->result() as $community){
+
+            if($community->picture!=null){
+                $picture = base_url()."assets/im/group_".$community->id."/".$community->picture;
+            }
+            else{
+                $picture = base_url()."assets/img/group.png";
+            }
+
+            // 0 = Join / 1 = Requested / 2 = Joined 
+            $data = array(
+                'id' =>(int)$community->id,
+                'name' =>$community->name,
+                'picture' => $picture,
+                'status_id' => (int)$community->status_id
+            );
+            $records[]=$data;
+        }
+        
+        return $records;
+
+    }
 
 }

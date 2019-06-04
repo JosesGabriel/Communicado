@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable no-undef */
 /**
  * Created by Farhad Zaman on 2/13/2017.
  */
@@ -175,6 +177,9 @@ function generateRandomString(length = 60) {
 // socketApi.em()
 
 io.on("connection", function (socket) {
+
+
+    console.log('dito ang start');
 
     connections.push(socket);
     users[socket.id] = socket;
@@ -642,7 +647,6 @@ io.on("connection", function (socket) {
                     let name = null;
                     let message = null;
                     let fileType = "text";
-                    let newGroup = false;
 
                     // emoji.ascii=true;
 
@@ -657,11 +661,9 @@ io.on("connection", function (socket) {
 
                     // Raplh Mention;
                     if(data.message.includes('class="mention"')==true){
-                        let m = null;
-                        let mention_id = null; 
                         let rex = /<a\s+(?:[^>]*?\s+)?data-username=(["'])(.*?)\1/g;
                         let arrMention = [];
-                        while ( m = rex.exec( data.message ) ) {
+                        while ( rex.exec( data.message ) ) {
                             let mention_id = await sMM.Im_group_members_Model.getMemberIdByUserSecret(m[2]);
                             if(parseInt(mention_id)>0 && (arrMention.indexOf(mention_id)==-1)){
                                 await sMM.Im_group_members_Model.insertUserMention(senderId,mention_id,receiverId,date_time);
@@ -674,7 +676,7 @@ io.on("connection", function (socket) {
                                                     left join users as u on m.r_id = u.userId
                                                     left join users as u2 on m.u_id = u2.userId
                                                     where m.u_id = ? and m.r_id = ? and m.g_id = ? and m.date_time=? limit 1`;
-                                let [result, err] = await mysqlCon2.execute(socketQuery,[senderId,mention_id,receiverId,date_time]);
+                                let result = await mysqlCon2.execute(socketQuery,[senderId,mention_id,receiverId,date_time]);
                                 for (let i = 0; i < result.length; i++) {
                                     try{
                                         users[result[i].socketId].emit("notifyMentionUser", result[i]);
@@ -797,7 +799,7 @@ io.on("connection", function (socket) {
                     //if (newGroup) {
                     let groupInfo = await group.get_group(receiverId, senderId);
                     let findSocketIdQ = "select socketId from im_usersocket where userId=" + senderId;
-                    let [result, f1] = await mysqlCon2.execute(findSocketIdQ);
+                    let result = await mysqlCon2.execute(findSocketIdQ);
                     for (let i = 0; i < result.length; i++) {
                         users[result[i].socketId].emit("addNewGroup", groupInfo);
                     }

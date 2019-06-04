@@ -12,7 +12,11 @@ class User extends REST_Controller
         $this->load->model('User_Model');
         $this->load->model('FriendList_Model');
         $this->load->model('Im_group_members_Model');
+        $this->load->model('Im_group_requests_Model');
         $this->load->model('Im_receiver_Model');
+        $this->load->model('Im_group_Model');
+        $this->load->model('Im_notifications_Model');
+        
         if(!ID_LOGIN) {
             $headers = apache_request_headers();
             if (isset($headers["Authorizationkeyfortoken"])) {
@@ -496,6 +500,113 @@ class User extends REST_Controller
             "response" => $responseData
         );
         $this->response($response, REST_Controller::HTTP_OK);
+    }
+
+    public function communityList_get()
+    {
+        if(!ID_LOGIN) {
+            $headers = apache_request_headers();
+            $userId =(int) $this->User_Model->getTokenToId($headers["Authorizationkeyfortoken"]);
+        }else{
+            $userId=$this->get("userId");
+        }
+
+        $data=$this->Im_group_Model->getCommunitylist($userId);
+
+        $token = [];
+        $page = 1;
+        $ctr = 1;
+        $perRow = 7;
+        $ctr_id = 1;
+        foreach($data as $datum){
+            $token[] =  [ 'id'=>$ctr_id++, 'page' => $page, 'data' => $this->jwt->encode($datum,$this->config->item("CONSUMER_SECRET")) ]; 
+            if($ctr!=$perRow){
+                $ctr+=1;
+            }else{
+                $ctr=1;
+                $page++;
+            }
+        }
+
+        $responseData=array(
+            // "_g"=> $this->jwt->encode($token, $this->config->item("CONSUMER_SECRET")),
+            "_g"=> $token
+        );
+
+        $response = array(
+            "status" => array(
+                "code" => REST_Controller::HTTP_OK,
+                "message" => true
+            ),
+            "response" => $responseData
+        );
+        $this->response($response, REST_Controller::HTTP_OK);
+    }
+
+    public function communityJoin_post(){
+
+        if(!ID_LOGIN) {
+            $headers = apache_request_headers();
+            $userId =(int) $this->User_Model->getTokenToId($headers["Authorizationkeyfortoken"]);
+        }else{
+            $userId=$this->post("userId",true);
+        }
+
+        $groupId = $this->post("groupId",true);
+        $rawData = $this->post("rawData",true);
+       
+        if (!$this->User_Model->userExist($userId)) {
+
+            $response = array(
+                "status" => array(
+                    "code" => REST_Controller::HTTP_NOT_FOUND,
+                    "message" => "User Not Found"
+                ),
+                "response" => null
+            );
+            $this->response($response, REST_Controller::HTTP_NOT_FOUND);
+        
+        } else {
+            
+            if ($this->Im_group_Model->getType($groupId)>0) {
+                $response = array(
+                    "status" => array(
+                        "code" => REST_Controller::HTTP_NOT_FOUND,
+                        "message" => "Invalid Community"
+                    ),
+                    "response" => null
+                );
+                $this->response($response, REST_Controller::HTTP_NOT_FOUND);
+
+            } else {
+ 
+                $this->Im_group_requests_Model->insert($groupId,$userId);
+                // check the admin of the community
+                $admin = $this->Im_group_Model->getGroupAdminInfobyGroupId($groupId);
+                $notification_type_id = 1; // Tell community admin regarding join request
+                $n_id = $this->Im_notifications_Model->insert($userId,$admin->userId,$groupId,$notification_type_id);
+               
+                $newData = $this->jwt->decode($rawData, $this->config->item("CONSUMER_SECRET"));
+                $newData->status_id=1;
+
+                $return['n_id'] = (int)$n_id;
+                $return['rawData'] = $this->jwt->encode($newData, $this->config->item("CONSUMER_SECRET"));;
+
+                $response = array(
+                    "status" => array(
+                        "code" => REST_Controller::HTTP_OK,
+                        "message" => "Success"
+                    ),
+                    "response" => $return,
+                    "token"=>null,
+                    "type"=>null
+                );
+                $this->response($response, REST_Controller::HTTP_OK);
+ 
+            }
+
+        }
+    
     }
 
 }

@@ -56,10 +56,13 @@
         });
 
         $( ".floatBtn-Wrapper" ).mouseleave(function() {
-            $(this).animate({ width: "40px" },100,"linear",() => {
+            $(this).animate({ width: "45px" },100,"linear",() => {
                 $(this).find('span').hide(50,'linear');
             });
         });
+
+        // reset community 
+        localStorage.setItem("_g",null);
 
     });
 </script>
@@ -146,6 +149,7 @@
         let chatBox = $('#chatBox');
         let groupBox = $("#groups");
         let notificationBox = $("#notificationBox");
+        let communityBox = $("#communityBox");
         let videoObjects = [];
         let responce = null;
         let userId = null;
@@ -165,6 +169,7 @@
         let pageNotif = 0;
         let limitNotif = 6;
         let groupLimit = 30;
+        let currentCommunityPage = 0;
         let groupStart = 0;
         let totalGroup = null;
         let friendStart = 0;
@@ -613,6 +618,43 @@
             } 
             e.preventDefault();
         });
+
+        // This function is to fecth and list of communities;
+        function getCommunities(callback) {
+            let url = "<?php echo base_url('user/communityList?limit=') ?>";
+            if (ID_BASED) {
+                url = "<?php echo base_url('user/communityList?userId=') ?>" + userId;
+            }
+            //console.log(url);
+            let settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": url,
+                "method": "GET",
+                "headers": {
+                    "authorization": "Basic YWRtaW46MTIzNA==",
+                    "Authorizationkeyfortoken": String(responce),
+                    "cache-control": "no-cache",
+                    "postman-token": "eb27c011-391a-0b70-37c5-609bcd1d7b6d"
+                },
+                "processData": false,
+                "contentType": false,
+                "beforeSend": function () {
+                    localStorage.setItem("_g",null)
+                    communityBox.html('<br><br><br><p align="center"><i class="fa fa-spinner fa-spin fa-4x fa-fw" aria-hidden="true"></i></p>');
+                },
+                "success": function () {
+                    communityBox.html('');
+                }
+            };
+            $.ajax(settings).done(function (res) {
+                let data = res.response._g;
+                callback(data);
+            });
+        }
+
+
+
 
         function initVideo(id, isme) {
             $("#" + id).mediaelementplayer({
@@ -1175,7 +1217,7 @@
                 }
                 
                 if(members[i].userEmail==creatorEmail){
-                    html += "<span class=\"time\" style='padding-top: 5px' ><div class=\"btn-primary btn-extra-small disabled \" style=\"cursor: default;\"><i class=\"fa fa-star fa-fw\" title=\"Community Administrator\"><\/i><\/div><\/span>";                  
+                    html += "<span class=\"time\" style='padding-top: 5px' ><div class=\"btn-warning btn-extra-small disabled \" style=\"cursor: default;\"><i class=\"fa fa-star fa-fw\" title=\"Community Administrator\"><\/i><\/div><\/span>";                  
                 }
                 /*if (parseInt(groupType) === 0) {
                     html += "                        <span class=\"time\" style='padding-top: 5px' ><a href=\"#\" data-group=\"" + groupId + "\" data-member=\"" + members[i].userId + "\" class=\"btn-danger btn-extra-small btnMemberDelete\"><i class=\"fa fa-trash\"><\/i><\/a><\/span>";
@@ -3016,6 +3058,7 @@
                 toastr.error("Group name is empty");
                 return;
             }
+
             let form = new FormData();
             form.append("groupId", groupId);
             form.append("groupName", groupName);
@@ -3290,8 +3333,276 @@
 
         });
 
-        
+        $('#btnCommunities').on("click", function (e) {
+            let _g = localStorage.getItem("_g");
+            if (_g == null || _g == "" || _g=='null') {
+                getCommunities(function(response){
+                    localStorage.setItem("_g",JSON.stringify(response));
+                    let data = localStorage.getItem('_g');
+                    listCommunities(data,1,false);
+                    $("#modalCommunities").modal("show");
+                    $('#findCommunity').focus();
+                });
+            }else{
+                let data = localStorage.getItem('_g');
+                listCommunities(data,1,false);
+                $("#modalCommunities").modal("show");
+                $('#findCommunity').focus();
+            }
+        });
 
+        function pageCommunities(page,lastpage){
+            //init pagination
+            let ret = {};
+        
+            ret.page = currentCommunityPage = 1;
+            ret.prev = 0;
+            ret.next = 0;
+            ret.prev_page = 1;
+            ret.next_page = 2;
+            ret.last_page = (parseInt(lastpage)>1) ? lastpage : 1 ;
+            if(parseInt(page)>1){
+                ret.page = currentCommunityPage = parseInt(page);
+                ret.prev = 1;
+                ret.prev_page = parseInt(ret.page)-1;
+                ret.next_page = parseInt(ret.page)+1;
+            }else{
+                ret.page = currentCommunityPage = 1;
+                ret.prev = 0;
+            }
+            ret.next = (ret.page==ret.last_page) ? 0 : 1;
+            let html = `<span class="list-group-item list-group-item-info">
+                    <ul class="pager" style="margin:0;">
+                        <li ${ (!ret.prev) ? 'class="disabled"' : '' }><a href="#" data-page="${ret.prev_page}" data-prev="${ (ret.prev) ? 1 : 0  }" id="communityPrev">Previous</a></li>
+                        <li ${ (!ret.next) ? 'class="disabled"' : '' }><a href="#" data-page="${ret.next_page}" data-next="${ (ret.next) ? 1 : 0  }" id="communityNext">Next</a></li>
+                    </ul>
+                    </nav>
+                </span>`;
+            return html;
+
+        }
+
+        function loopCommunities(records){
+            let html = '';
+            for (let i = 0; i < records.length; i++) {
+                let raw = records[i];
+                let rec = jwt_decode(records[i].data);
+                let btn_icon, btn_color, btn_label, btn_disabled;
+                switch (rec.status_id) {
+                    case 0:
+                        btn_icon = 'fa-plus-square';
+                        btn_color = 'info';
+                        btn_label = 'Join';
+                        btn_disabled = '';
+                    break;
+        
+                    case 1:
+                        btn_icon = 'fa-paper-plane-o';
+                        btn_color = 'primary';
+                        btn_label = 'Requested';
+                        btn_disabled = 'disabled';
+                    break;
+
+                    case 2:
+                        btn_icon = 'fa-check-square';
+                        btn_color = 'success';
+                        btn_label = 'Joined';
+                        btn_disabled = 'disabled';
+                    break;
+
+                    case 3:
+                        btn_icon = 'fa-star';
+                        btn_color = 'warning';
+                        btn_label = 'Admin';
+                        btn_disabled = 'disabled';
+                    break;
+                }
+                html += `<a style="color:black" class="list-group-item"> 
+                        <img src="${ rec.picture }" class="communitylist_thumbnail">  
+                        <label class="communitylist_label">${ rec.name }</label> 
+                        <button type="button" ${btn_disabled} class="btn-xs btn-${btn_color} pull-right communitylist_btn"
+                            data-raw-id="${ parseInt(raw.id) }" 
+                            data-raw-data="${ raw.data }"
+                            data-raw-page="${ raw.page }" 
+                            data-id="${rec.id}" data-name="${ rec.name }" >
+                            <i class="fa ${btn_icon} fa-fw" aria-hidden="true"></i> <span>${btn_label}</span>
+                        </button></a>`;       
+            }
+            return html;
+        }
+
+        $(document).on('click', 'button.communitylist_btn', function (e) {
+            let group_btn = $(this);
+            let group_id = parseInt($(this).attr('data-id'));
+            let group_name = $(this).attr('data-name');
+            let raw_id = parseInt($(this).attr('data-raw-id'));
+            let raw_data = $(this).attr('data-raw-data');
+            let raw_page = parseInt($(this).attr('data-raw-page'));
+
+            if(!confirm("Are you sure to join "+ group_name )){
+                return;
+            }
+            //  request send
+            if(navigator.onLine==false){
+                toastr.error("Request Failed. No Internet");
+                return;
+            }
+            let form=new FormData();
+            form.append("groupId", group_id);
+            form.append("rawData", raw_data);
+            let url = "<?php echo base_url('user/communityJoin') ?>";
+            let settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": url,
+                "method": "POST",
+                "headers": {
+                    "authorization": "Basic YWRtaW46MTIzNA==",
+                    "Authorizationkeyfortoken": String(responce),
+                    "cache-control": "no-cache",
+                    "postman-token": "58e7510b-ad46-6037-fc4d-028915069e2b"
+                },
+                "processData": false,
+                "contentType": false,
+                "mimeType": "multipart/form-data",
+                "data": form,
+                "error": function (e) {
+                    let err = JSON.parse(e.responseText);
+                    group_btn.prop('disabled', false);
+                    group_btn.find('span').text('Join');
+                    group_btn.find('i').addClass('fa-plus-square');
+                    group_btn.find('i').removeClass('fa-paper-plane-o');
+                    group_btn.addClass("btn-info");
+                    group_btn.removeClass("btn-primary");
+                    toastr.error(err.response);
+                },
+                "beforeSend": function () {
+                    group_btn.prop('disabled', true);
+                    group_btn.find('span').text('Sending...');
+                }
+            };
+            $.ajax(settings).done(function (response) {
+                group_btn.removeClass("btn-info");
+                group_btn.addClass("btn-primary");
+                group_btn.prop('disabled', true);
+                group_btn.find('span').text('Requested');
+                group_btn.find('i').removeClass('fa-plus-square');
+                group_btn.find('i').addClass('fa-paper-plane-o');
+                toastr.info("Your request to join has been sent to community administrator of " + group_name);
+                // update cache
+                let result = JSON.parse(response).response;    
+                let obj = { id:raw_id, page:raw_page, data: result.rawData };
+                let local = JSON.parse(localStorage.getItem('_g'));
+                localStorage.removeItem('_g')
+                let newData = local.filter(row => row.id!==raw_id);
+                newData.push(obj);
+                newData.sort((a, b) => (a.id > b.id) ? 1 : -1)
+                localStorage.setItem('_g',JSON.stringify(newData));
+                // send message to admin
+                console.log(result.n_id)
+            });
+            e.preventDefault();
+        });
+        
+        function listCommunities(data,page,find){
+            if(!data){
+                communityBox.html("<h4>Community box is empty.</h4>");
+                return;
+            }
+            communityBox.html('<br><br><br><p align="center"><i class="fa fa-spinner fa-spin fa-4x fa-fw" aria-hidden="true"></i></p>');
+            let html = '';
+            let records = '';
+            let jwtdata =  JSON.parse(data);
+            if(!find || find==undefined){
+                // pages
+                html += pageCommunities(page,parseInt(jwtdata[jwtdata.length-1].page));
+                // list
+                let records = jwtdata.filter(row => parseInt(row.page)==parseInt(page));
+                html += loopCommunities(records);
+            }else{              
+     
+                if(find.length==undefined || find.length<3){
+                    communityBox.html('<br><br><br><p align="center"><i class="fa fa-ellipsis-h fa-4x fa-fw" aria-hidden="true"></i></p><br><h2 align=center>Then Hit Enter</h2><p align="center"><small><b>Simply click "ESC" to get back in Normal List</b></small></p>');
+                    return; 
+                }
+                
+                const regexp = new RegExp(find.replace(/[^a-zA-Z0-9]/g, ''), 'i');
+                let records = jwtdata.filter(row => {
+                    let rec = jwt_decode(row.data);
+                    if(regexp.test(rec.name)==true){
+                        return rec;
+                    }
+                });
+
+                if(records.length===0 && find.length>2){
+                    communityBox.html('<br><br><br><p align="center"><i class="fa fa-frown-o fa-4x fa-fw" aria-hidden="true"></i></p><br><h2 align=center>No Record Found</h2><p align="center"><small><b>Simply click "ESC" to get back in Normal List</b></small></p>');
+                    return;
+                }else{
+                    html += loopCommunities(records);
+                }
+            }
+            
+            communityBox.html(html);
+        }
+
+        $(document).on('click', 'a#communityPrev', function (e) {
+            let page = $(this).attr('data-page');
+            let prev = parseInt($(this).attr('data-prev'));
+            if(prev){
+                listCommunities(localStorage.getItem('_g'),page);
+                return;
+            } 
+            e.preventDefault();
+        });
+
+        $(document).on('click', 'a#communityNext', function (e) {
+            let page = $(this).attr('data-page');
+            let next = parseInt($(this).attr('data-next'));
+            if(next){
+                listCommunities(localStorage.getItem('_g'),page);
+                return;
+            } 
+            e.preventDefault();
+        });
+
+        $('#findCommunity').on('keyup', function(e) {
+            var input = $(this);
+            if(input.val().length === 0) {
+                input.addClass('searchAwesome');
+            } else {
+                input.removeClass('searchAwesome');
+            }
+            if(e.which==27){
+                listCommunities(localStorage.getItem('_g'),currentCommunityPage,false);
+                $(this).val(null);
+            }
+        });
+
+        $('#findCommunity').on('keypress',function(e) {
+            if(e.which == 13) {
+                let find = e.target.value;
+                find = find.trim();
+               // console.log(find.length);
+                if(find.length<=2){
+                    communityBox.html('<br><br><br><p align="center"><i class="fa fa-ellipsis-h fa-4x fa-fw" aria-hidden="true"></i></p><br><h2 align=center>Then Hit Enter</h2><p align="center"><small><b>Simply click "ESC" to get back in Normal List</b></small></p>');
+                    toastr.error('Notice: Please enter a minimum of 3 characters');
+                    return;
+                }else{
+                    listCommunities(localStorage.getItem('_g'),1,find);
+                }
+            }
+        });
+
+        $('#findCommunity').on('focus', function() {
+            listCommunities(localStorage.getItem('_g'),1,true);
+        });
+
+        // $('#findCommunity').on('blur', function() {
+        //     $(this).val(null);
+        //     listCommunities(localStorage.getItem('_g'),currentCommunityPage,false);
+        // });
+
+        
 
 //-------------------- Drop Zone ---------------------------------------
         //dropZone
@@ -3317,6 +3628,7 @@
                 return false;
             }*/
             files.forEach(uploadFile);
+
         }
         function uploadFile(file) {
             let attachFile = getFileExtension(file.name);
@@ -3831,6 +4143,7 @@
             $('#connectionErrorModal').modal('hide');
         });
         socket.on("reconnecting", function () {
+            //console.log('start');
                 $(".memberStatus").removeClass("memberActive");
                 $(".authStatus").removeClass("memberActive");
                 if(!isDisconnected){

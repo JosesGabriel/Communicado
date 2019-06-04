@@ -18,6 +18,7 @@ class ImApi extends REST_Controller
         $this->load->model("Im_receiver_Model");
         $this->load->model("Im_blocklist");
         $this->load->model("Im_mutelist");
+        $this->load->model("Im_group_requests_Model");
         
         if(!ID_LOGIN) {
             $headers = apache_request_headers();
@@ -321,6 +322,7 @@ class ImApi extends REST_Controller
                 //$memberList=$this->Im_group_members_Model->getMembers($groupId);
                 $membersWithDeletedOne = $this->Im_group_members_Model->getMembers($groupId);
                 $this->Im_group_members_Model->delete($groupId, $deletedMemberId);
+                $this->Im_group_requests_Model->delete($groupId, $deletedMemberId);
                 $this->Im_receiver_Model->DeleteAll($groupId, $deletedMemberId);
             }
             $membersInfo = array();
