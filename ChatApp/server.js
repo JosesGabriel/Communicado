@@ -677,6 +677,17 @@ io.on("connection", function (socket) {
                             if(parseInt(mention_id)>0 && (arrMention.indexOf(mention_id)==-1)){
                                 await sMM.Im_group_members_Model.insertUserMention(senderId,mention_id,receiverId,date_time);
                                 arrMention.push(mention_id);
+
+                                let findUser = `Select concat(firstName, ' ', lastName) as full_name FROM users WHERE userId = ?`
+                                let [sender, findUserErr] = await mysqlCon2.execute(findUser, [senderId]);
+
+                                let socketApiData = {
+                                    sender: sender[0].full_name,
+                                }
+
+                                // send notification to socket-api
+                                socketApi.emit('vyndue:mention', {user_secret: m[2], data: socketApiData})
+
                                 // check if user is active then trigger a push notification
                                 // console.log('notification');    
                                 let socketQuery = `select u.active, concat(u2.firstName,' ',u2.lastName) as fromname, m.g_id as group_id, u.userSecret, u.userId, s.socketId
