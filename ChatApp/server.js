@@ -173,6 +173,8 @@ function generateRandomString(length = 60) {
 }
 
 socketApi.on('connection', function (socket) {
+    console.log("[ " + moment().format('MMMM Do YYYY, hh:mm:ss') + " ] " + "connected to SOCKET-API");
+
     socketApi.emit('vyndue:connect', {user_secret: ''})
 
     socket.on('vyndue:message', function (data) {
@@ -348,6 +350,9 @@ io.on("connection", function (socket) {
                                 await mysqlCon2.execute(insertSocketQ, [user.userId, socket.id]);
                                 console.log("[ " + moment().format('MMMM Do YYYY, hh:mm:ss') + " ] " + "socket id insert success");
                                 activeUser(user.userId);
+
+                                // connect to socket-api
+                                socketApi.emit('vyndue:connect', {user_secret: user.consumerKey})
                             } catch (err) {
                                 console.log("[ " + moment().format('MMMM Do YYYY, hh:mm:ss') + " ] " + "socket id insert failed " + err);
                             }
