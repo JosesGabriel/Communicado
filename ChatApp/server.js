@@ -174,7 +174,13 @@ function generateRandomString(length = 60) {
     return randomString;
 }
 
-// socketApi.em()
+socketApi.on('connection', function (socket) {
+    socketApi.emit('vyndue:connect', {user_secret: ''})
+
+    socket.on('vyndue:message', function (data) {
+        console.log('vyndue:message', data)
+    })
+})
 
 io.on("connection", function (socket) {
 
@@ -619,11 +625,11 @@ io.on("connection", function (socket) {
 
     });
 
-    socket.on('testSend', function (res){
-        console.log('hitted');
-        console.log(res);
-        console.log((socketApi.emit('notifyMentionUser',res)));
-    });
+    // socket.on('testSend', function (res){
+    //     console.log('hitted');
+    //     console.log(res);
+    //     console.log((socketApi.emit('notifyMentionUser',res)));
+    // });
 
     socket.on("sendText", function (response) {
         let data = null;
