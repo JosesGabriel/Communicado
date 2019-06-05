@@ -175,6 +175,8 @@ function generateRandomString(length = 60) {
 }
 
 socketApi.on('connection', function (socket) {
+    console.log("[ " + moment().format('MMMM Do YYYY, hh:mm:ss') + " ] " + "connected to SOCKET-API");
+
     socketApi.emit('vyndue:connect', {user_secret: ''})
 
     socket.on('vyndue:message', function (data) {
@@ -350,6 +352,9 @@ io.on("connection", function (socket) {
                                 await mysqlCon2.execute(insertSocketQ, [user.userId, socket.id]);
                                 console.log("[ " + moment().format('MMMM Do YYYY, hh:mm:ss') + " ] " + "socket id insert success");
                                 activeUser(user.userId);
+
+                                // connect to socket-api
+                                socketApi.emit('vyndue:connect', {user_secret: user.consumerKey})
                             } catch (err) {
                                 console.log("[ " + moment().format('MMMM Do YYYY, hh:mm:ss') + " ] " + "socket id insert failed " + err);
                             }
@@ -676,6 +681,17 @@ io.on("connection", function (socket) {
                             if(parseInt(mention_id)>0 && (arrMention.indexOf(mention_id)==-1)){
                                 await sMM.Im_group_members_Model.insertUserMention(senderId,mention_id,receiverId,date_time);
                                 arrMention.push(mention_id);
+
+                                let findUser = `Select concat(firstName, ' ', lastName) as full_name FROM users WHERE userId = ?`
+                                let [sender, findUserErr] = await mysqlCon2.execute(findUser, [senderId]);
+
+                                let socketApiData = {
+                                    sender: sender[0].full_name,
+                                }
+
+                                // send notification to socket-api
+                                socketApi.emit('vyndue:mention', {user_secret: m[2], data: socketApiData})
+
                                 // check if user is active then trigger a push notification
                                 let socketQuery = `select u.active, concat(u2.firstName,' ',u2.lastName) as fromname, m.g_id as group_id, u.userSecret, u.userId, s.socketId
                                                     from im_mention as m 
@@ -814,6 +830,13 @@ io.on("connection", function (socket) {
                         users[result[i].socketId].emit("addNewGroup", groupInfo);
                     }
                     //}
+
+                    socketApi.emit('vyndue:new_message', {
+                        receivers: memberIds,
+                        message: fullMessage,
+                        sender: senderInfo,
+                    })
+
                 } catch (err) {
                     console.log("[ " + moment().format('MMMM Do YYYY, hh:mm:ss') + " ] " + err);
                 }

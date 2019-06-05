@@ -49,7 +49,7 @@ Im_group_members_Model.getTotalGroupMember= async function(g_id){
 };
 
 Im_group_members_Model.getMembers=async function(g_id){
-    let query="select u_id from im_group_members where g_id=?";
+    let query = "SELECT igm.u_id, u.userSecret FROM im_group_members igm INNER JOIN users u ON igm.u_id = u.userId WHERE igm.g_id = ?";
     let [result,err]=await mysqlCon.execute(query,[g_id]);
     return result;
 };
