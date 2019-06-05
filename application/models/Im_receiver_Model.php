@@ -159,28 +159,39 @@ class Im_receiver_Model extends CI_Model{
     public function notificationTotaluser($u_id)
     {
         $SQL = "SELECT im.g_id as group_id, concat(u.firstName,' ',u.lastName) as sender_name,
-            date_format(im.date_time,'%Y-%m-%dT%H:%i:%s.000Z') as date_time,
-            if(g.type=1,'Personal Chat',if(!isnull(g.name),g.name,'Unnamed Community')) as group_name,
-            g.type as group_type, 1 as msg_type
-            from im_mention as im 
-            left join im_group as g on im.g_id = g.g_id
-            left join users as u on im.u_id = u.userId
-            left join im_blocklist as bl on bl.g_id = im.g_id
-            left join im_mutelist as ml on ml.g_id = im.g_id
-            where im.r_id=$u_id and im.seen=0 and isnull(ml.g_id) and isnull(bl.g_id)
-            UNION ALL
-            select ir.g_id as group_id, concat(u.firstName,' ',u.lastName) as sender_name,
-            date_format(concat(m.date,' ',m.time),'%Y-%m-%dT%H:%i:%s.000Z') as date_time,
-            if(g.type=1,'Personal Chat',if(!isnull(g.name),g.name,'Unnamed Community')) as group_name, 
-            g.type as group_type, 0 as msg_type
-            from im_receiver as ir
-            left join im_group as g on ir.g_id = g.g_id
-            left join im_message as m using(m_id)
-            left join users as u on m.sender = u.userId
-            left join im_blocklist as bl on bl.g_id = ir.g_id
-            left join im_mutelist as ml on ml.g_id = ir.g_id
-            where ir.r_id=$u_id and ir.received=0 
-            and isnull(ml.g_id) and isnull(bl.g_id)";
+        nt.description as message, if(g.type=1,'Personal Chat',if(!isnull(g.name),g.name,'Unnamed Community')) as group_name,
+        date_format(im.date_time,'%Y-%m-%dT%H:%i:%s.000Z') as date_time,
+        nt.id as notiftype, 0 as notif_id
+        from im_mention as im 
+        left join im_group as g on im.g_id = g.g_id
+        left join users as u on im.u_id = u.userId
+        left join im_notification_types as nt on nt.id = 4
+        left join im_blocklist as bl on bl.g_id = im.g_id
+        left join im_mutelist as ml on ml.g_id = im.g_id
+        where im.r_id=$u_id and im.seen=0 and isnull(ml.g_id) and isnull(bl.g_id)
+        UNION ALL
+        select ir.g_id as group_id, concat(u.firstName,' ',u.lastName) as sender_name,
+        nt.description as message, if(g.type=1,'Personal Chat',if(!isnull(g.name),g.name,'Unnamed Community')) as group_name, 
+        date_format(concat(m.date,' ',m.time),'%Y-%m-%dT%H:%i:%s.000Z') as date_time,
+        nt.id as notiftype, 0 as notif_id
+        from im_receiver as ir
+        left join im_group as g on ir.g_id = g.g_id
+        left join im_message as m using(m_id)
+        left join users as u on m.sender = u.userId
+        left join im_blocklist as bl on bl.g_id = ir.g_id
+        left join im_mutelist as ml on ml.g_id = ir.g_id
+        left join im_notification_types as nt on nt.id = if(g.type=1,5,3)
+        where ir.r_id=$u_id and ir.received=0 
+        and isnull(ml.g_id) and isnull(bl.g_id)
+        UNION ALL
+        select n.g_id as group_id,concat(u2.firstName,' ',u2.lastName) as sender_name, 
+        nt.description as message, if(!isnull(g.name),g.name,'Unnamed Community') as group_name,
+        date_format(n.date_time,'%Y-%m-%dT%H:%i:%s.000Z') as date_time, nt.id as notif_type, n.n_id as notif_id
+        from im_notifications as n
+        inner join im_group as g on n.g_id = g.g_id
+        inner join im_notification_types as nt on n.t_id = nt.id
+        inner join users as u2 on u2.userid = n.u_id
+        where n.r_id=$u_id and n.seen=0";
             $query = $this->db->query($SQL);
             return $query->num_rows();
     }
@@ -190,29 +201,40 @@ class Im_receiver_Model extends CI_Model{
         
         $return = [];
         $SQL = "SELECT im.g_id as group_id, concat(u.firstName,' ',u.lastName) as sender_name,
-            date_format(im.date_time,'%Y-%m-%dT%H:%i:%s.000Z') as date_time,
-            if(g.type=1,'Personal Chat',if(!isnull(g.name),g.name,'Unnamed Community')) as group_name,
-            g.type as group_type, 1 as msg_type
-            from im_mention as im 
-            left join im_group as g on im.g_id = g.g_id
-            left join users as u on im.u_id = u.userId
-            left join im_blocklist as bl on bl.g_id = im.g_id
-            left join im_mutelist as ml on ml.g_id = im.g_id
-            where im.r_id=$u_id and im.seen=0 and isnull(ml.g_id) and isnull(bl.g_id)
-            UNION ALL
-            select ir.g_id as group_id, concat(u.firstName,' ',u.lastName) as sender_name,
-            date_format(concat(m.date,' ',m.time),'%Y-%m-%dT%H:%i:%s.000Z') as date_time,
-            if(g.type=1,'Personal Chat',if(!isnull(g.name),g.name,'Unnamed Community')) as group_name, 
-            g.type as group_type, 0 as msg_type
-            from im_receiver as ir
-            left join im_group as g on ir.g_id = g.g_id
-            left join im_message as m using(m_id)
-            left join users as u on m.sender = u.userId
-            left join im_blocklist as bl on bl.g_id = ir.g_id
-            left join im_mutelist as ml on ml.g_id = ir.g_id
-            where ir.r_id=$u_id and ir.received=0 
-            and isnull(ml.g_id) and isnull(bl.g_id)
-            ORDER BY date_time DESC LIMIT $limit OFFSET $offset";
+        nt.description as message, if(g.type=1,'Personal Chat',if(!isnull(g.name),g.name,'Unnamed Community')) as group_name,
+        date_format(im.date_time,'%Y-%m-%dT%H:%i:%s.000Z') as date_time,
+        nt.id as notiftype, 0 as notif_id, nt.icon, nt.badge
+        from im_mention as im 
+        left join im_group as g on im.g_id = g.g_id
+        left join users as u on im.u_id = u.userId
+        left join im_notification_types as nt on nt.id = 4
+        left join im_blocklist as bl on bl.g_id = im.g_id
+        left join im_mutelist as ml on ml.g_id = im.g_id
+        where im.r_id=$u_id and im.seen=0 and isnull(ml.g_id) and isnull(bl.g_id)
+        UNION ALL
+        select ir.g_id as group_id, concat(u.firstName,' ',u.lastName) as sender_name,
+        nt.description as message, if(g.type=1,'Personal Chat',if(!isnull(g.name),g.name,'Unnamed Community')) as group_name, 
+        date_format(concat(m.date,' ',m.time),'%Y-%m-%dT%H:%i:%s.000Z') as date_time,
+        nt.id as notiftype, 0 as notif_id, nt.icon, nt.badge
+        from im_receiver as ir
+        left join im_group as g on ir.g_id = g.g_id
+        left join im_message as m using(m_id)
+        left join users as u on m.sender = u.userId
+        left join im_blocklist as bl on bl.g_id = ir.g_id
+        left join im_mutelist as ml on ml.g_id = ir.g_id
+        left join im_notification_types as nt on nt.id = if(g.type=1,5,3)
+        where ir.r_id=$u_id and ir.received=0 
+        and isnull(ml.g_id) and isnull(bl.g_id)
+        UNION ALL
+        select n.g_id as group_id,concat(u2.firstName,' ',u2.lastName) as sender_name, 
+        nt.description as message, if(!isnull(g.name),g.name,'Unnamed Community') as group_name,
+        date_format(n.date_time,'%Y-%m-%dT%H:%i:%s.000Z') as date_time, nt.id as notif_type, n.n_id as notif_id, nt.icon, nt.badge
+        from im_notifications as n
+        inner join im_group as g on n.g_id = g.g_id
+        inner join im_notification_types as nt on n.t_id = nt.id
+        inner join users as u2 on u2.userid = n.u_id
+        where n.r_id=$u_id and n.seen=0
+        ORDER BY date_time DESC LIMIT $limit OFFSET $offset";
 
         $query = $this->db->query("$SQL");
         

@@ -10,6 +10,7 @@ let Im_group_members_Model={};
 let Im_group_Model={};
 let Im_message_Model={};
 let Im_receiver_Model={};
+let Im_notifications_Model={};
 
 
 //--------- Im_block_list_model-------//
@@ -151,9 +152,27 @@ Im_receiver_Model.deleteByGroupId=async (g_id)=>{
     await mysqlCon.execute(query,[g_id]);
 };
 
+//------------ notifications --------------//
+
+Im_notifications_Model.fetchDetails= async function(n_id){
+    let query=`select concat(u2.firstName,' ',u2.lastName) as fromname, nt.description as notdesc, n.g_id,  
+        if(!isnull(g.name),g.name,'Unnamed Community') as group_name, 
+        u.active, u.userSecret, u.userId, s.socketId 
+        from im_notifications as n
+        inner join im_group as g on n.g_id = g.g_id
+        inner join im_notification_types as nt on n.t_id = nt.id
+        inner join users as u2 on u2.userid = n.u_id
+        inner join users as u on n.r_id = u.userId
+        left join im_usersocket as s on u.userId = s.userId
+        where n.n_id=${n_id}`;
+    let [result,err]= await mysqlCon.execute(query,[n_id]);
+    return result[0];
+};
+
 app.Im_blocklist=Im_blocklist;
 app.Im_group_members_Model=Im_group_members_Model;
 app.Im_group_Model=Im_group_Model;
 app.Im_message_Model=Im_message_Model;
 app.Im_receiver_Model=Im_receiver_Model;
+app.Im_notifications_Model=Im_notifications_Model;
 module.exports=app;

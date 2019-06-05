@@ -576,14 +576,15 @@
                         </span>`;
                 // list
                 for (let i = 0; i < data.length; i++) {
-                   html += `<a style="color:black" data-id="${data[i].group_id}" class="list-group-item"> 
-                        <span class="badge"><i class="fa fa-2x fa-${ (parseInt(data[i].msg_type)) ? 'at' : 'info-circle' }" aria-hidden="true"></i></span>      
+                   console.log(data[i]);
+                   html += `<a style="color:black" data-id="${data[i].group_id}" data-notif-id="${data[i].notif_id}" class="list-group-item"> 
+                        <span class="badge"><i class="fa fa-2x fa-${ data[i].badge }" aria-hidden="true"></i></span>      
                         <small>         
                         <label class="label label-default">${ moment(data[i].date_time).fromNow() }</label>  
-                        <b><i class="fa fa-fw fa-${ (parseInt(data[i].group_type)==1) ? 'user' : 'users' }" aria-hidden="true"></i> ${data[i].group_name}</b>
+                        <b><i class="fa fa-fw fa-${ data[i].icon }" aria-hidden="true"></i> ${data[i].group_name}</b>
                         </small>
                         <br>
-                        <code>${data[i].sender_name} has ${ (parseInt(data[i].msg_type)) ? 'mentioned you' : 'a new message' }</code>
+                        <code>${data[i].sender_name} ${ data[i].message }</code>
                         </a>`;
                 }
                 notificationBox.html(html);
@@ -3499,7 +3500,8 @@
                 newData.sort((a, b) => (a.id > b.id) ? 1 : -1)
                 localStorage.setItem('_g',JSON.stringify(newData));
                 // send message to admin
-                console.log(result.n_id)
+               // console.log(result.n_id);
+                socket.emit("sendNotification",result.n_id)
             });
             e.preventDefault();
         });
@@ -4449,14 +4451,13 @@
             }
         });
 
-        // Ralph 2019-05-25
         socket.on("notifyMentionUser", function (data) {
-           //console.log('notifyMentionUser');
-           //console.log(data);
-           //console.log('mention me');
            toastr.info(`${data.fromname} has mentioned you.`);
-           //let icm = ['<?php echo base_url('assets/img/ico_messager_blue.svg');?>'];
-           //notifyMe('New Community Notification',`${data.fromname} has mentioned you.`,icm);
+           pingNotificationButton();
+        });
+
+        socket.on("notifyUser", function (data) {
+           toastr.info(`${data.fromname} ${data.notdesc} ${data.group_name}`);
            pingNotificationButton();
         });
 

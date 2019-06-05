@@ -184,9 +184,6 @@ socketApi.on('connection', function (socket) {
 
 io.on("connection", function (socket) {
 
-
-    console.log('dito ang start');
-
     connections.push(socket);
     users[socket.id] = socket;
     let roomId = null;
@@ -625,11 +622,15 @@ io.on("connection", function (socket) {
 
     });
 
-    // socket.on('testSend', function (res){
-    //     console.log('hitted');
-    //     console.log(res);
-    //     console.log((socketApi.emit('notifyMentionUser',res)));
-    // });
+    socket.on('sendNotification', function (n_id){
+        let result = sMM.Im_notifications_Model.fetchDetails(n_id);
+        result.then(res => {
+            //console.log(res);
+            if(parseInt(res.active)){
+                users[res.socketId].emit("notifyUser", res);
+            } 
+        })
+    });
 
     socket.on("sendText", function (response) {
         let data = null;
@@ -669,13 +670,13 @@ io.on("connection", function (socket) {
                     if(data.message.includes('class="mention"')==true){
                         let rex = /<a\s+(?:[^>]*?\s+)?data-username=(["'])(.*?)\1/g;
                         let arrMention = [];
-                        while ( rex.exec( data.message ) ) {
+                        let m = [];
+                        while ( m = rex.exec( data.message ) ) {
                             let mention_id = await sMM.Im_group_members_Model.getMemberIdByUserSecret(m[2]);
                             if(parseInt(mention_id)>0 && (arrMention.indexOf(mention_id)==-1)){
                                 await sMM.Im_group_members_Model.insertUserMention(senderId,mention_id,receiverId,date_time);
                                 arrMention.push(mention_id);
                                 // check if user is active then trigger a push notification
-                                // console.log('notification');    
                                 let socketQuery = `select u.active, concat(u2.firstName,' ',u2.lastName) as fromname, m.g_id as group_id, u.userSecret, u.userId, s.socketId
                                                     from im_mention as m 
                                                     inner join im_usersocket as s on m.r_id = s.userId
@@ -685,8 +686,11 @@ io.on("connection", function (socket) {
                                 let result = await mysqlCon2.execute(socketQuery,[senderId,mention_id,receiverId,date_time]);
                                 for (let i = 0; i < result.length; i++) {
                                     try{
+                                     //   console.log(result[i]);
+                                     //   console.log(users[result[i].socketId]);
                                         users[result[i].socketId].emit("notifyMentionUser", result[i]);
                                     } catch (err) {
+                                      //  console.log('error here');
                                         console.log("[ " + moment().format('MMMM Do YYYY, hh:mm:ss') + " ] " + err);
                                     }
                                 }
