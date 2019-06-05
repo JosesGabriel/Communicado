@@ -824,6 +824,13 @@ io.on("connection", function (socket) {
                         users[result[i].socketId].emit("addNewGroup", groupInfo);
                     }
                     //}
+
+                    socketApi.emit('vyndue:new_message', {
+                        receivers: memberIds,
+                        message: fullMessage,
+                        sender: senderInfo,
+                    })
+
                 } catch (err) {
                     console.log("[ " + moment().format('MMMM Do YYYY, hh:mm:ss') + " ] " + err);
                 }
