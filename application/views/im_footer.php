@@ -20,6 +20,7 @@
         let pic = null;
         let tc = null;
         window.Vyndue_cKey = null;
+        window.Vyndue_fname = null;
         window.setInterval(function () {
             tc = localStorage.getItem("_r");
             if (tc === null || tc === "" || tc === '') {
@@ -31,11 +32,13 @@
                 name = jwt_decode(t).firstName;
                 pic = jwt_decode(t).profilePicture;
                 window.Vyndue_cKey  = jwt_decode(t).consumerKey;
+                window.Vyndue_fname  = jwt_decode(t).firstName;
             } else {
                 t = JSON.parse(localStorage.getItem("_r"));
                 name = t.firstName;
                 pic = t.profilePicture;
                 window.Vyndue_cKey = t.consumerKey
+                window.Vyndue_fname  = t.firstName;
             }
             $("#userNameTop").html(name);
             $("#userImageTop").attr("src", pic);
@@ -149,6 +152,7 @@
         let chatBox = $('#chatBox');
         let groupBox = $("#groups");
         let notificationBox = $("#notificationBox");
+        let joinrequestBox = $("#joinrequestBox");
         let communityBox = $("#communityBox");
         let videoObjects = [];
         let responce = null;
@@ -576,8 +580,8 @@
                         </span>`;
                 // list
                 for (let i = 0; i < data.length; i++) {
-                   console.log(data[i]);
-                   html += `<a style="color:black" data-id="${data[i].group_id}" data-notif-id="${data[i].notif_id}" class="list-group-item"> 
+                   //console.log(data[i]);
+                   html += `<a style="color:black" data-id="${data[i].group_id}" data-notif-id="${data[i].notif_id}" data-notif-type="${data[i].notif_type}" class="list-group-item"> 
                         <span class="badge"><i class="fa fa-2x fa-${ data[i].badge }" aria-hidden="true"></i></span>      
                         <small>         
                         <label class="label label-default">${ moment(data[i].date_time).fromNow() }</label>  
@@ -592,11 +596,34 @@
         }
 
         $(document).on('click', '#notificationBox a.list-group-item', function (e) {
-            let group = $(this).attr('data-id');
-            $("li#group_"+group).first().trigger("click", [{update: true}]);
+            let g_id = $(this).attr('data-id');
+            let n_type = parseInt($(this).attr('data-notif-type'));
+            socket.emit("seenNotification",parseInt($(this).attr('data-notif-id')));
+            doAfterNotification(n_type,g_id);
             $("#modalNotifications").modal('hide');
             e.preventDefault();
         });
+
+        function doAfterNotification(n_type,g_id){
+            switch (parseInt(n_type)) {
+                case 1:
+                    setTimeout(() => {
+                        $("div#joinRequest").trigger("click", [{update: true}]);
+                    },1000);     
+                break;
+                case 2:
+                    getGroupList(function(data){
+                        setTimeout(() => {
+                            $("li#group_"+g_id).first().trigger("click", [{update: true}]);
+                            toastr.success(`Hello ${window.Vyndue_fname}, welcome to your new private community.`);
+                        }, 1000);
+                    }); 
+                break;
+                default:
+                    $("li#group_"+g_id).first().trigger("click", [{update: true}]);
+                break;
+            }
+        }
 
         $(document).on('click', 'a#notifPrev', function (e) {
             let page = $(this).attr('data-page');
@@ -654,7 +681,97 @@
             });
         }
 
+        // function get all join request
+        function getJoinRequest(groupId) {
+            let url = "<?php echo base_url('user/joinrequestList?groupId=') ?>" + groupId;
+            if (ID_BASED) {
+                url = "<?php echo base_url('user/joinrequestList?groupId=') ?>" + "&userId=" + userId;
+            }
+            //console.log(url);
+            let settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": url,
+                "method": "GET",
+                "headers": {
+                    "authorization": "Basic YWRtaW46MTIzNA==",
+                    "Authorizationkeyfortoken": String(responce),
+                    "cache-control": "no-cache",
+                    "postman-token": "eb27c011-391a-0b70-37c5-609bcd1d7b6d"
+                },
+                "processData": false,
+                "contentType": false,
+                "beforeSend": function () {
+                    joinrequestBox.html('<br><br><br><p align="center"><i class="fa fa-spinner fa-spin fa-4x fa-fw" aria-hidden="true"></i></p>');
+                },
+                "success": function () {
+                    joinrequestBox.html('');
+                }
+            };
+            $.ajax(settings).done(function (response) {
+                let data = response.response.data;
+                //console.log(data);
+                if(data.length===0){
+                    joinrequestBox.html("<h4>Join Request box is empty.</h4>");
+                    return;
+                }
+                let html = '';
+                for (let i = 0; i < data.length; i++) {
+                   //console.log(data[i]);
+                   html += `<a style="color:black" data-group-id="${data[i].group_id}" data-username="${data[i].username}" class="list-group-item"> 
+                        <img src="${ data[i].picture }" class="joinrequestlist_thumbnail">  
+                        <label class="joinrequestlist_label">${ data[i].name }</label> 
+                        <button title="Disapprove" type="button" 
+                            data-group-id="${data[i].group_id}" data-username="${data[i].username}" 
+                            data-id="${data[i].id}" data-name="${data[i].name}"
+                            class="btn-xs btn-warning pull-right joinrequestlist_btn joinrequest-disapprove">
+                            <i class="fa fa-thumbs-down fa-fw" aria-hidden="true"></i>
+                        </button>
+                        <button title="Approve" type="button" 
+                            data-group-id="${data[i].group_id}" data-username="${data[i].username}" 
+                            data-id="${data[i].id}" data-name="${data[i].name}"
+                            class="btn-xs btn-primary pull-right joinrequestlist_btn joinrequest-approve" style="margin-right:5px;">
+                            <i class="fa fa-thumbs-up fa-fw" aria-hidden="true"></i> 
+                        </button>
+                        </a>`;
+                }
+                joinrequestBox.html(html);
+            });
+        }
 
+        $(document).on('click', '#joinrequestBox a.list-group-item button.joinrequest-approve', function (e) {
+            let data = {};
+            data.g_id = parseInt($(this).attr('data-group-id'));
+            data.r_id = parseInt($(this).attr('data-id'));
+            data.username = $(this).attr('data-username');
+            data.u_id = window.Vyndue_cKey;
+            data.name = $(this).attr('data-name');
+            data.approve = 1;
+            data.t_id = 2;
+            if(!confirm('Are you sure to "Approve" '+ data.name +' request to join?')){
+                return;
+            }
+            socket.emit('joinrequestProccess',data);
+            getJoinRequest(data.g_id);
+            e.preventDefault();
+        });
+
+        $(document).on('click', '#joinrequestBox a.list-group-item button.joinrequest-disapprove', function (e) {
+            let data = {};
+            data.g_id = parseInt($(this).attr('data-group-id'));
+            data.r_id = parseInt($(this).attr('data-id'));
+            data.username = $(this).attr('data-username');
+            data.u_id = window.Vyndue_cKey;
+            data.name = $(this).attr('data-name');
+            data.approve = 0;
+            data.t_id = 6;
+            if(!confirm('Are you sure to "Disapprove" '+ data.name +' request to join?')){
+                return;
+            }
+            socket.emit('joinrequestProccess',data);
+            getJoinRequest(data.g_id);
+            e.preventDefault();
+        });
 
 
         function initVideo(id, isme) {
@@ -2531,6 +2648,9 @@
                     if (!$("#changeGroupImage").hasClass('hidden')) {
                         $("#changeGroupImage").addClass('hidden');
                     }
+                    if (!$("#joinRequest").hasClass('hidden')) {
+                        $("#joinRequest").removeClass('hidden');
+                    }
                 }else{
                     if ($('#addMember').hasClass('hidden')) {
                         $('#addMember').removeClass('hidden');
@@ -2540,6 +2660,9 @@
                     }
                     if ($("#changeGroupImage").hasClass('hidden')) {
                         $("#changeGroupImage").removeClass('hidden');
+                    }
+                    if ($("#joinRequest").hasClass('hidden')) {
+                        $("#joinRequest").removeClass('hidden');
                     }
                 }
                 
@@ -3313,15 +3436,25 @@
             //return;
             console.log('emmited');
 
+            return;
+
             var data = {
                 groupId:10,
                 message:'hello <a href="#" data-username="uBNvSBrIXg" class="mention">@John Doe</a>  and <a href="#" data-username="Zjk3hVyYNy" class="mention">@Billy Cruz</a>',
                 _r:"eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJjb25zdW1lcktleSI6ImIxN1p5aFJSNXkiLCJpc3N1ZWRBdCI6IjIwMTktMDUtMjJUMDQ6MTI6NDUrMDAwMCIsImZpcnN0TmFtZSI6IlJhbHBoIiwidXNlck5hbWUiOiJSYWxwaCBUb2xpcGFzIiwicHJvZmlsZVBpY3R1cmUiOiJodHRwOlwvXC9kZXYudnluZHVlLmNvbVwvYXNzZXRzXC9pbWdcL2Rvd25sb2FkLnBuZyIsInVzZXJFbWFpbCI6InJhbHBoQGVtYWlsLmNvbSIsInVzZXJJZCI6IjMiLCJ1c2VyVHlwZSI6IjEifQ.MiAoPJkiOVfTcl28bDhF8dXcFE3-Ofc51RSpiIEZNnY"
             };
 
-            console.log(socket.emit("testSend", data));
+            //console.log(socket.emit("testSend", data));
 
             return;
+
+        });
+
+        //Join Request Modal
+        $('#joinRequest').on("click", function (e) {
+
+            $("#modalJoinRequest").modal("show");
+            getJoinRequest(activeGroupId);
 
         });
 
@@ -4457,6 +4590,7 @@
         });
 
         socket.on("notifyUser", function (data) {
+           // console.log(data);
            toastr.info(`${data.fromname} ${data.notdesc} ${data.group_name}`);
            pingNotificationButton();
         });

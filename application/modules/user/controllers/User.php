@@ -609,4 +609,32 @@ class User extends REST_Controller
     
     }
 
+    public function joinrequestList_get()
+    {
+        if(!ID_LOGIN) {
+            $headers = apache_request_headers();
+            $userId =(int) $this->User_Model->getTokenToId($headers["Authorizationkeyfortoken"]);
+        }else{
+            $userId=$this->get("userId");
+        }
+ 
+        $g_id = $this->get("groupId",true);
+
+        $data=$this->Im_group_requests_Model->joinrequestList($userId,$g_id);
+        
+
+        $responseData=array(
+            "data"=> $data
+        );
+
+        $response = array(
+            "status" => array(
+                "code" => REST_Controller::HTTP_OK,
+                "message" => true
+            ),
+            "response" => $responseData
+        );
+        $this->response($response, REST_Controller::HTTP_OK);
+    }
+
 }

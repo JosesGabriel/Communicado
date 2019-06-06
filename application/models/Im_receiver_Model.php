@@ -161,7 +161,7 @@ class Im_receiver_Model extends CI_Model{
         $SQL = "SELECT im.g_id as group_id, concat(u.firstName,' ',u.lastName) as sender_name,
         nt.description as message, if(g.type=1,'Personal Chat',if(!isnull(g.name),g.name,'Unnamed Community')) as group_name,
         date_format(im.date_time,'%Y-%m-%dT%H:%i:%s.000Z') as date_time,
-        nt.id as notiftype, 0 as notif_id
+        nt.id as notif_type, 0 as notif_id, nt.icon, nt.badge
         from im_mention as im 
         left join im_group as g on im.g_id = g.g_id
         left join users as u on im.u_id = u.userId
@@ -173,7 +173,7 @@ class Im_receiver_Model extends CI_Model{
         select ir.g_id as group_id, concat(u.firstName,' ',u.lastName) as sender_name,
         nt.description as message, if(g.type=1,'Personal Chat',if(!isnull(g.name),g.name,'Unnamed Community')) as group_name, 
         date_format(concat(m.date,' ',m.time),'%Y-%m-%dT%H:%i:%s.000Z') as date_time,
-        nt.id as notiftype, 0 as notif_id
+        nt.id as notif_type, 0 as notif_id, nt.icon, nt.badge
         from im_receiver as ir
         left join im_group as g on ir.g_id = g.g_id
         left join im_message as m using(m_id)
@@ -186,7 +186,8 @@ class Im_receiver_Model extends CI_Model{
         UNION ALL
         select n.g_id as group_id,concat(u2.firstName,' ',u2.lastName) as sender_name, 
         nt.description as message, if(!isnull(g.name),g.name,'Unnamed Community') as group_name,
-        date_format(n.date_time,'%Y-%m-%dT%H:%i:%s.000Z') as date_time, nt.id as notif_type, n.n_id as notif_id
+        date_format(n.date_time,'%Y-%m-%dT%H:%i:%s.000Z') as date_time, 
+        nt.id as notif_type, n.n_id as notif_id, nt.icon, nt.badge
         from im_notifications as n
         inner join im_group as g on n.g_id = g.g_id
         inner join im_notification_types as nt on n.t_id = nt.id
@@ -203,7 +204,7 @@ class Im_receiver_Model extends CI_Model{
         $SQL = "SELECT im.g_id as group_id, concat(u.firstName,' ',u.lastName) as sender_name,
         nt.description as message, if(g.type=1,'Personal Chat',if(!isnull(g.name),g.name,'Unnamed Community')) as group_name,
         date_format(im.date_time,'%Y-%m-%dT%H:%i:%s.000Z') as date_time,
-        nt.id as notiftype, 0 as notif_id, nt.icon, nt.badge
+        nt.id as notif_type, 0 as notif_id, nt.icon, nt.badge
         from im_mention as im 
         left join im_group as g on im.g_id = g.g_id
         left join users as u on im.u_id = u.userId
@@ -215,7 +216,7 @@ class Im_receiver_Model extends CI_Model{
         select ir.g_id as group_id, concat(u.firstName,' ',u.lastName) as sender_name,
         nt.description as message, if(g.type=1,'Personal Chat',if(!isnull(g.name),g.name,'Unnamed Community')) as group_name, 
         date_format(concat(m.date,' ',m.time),'%Y-%m-%dT%H:%i:%s.000Z') as date_time,
-        nt.id as notiftype, 0 as notif_id, nt.icon, nt.badge
+        nt.id as notif_type, 0 as notif_id, nt.icon, nt.badge
         from im_receiver as ir
         left join im_group as g on ir.g_id = g.g_id
         left join im_message as m using(m_id)
@@ -228,7 +229,8 @@ class Im_receiver_Model extends CI_Model{
         UNION ALL
         select n.g_id as group_id,concat(u2.firstName,' ',u2.lastName) as sender_name, 
         nt.description as message, if(!isnull(g.name),g.name,'Unnamed Community') as group_name,
-        date_format(n.date_time,'%Y-%m-%dT%H:%i:%s.000Z') as date_time, nt.id as notif_type, n.n_id as notif_id, nt.icon, nt.badge
+        date_format(n.date_time,'%Y-%m-%dT%H:%i:%s.000Z') as date_time, 
+        nt.id as notif_type, n.n_id as notif_id, nt.icon, nt.badge
         from im_notifications as n
         inner join im_group as g on n.g_id = g.g_id
         inner join im_notification_types as nt on n.t_id = nt.id

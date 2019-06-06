@@ -95,6 +95,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="col-md-12 col-xl-12 col-xs-12 col-sm-12 pad-5" style="cursor: pointer;color: #75aef3;padding-right: 0;">
                 <i class="fa fa-plus"></i>Add People</div>
             </div>
+            <div class="col-md-12 col-xl-12 col-xs-12 col-sm-12  pad-5 hidden optionHubar" id="joinRequest" data-group="">
+                <div class="col-md-12 col-xl-12 col-xs-12 col-sm-12 pad-5" style="cursor: pointer;color: #75aef3;padding-right: 0;">
+                <i class="fa fa-user-plus"></i>Join Request</div>
+            </div>
             <div class="col-md-12 col-xl-12 col-xs-12 col-sm-12  pad-5 hidden optionHubar" id="blockOptions"  >
                 <div class="col-md-12 col-xl-12 col-xs-12 col-sm-12 pad-5 hidden" id="block" style="cursor: pointer;color: #75aef3;padding-right: 0;">
                 <i class="fa  fa-toggle-off"></i>Block</div>
@@ -168,7 +172,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
         </div>
 
-        <div style="display:none" id="vyndue-floatBtn-container_4">
+        <div style="display:none;" id="vyndue-floatBtn-container_4">
             <div title="Settings" id="btnSettings" class="floatBtn-Wrapper">
                 <i class="fa fa-gear" aria-hidden="true"></i>
                 <span>Settings</span>
@@ -179,7 +183,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <!-- Modals -->
 <div id="modalCommunities" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" class="modal fade in" style="display: none;padding-right: 17px;" data-backdrop="static" data-keyboard="false">
-    <div role="document" class="modal-dialog" style="width:570px !important;">
+    <div role="document" class="modal-dialog" style="width:600px !important;">
         <div class="modal-content" >
             <div class="modal-header" style="padding-bottom: 0 !important;">
                 <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="oli oli-delete_sign"></i></span></button>
@@ -196,7 +200,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </div>
 
 <div id="modalNotifications" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" class="modal fade in" style="display: none;padding-right: 17px;" data-backdrop="static" data-keyboard="false">
-    <div role="document" class="modal-dialog" style="width:400px !important;">
+    <div role="document" class="modal-dialog" style="width:500px !important;">
         <div class="modal-content" >
             <div class="modal-header" style="padding-bottom: 0 !important;">
                 <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="oli oli-delete_sign"></i></span></button>
@@ -204,6 +208,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="modal-body">
                     <div id="notificationBox" class="list-group">
                         <h4>Notification box is empty.</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="modalJoinRequest" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" class="modal fade in" style="display: none;padding-right: 17px;" data-backdrop="static" data-keyboard="false">
+    <div role="document" class="modal-dialog" style="width:500px !important;">
+        <div class="modal-content" >
+            <div class="modal-header" style="padding-bottom: 0 !important;">
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="oli oli-delete_sign"></i></span></button>
+                <h4 class="modal-title myUpdateModalLabel" style="background-color: #75aef3">  <i class="fa fa-user-plus" aria-hidden="true"></i> Join Request</h4>
+                <div class="modal-body">
+                    <div id="joinrequestBox" class="list-group">
+                        <h4>Join Request box is empty.</h4>
                     </div>
                 </div>
             </div>

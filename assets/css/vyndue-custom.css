@@ -126,6 +126,7 @@ input.searchAwesome {
 .communitylist_thumbnail{
   height: 30px;
   width: 30px;
+  cursor: default;
 }
 
 .communitylist_label{
@@ -135,4 +136,24 @@ input.searchAwesome {
 }
 .communitylist_btn{
   width:135px;
+}
+
+div#joinrequestBox{
+  height: 400px;
+  overflow-x: auto;
+}
+
+.joinrequestlist_thumbnail{
+  height: 30px;
+  width: 30px;
+  cursor: default;
+}
+
+.joinrequestlist_label{
+  margin-left: 15px;
+  margin-top: 7px;
+  position: absolute;
+}
+.joinrequestlist_btn{
+  width:45px;
 }

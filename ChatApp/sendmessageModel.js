@@ -5,12 +5,14 @@ const mysqlCon = database.mysqlCon2;
 const group=require("./group");
 let baseUrl=group.getHost();
 let app={};
+let Im_user_Model={};
 let Im_blocklist={};
 let Im_group_members_Model={};
 let Im_group_Model={};
 let Im_message_Model={};
 let Im_receiver_Model={};
 let Im_notifications_Model={};
+let Im_group_requests_Model={};
 
 
 //--------- Im_block_list_model-------//
@@ -55,15 +57,8 @@ Im_group_members_Model.getMembers=async function(g_id){
 };
 
 Im_group_members_Model.insert=async function (g_id,u_id){
-  let query="INSERT INTO im_group_members (g_id,u_id) VALUES (?,?)";
+  let query="INSERT IGNORE INTO im_group_members (g_id,u_id) VALUES (?,?)";
     await mysqlCon.execute(query,[g_id,u_id]);
-};
-
-// ralph 2019-05-24
-Im_group_members_Model.getMemberIdByUserSecret=async function (usersecret){
-    let query="select userid from users where usersecret=?";
-    let [result,err]=await mysqlCon.execute(query,[usersecret]);
-    return parseInt(result[0].userid);
 };
 
 
@@ -154,7 +149,13 @@ Im_receiver_Model.deleteByGroupId=async (g_id)=>{
 
 //------------ notifications --------------//
 
-Im_notifications_Model.fetchDetails= async function(n_id){
+Im_notifications_Model.insert= async (u_id,r_id,g_id,t_id)=>{
+    let query="insert into im_notifications (u_id,r_id,g_id,t_id,date_time) values (?,?,?,?,now());";
+    let [res,err] = await mysqlCon.execute(query,[u_id,r_id,g_id,t_id]);
+    return res.insertId;
+};
+
+Im_notifications_Model.fetchDetails = async function(n_id){
     let query=`select concat(u2.firstName,' ',u2.lastName) as fromname, nt.description as notdesc, n.g_id,  
         if(!isnull(g.name),g.name,'Unnamed Community') as group_name, 
         u.active, u.userSecret, u.userId, s.socketId 
@@ -169,10 +170,36 @@ Im_notifications_Model.fetchDetails= async function(n_id){
     return result[0];
 };
 
+//------------ join request --------------//
+
+Im_group_requests_Model.approveJoinRequest = async function(member_id,group_id,admin_id){
+    let query=`update im_group_requests as r
+        inner join im_group as g on r.g_id = g.g_id 
+        set r.accepted_date=now()
+        where r.g_id=? and r.u_id=? and g.createdBy=? and isnull(r.accepted_date);`;
+    await mysqlCon.execute(query,[group_id,member_id,admin_id]);
+}; 
+
+Im_group_requests_Model.removeJoinRequest = async function(member_id,group_id,admin_id){
+    let query=`delete r from im_group_requests as r
+        inner join im_group as g on r.g_id = g.g_id     
+        where r.g_id=? and r.u_id=? and g.createdBy=? and isnull(r.accepted_date);`;
+    await mysqlCon.execute(query,[group_id,member_id,admin_id]);
+}; 
+
+// ralph 2019-05-24
+Im_user_Model.getUserIdByUserSecret=async function (usersecret){
+    let query="select userid from users where usersecret=?";
+    let [result,err]=await mysqlCon.execute(query,[usersecret]);
+    return parseInt(result[0].userid);
+};
+
+app.Im_user_Model=Im_user_Model;
 app.Im_blocklist=Im_blocklist;
 app.Im_group_members_Model=Im_group_members_Model;
 app.Im_group_Model=Im_group_Model;
 app.Im_message_Model=Im_message_Model;
 app.Im_receiver_Model=Im_receiver_Model;
 app.Im_notifications_Model=Im_notifications_Model;
+app.Im_group_requests_Model=Im_group_requests_Model;
 module.exports=app;

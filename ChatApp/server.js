@@ -632,6 +632,46 @@ io.on("connection", function (socket) {
         })
     });
 
+    socket.on('seenNotification', function (n_id){
+        
+        let SQLQuery = "update im_notifications set seen=1, seen_tstamp=now() where n_id=? and seen=0";
+        mysqlCon2.execute(SQLQuery, [n_id]);
+        
+    });
+
+    socket.on('joinrequestProccess', function (data){
+        
+        let result = JoinRequestNotification(data);
+        result.then(response => {
+            if(parseInt(response.active)){
+                users[response.socketId].emit("notifyUser", response);
+            } 
+        });
+
+    });
+
+    async function JoinRequestNotification(data) {
+
+        data.u_id = await sMM.Im_user_Model.getUserIdByUserSecret(data.u_id);
+        let { u_id,r_id,g_id,t_id } = data;
+
+        if(parseInt(data.approve)===1){
+            //update request 
+            await sMM.Im_group_requests_Model.approveJoinRequest(r_id,g_id,u_id);
+            //add user in the group
+            await sMM.Im_group_members_Model.insert(g_id,r_id);
+        }else{
+            // remove request
+            await sMM.Im_group_requests_Model.removeJoinRequest(r_id,g_id,u_id);
+        }
+
+        // send notification
+        let n_id = await sMM.Im_notifications_Model.insert(u_id,r_id,g_id,t_id);
+        let result = await sMM.Im_notifications_Model.fetchDetails(n_id);
+        return result;
+
+    }
+
     socket.on("sendText", function (response) {
         let data = null;
         if (typeof response === 'object') {
@@ -672,7 +712,9 @@ io.on("connection", function (socket) {
                         let arrMention = [];
                         let m = [];
                         while ( m = rex.exec( data.message ) ) {
-                            let mention_id = await sMM.Im_group_members_Model.getMemberIdByUserSecret(m[2]);
+                            //console.log(m);
+                            let mention_id = await sMM.Im_user_Model.getUserIdByUserSecret(m[2]);
+                            //console.log(mention_id);
                             if(parseInt(mention_id)>0 && (arrMention.indexOf(mention_id)==-1)){
                                 await sMM.Im_group_members_Model.insertUserMention(senderId,mention_id,receiverId,date_time);
                                 arrMention.push(mention_id);
@@ -683,12 +725,12 @@ io.on("connection", function (socket) {
                                                     left join users as u on m.r_id = u.userId
                                                     left join users as u2 on m.u_id = u2.userId
                                                     where m.u_id = ? and m.r_id = ? and m.g_id = ? and m.date_time=? limit 1`;
-                                let result = await mysqlCon2.execute(socketQuery,[senderId,mention_id,receiverId,date_time]);
+                                let [result,err] = await mysqlCon2.execute(socketQuery,[senderId,mention_id,receiverId,date_time]);
                                 for (let i = 0; i < result.length; i++) {
                                     try{
-                                     //   console.log(result[i]);
-                                     //   console.log(users[result[i].socketId]);
-                                        users[result[i].socketId].emit("notifyMentionUser", result[i]);
+                                         if(parseInt(result[i].active)>0){
+                                            users[result[i].socketId].emit("notifyMentionUser", result[i]);
+                                         } 
                                     } catch (err) {
                                       //  console.log('error here');
                                         console.log("[ " + moment().format('MMMM Do YYYY, hh:mm:ss') + " ] " + err);
