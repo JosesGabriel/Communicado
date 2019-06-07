@@ -340,11 +340,8 @@
         */
         
         function notifyMe(header, message, icon ) {
-           // console.log('Notify me');
-           // console.log(Notification.permission);
             let modmsg = message.replace(/(<([^>]+)>)/ig,"");          
             if (notificationPermission && (icon !== undefined || icon !== null)) {
-               // console.log(icon);
                 let image = null;
                 let c = document.createElement("canvas");
                 let ctx = c.getContext("2d");
@@ -466,8 +463,6 @@
 
         $(inputMentionSearch).on('focus', function(e){
             getMention(function (res) {
-              //  console.log('result');
-              //  console.log(res);
                 let q = [];
                 for (i = 0; i < res.length; i++) {    
                     let md = {
@@ -490,12 +485,9 @@
             if(data===undefined) return;
             hide_divMentionDiv();
             input.focus();
-            //console.log('selected');
-            //console.log(data);
             setTimeout(() => {
                 let content = input.innerHTML.slice(0, input.innerHTML.length-1);
                 let newcontent = content + '<m><a href="#" data-username="'+ data.username +'" class="mention">@' + data.name + '</a></m>&nbsp;';                
-               // console.log(newcontent);
                 input.innerHTML = newcontent;
             }, 150);
         });
@@ -536,7 +528,6 @@
             if (ID_BASED) {
                 url = "<?php echo base_url('user/notificationTotal?userId=') ?>" + userId;
             }
-            //console.log(url);
             let settings = {
                 "async": true,
                 "crossDomain": true,
@@ -563,7 +554,6 @@
             if (ID_BASED) {
                 url = "<?php echo base_url('user/notificationList?limit=') ?>" + limitNotif + "&page=" + pageNotif + "&userid=" + userId;
             }
-            //console.log(url);
             let settings = {
                 "async": true,
                 "crossDomain": true,
@@ -606,7 +596,6 @@
                         </span>`;
                 // list
                 for (let i = 0; i < data.length; i++) {
-                   //console.log(data[i]);
                    html += `<a style="color:black" data-id="${data[i].group_id}" data-notif-id="${data[i].notif_id}" data-notif-type="${data[i].notif_type}" class="list-group-item"> 
                         <span class="badge"><i class="fa fa-2x fa-${ data[i].badge }" aria-hidden="true"></i></span>      
                         <small>         
@@ -634,7 +623,8 @@
             switch (parseInt(n_type)) {
                 case 1:
                     setTimeout(() => {
-                        $("div#joinRequest").trigger("click", [{update: true}]);
+                        $("#modalJoinRequest").modal("show");
+                        getJoinRequest(g_id);
                     },1000);     
                 break;
                 case 2:
@@ -654,7 +644,6 @@
         $(document).on('click', 'a#notifPrev', function (e) {
             let page = $(this).attr('data-page');
             let prev = parseInt($(this).attr('data-prev'));
-            //console.log(prev);
             if(prev){
                 getNotification(page);
                 return;
@@ -665,7 +654,6 @@
         $(document).on('click', 'a#notifNext', function (e) {
             let page = $(this).attr('data-page');
             let next = parseInt($(this).attr('data-next'));
-            //console.log(next);
             if(next){
                 getNotification(page);
                 return;
@@ -679,7 +667,6 @@
             if (ID_BASED) {
                 url = "<?php echo base_url('user/communityList?userId=') ?>" + userId;
             }
-            //console.log(url);
             let settings = {
                 "async": true,
                 "crossDomain": true,
@@ -713,7 +700,6 @@
             if (ID_BASED) {
                 url = "<?php echo base_url('user/joinrequestList?groupId=') ?>" + "&userId=" + userId;
             }
-            //console.log(url);
             let settings = {
                 "async": true,
                 "crossDomain": true,
@@ -736,14 +722,12 @@
             };
             $.ajax(settings).done(function (response) {
                 let data = response.response.data;
-                //console.log(data);
                 if(data.length===0){
                     joinrequestBox.html("<h4>Join Request box is empty.</h4>");
                     return;
                 }
                 let html = '';
                 for (let i = 0; i < data.length; i++) {
-                   //console.log(data[i]);
                    html += `<a style="color:black;cursor: default;" data-group-id="${data[i].group_id}" data-username="${data[i].username}" class="list-group-item"> 
                         <img src="${ data[i].picture }" class="joinrequestlist_thumbnail">  
                         <label data-username="${data[i].username}" title="View Profile" class="joinrequestlist_label">${ data[i].name }</label> 
@@ -1192,7 +1176,6 @@
             $("#groups").append(scrollYClone);
         }
         function printGroupList(groups) {
-            //console.log('style here');
             let html = "";
             groupIds = [];
             time = {};
@@ -1242,7 +1225,6 @@
                 }
                 html += "                    <\/li>";
             }
-            //console.log(html);
             $("#groups").html(html);
             for (let i = 0; i < groups.length; i++) {
                 createGroupImage( groups[i].groupId);
@@ -1250,12 +1232,10 @@
         }
         //This function is used to get the group list
         function getGroupList(callback) {
-            //console.log('Start Here!');
             let url = "<?php echo base_url('imApi/getGroups?limit=') ?>" + groupLimit + "&start=0";
             if (ID_BASED) {
                 url = "<?php echo base_url('imApi/getGroups?limit=') ?>" + groupLimit + "&start=0&userId=" + userId;
             }
-            // console.log(url);
             let settings = {
                 "async": true,
                 "crossDomain": true,
@@ -1284,7 +1264,6 @@
                 init_twemoji();
                 let groups = response.response;
 
-                //console.log(groups);
 
                 totalGroup = parseInt(response.status.total);
                 if (totalGroup == 0) {
@@ -1349,8 +1328,6 @@
             }
             for (let i = 0; i < members.length; i++) {
                 membersId.push(members[i].userId);
-                // console.log(members[i].userEmail);
-                // console.log(creatorEmail);
                
 
                 html += "<li class=\"person\"  style=\"padding-top: 5px;padding-bottom: 0px;height:50px;cursor: default;\">";
@@ -1431,7 +1408,6 @@
             if (ID_BASED) {
                 url = "<?php echo base_url('imApi/getMembers?groupId=') ?>" + groupId + "&userId=" + userId;
             }
-            //console.log(url);
             let settings = {
                 "async": true,
                 "crossDomain": true,
@@ -1453,7 +1429,6 @@
                 }
             };
             $.ajax(settings).done(function (response) {
-                //console.log(response);
                 let members = response.response.memberList;
                 let meCreator = response.response.meCreator;
                 let creatorEmail = response.response.creatorEmail;
@@ -1614,7 +1589,6 @@
             $.ajax(settings).done(function (response) {
                 let data = response.response.friends;
                 totalFriend = response.response.total;
-               // console.log(data);
                 callback(data);
             });
         }
@@ -1742,7 +1716,6 @@
             if (ID_BASED) {
                 url = "<?php echo base_url('imApi/getMessage?groupId=') ?>" + groupId + "&limit=" + limit + "&start=" + start + "&userId=" + userId;
             }
-           // console.log(url);
             let settings = {
                 "async": true,
                 "crossDomain": true,
@@ -2079,8 +2052,6 @@
                 });
             }
             else {
-                // console.log('sendtext here');
-                // console.log(socketData);
                 typingTimeoutFunction();
                 $('.close').trigger("click");
                 socketData._r = String(responce);
@@ -2583,7 +2554,6 @@
         }
         //$(".rightSection").perfectScrollbar();
         $('#groups').on("click", ".person", function (e, update) {
-            //console.log('groups click');
             if ($(this).hasClass('active')) {
                 return false;
             }
@@ -2932,7 +2902,6 @@
                     };
                     $.ajax(settings).done(function (response) {
                         let groupId = response.response.groupId;
-                        //console.log('response');
                         if(groupId>0){
                             $("li#group_"+groupId).first().trigger("click", [{update: true}]);
                         }else{
@@ -2973,8 +2942,6 @@
                         q.push(md);
                     }
                 }
-                // console.log('add member');
-                // console.log(q);
                 newMemberInput.setData(q);
                 newMemberInput.clear();
                 $('#addNewMemberModal').modal('show');
@@ -3144,10 +3111,7 @@
             }
             //let modmessage = message.replace(/(<([^>]+)>)/ig, "").replace(/&nbsp;/gi, " ").replace(/&nbsp;/gi, " ").trim();            
             // send message event
-            // console.log('send message event');
-            // console.log(message);
             let modmessage = message.replace(/(<\/?(?:a)[^>]*>)|<[^>]+>/ig, '$1').replace(/&nbsp;/gi, " ").replace(/&nbsp;/gi, " ").trim();
-            // console.log(modmessage);
             if ((modmessage === null || modmessage === "") && (file === null || file === "")) {
                 reset();
                 return;
@@ -3472,7 +3436,6 @@
         // Ralph 2019-05-22
         $('#btnSettings').on("click", function (e) {
             //return;
-            console.log('emmited');
 
             return;
 
@@ -3482,7 +3445,6 @@
                 _r:"eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJjb25zdW1lcktleSI6ImIxN1p5aFJSNXkiLCJpc3N1ZWRBdCI6IjIwMTktMDUtMjJUMDQ6MTI6NDUrMDAwMCIsImZpcnN0TmFtZSI6IlJhbHBoIiwidXNlck5hbWUiOiJSYWxwaCBUb2xpcGFzIiwicHJvZmlsZVBpY3R1cmUiOiJodHRwOlwvXC9kZXYudnluZHVlLmNvbVwvYXNzZXRzXC9pbWdcL2Rvd25sb2FkLnBuZyIsInVzZXJFbWFpbCI6InJhbHBoQGVtYWlsLmNvbSIsInVzZXJJZCI6IjMiLCJ1c2VyVHlwZSI6IjEifQ.MiAoPJkiOVfTcl28bDhF8dXcFE3-Ofc51RSpiIEZNnY"
             };
 
-            //console.log(socket.emit("testSend", data));
 
             return;
 
@@ -3671,7 +3633,6 @@
                 newData.sort((a, b) => (a.id > b.id) ? 1 : -1)
                 localStorage.setItem('_g',JSON.stringify(newData));
                 // send message to admin
-               // console.log(result.n_id);
                 socket.emit("sendNotification",result.n_id)
             });
             e.preventDefault();
@@ -3755,7 +3716,6 @@
             if(e.which == 13) {
                 let find = e.target.value;
                 find = find.trim();
-               // console.log(find.length);
                 if(find.length<=2){
                     communityBox.html('<br><br><br><p align="center"><i class="fa fa-ellipsis-h fa-4x fa-fw" aria-hidden="true"></i></p><br><h2 align=center>Then Hit Enter</h2><p align="center"><small><b>Simply click "ESC" to get back in Normal List</b></small></p>');
                     toastr.error('Notice: Please enter a minimum of 3 characters');
@@ -4322,7 +4282,6 @@
             $('#connectionErrorModal').modal('hide');
         });
         socket.on("reconnecting", function () {
-            //console.log('start');
                 $(".memberStatus").removeClass("memberActive");
                 $(".authStatus").removeClass("memberActive");
                 if(!isDisconnected){
@@ -4634,14 +4593,12 @@
         });
 
         socket.on("notifyUser", function (data) {
-           // console.log(data);
            toastr.info(`${data.fromname} ${data.notdesc} ${data.group_name}`);
            pingNotificationButton();
         });
 
         function pingNotificationButton(){
             if($('#modalNotifications').is(':visible')){
-                // console.log('open');
                 $('#btnNotifications').addClass('hasNotifications');
                 setTimeout(function(){
                     $('#btnNotifications').removeClass('hasNotifications');
@@ -4649,7 +4606,6 @@
                 // request
                 getNotification(0);
            }else{   
-                // console.log('close');
                 $('#btnNotifications').addClass('hasNotifications');
            }
         }
