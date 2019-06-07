@@ -47,6 +47,7 @@ class User_Model extends CI_Model
                'firstName' =>$query-> row('firstName'), //required
                'lastName'=>$query->row('lastName'), // required
                'userEmail'=>$query->row('userEmail'),// required
+               'userSecret'=>$query->row('userSecret'),// required
                'userAddress'=>$query->row('userAddress'),//optional
                'userMobile'=>$query-> row('userMobile'), //optional
                'userStatus'=>(int) $query-> row('userStatus'),// required. bool type(0,1). checks user profile is active or not

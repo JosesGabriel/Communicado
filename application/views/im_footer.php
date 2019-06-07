@@ -531,6 +531,32 @@
 
         // Ralph 2019-05-29
         // This function is to fecth and list a sorts of notification;
+        function getTotalNotification(callback){
+            let url = "<?php echo base_url('user/notificationTotal') ?>";
+            if (ID_BASED) {
+                url = "<?php echo base_url('user/notificationTotal?userId=') ?>" + userId;
+            }
+            //console.log(url);
+            let settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": url,
+                "method": "GET",
+                "headers": {
+                    "authorization": "Basic YWRtaW46MTIzNA==",
+                    "Authorizationkeyfortoken": String(responce),
+                    "cache-control": "no-cache",
+                    "postman-token": "eb27c011-391a-0b70-37c5-609bcd1d7b6d"
+                },
+                "processData": false,
+                "contentType": false
+            };
+            $.ajax(settings).done(function (response) {
+                let count = response.response.count;
+                callback(count);
+            });
+        };
+
         function getNotification(page) {
             let pageNotif = (parseInt(page)>0) ? page : 0;
             let url = "<?php echo base_url('user/notificationList?limit=') ?>" + limitNotif + "&page=" + pageNotif;
@@ -718,9 +744,9 @@
                 let html = '';
                 for (let i = 0; i < data.length; i++) {
                    //console.log(data[i]);
-                   html += `<a style="color:black" data-group-id="${data[i].group_id}" data-username="${data[i].username}" class="list-group-item"> 
+                   html += `<a style="color:black;cursor: default;" data-group-id="${data[i].group_id}" data-username="${data[i].username}" class="list-group-item"> 
                         <img src="${ data[i].picture }" class="joinrequestlist_thumbnail">  
-                        <label class="joinrequestlist_label">${ data[i].name }</label> 
+                        <label data-username="${data[i].username}" title="View Profile" class="joinrequestlist_label">${ data[i].name }</label> 
                         <button title="Disapprove" type="button" 
                             data-group-id="${data[i].group_id}" data-username="${data[i].username}" 
                             data-id="${data[i].id}" data-name="${data[i].name}"
@@ -738,6 +764,12 @@
                 joinrequestBox.html(html);
             });
         }
+
+        $(document).on('click', 'label.joinrequestlist_label', function (e) {
+            let url = "<?=ARBITRAGE.'/user/'?>"+ $(this).data('username') + "/";
+            window.open(url.replace(' ',''), "_blank");
+            e.preventDefault();
+        });
 
         $(document).on('click', '#joinrequestBox a.list-group-item button.joinrequest-approve', function (e) {
             let data = {};
@@ -1328,8 +1360,8 @@
                     html += "                        <img class='memberStatus' id='member_" + members[i].userId + "' src=\"" + members[i].profilePictureUrl + "\" alt=\"\" \/>";
                 }
                 html += "                        <span  class=\"name\"><div>" + members[i].firstName + " " + members[i].lastName +"</div><\/span>";
-                html += "                        <span  class=\"vyndue_email\"><div>" + members[i].userEmail +"<\/div><\/span>";                
-                
+                html += "                        <span  class=\"vyndue_email\"> <div> " + members[i].userSecret +"<\/div><\/span>";                
+                html += "<i class='fa fa-at text-info vyndue_at_email' aria-hidden='true'></i>";
                 if (meCreator === true) {
                     html += "                        <span class=\"time\" style='padding-top: 5px' ><a href=\"#\" data-group=\"" + groupId + "\" data-member=\"" + members[i].userId + "\" class=\"btn-danger btn-extra-small btnMemberDelete\"><i class=\"fa fa-trash\"><\/i><\/a><\/span>";
                 }
@@ -2612,6 +2644,9 @@
                 if (!$("#leaveGroup").hasClass('hidden')) {
                     $("#leaveGroup").addClass('hidden');
                 }
+                if (!$("#joinRequest").hasClass('hidden')) {
+                    $("#joinRequest").addClass('hidden');
+                }
                 $("#groupMembers").html("");
 
             }else{
@@ -2624,6 +2659,9 @@
                 if(groupType==2){
                     if (!$("#leaveGroup").hasClass('hidden')) {
                         $("#leaveGroup").addClass('hidden');
+                    }
+                    if (!$("#joinRequest").hasClass('hidden')) {
+                        $("#joinRequest").addClass('hidden');
                     }
                 }else{
                     if(meCreator){
@@ -3737,6 +3775,12 @@
         //     listCommunities(localStorage.getItem('_g'),currentCommunityPage,false);
         // });
 
+
+        $(document).on('click', 'span.vyndue_email div', function (e) {
+            let url = "<?=ARBITRAGE.'/user/'?>"+ $(this).text() + "/";
+            window.open(url.replace(' ',''), "_blank");
+            e.preventDefault();
+        });
         
 
 //-------------------- Drop Zone ---------------------------------------
@@ -4609,6 +4653,12 @@
                 $('#btnNotifications').addClass('hasNotifications');
            }
         }
+        
+        getTotalNotification(function(count){
+            if(parseInt(count)>0){
+                pingNotificationButton();
+            }
+        });
         //$('#connectionErrorModal').show();
 //------------------ End of web socket section -------------------------
         setInterval(updateTime, 60000);

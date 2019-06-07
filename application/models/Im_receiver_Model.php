@@ -156,7 +156,7 @@ class Im_receiver_Model extends CI_Model{
     }
 
     // ralph 2019-05-29
-    public function notificationTotaluser($u_id)
+    public function getTotalNotification($u_id)
     {
         $SQL = "SELECT im.g_id as group_id, concat(u.firstName,' ',u.lastName) as sender_name,
         nt.description as message, if(g.type=1,'Personal Chat',if(!isnull(g.name),g.name,'Unnamed Community')) as group_name,

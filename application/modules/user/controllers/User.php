@@ -473,7 +473,7 @@ class User extends REST_Controller
         $pagemod = ($page>0) ? $page*$limit : 0;
         
         $data=$this->Im_receiver_Model->notificationList($userId,$limit,$pagemod);
-        $data['counttotal'] = $this->Im_receiver_Model->notificationTotaluser($userId);
+        $data['counttotal'] = $this->Im_receiver_Model->getTotalNotification($userId);
         // pagination
         if($data['count']>0){
             $data['prev'] = $page<>0 ? 1 : 0 ;
@@ -625,6 +625,32 @@ class User extends REST_Controller
 
         $responseData=array(
             "data"=> $data
+        );
+
+        $response = array(
+            "status" => array(
+                "code" => REST_Controller::HTTP_OK,
+                "message" => true
+            ),
+            "response" => $responseData
+        );
+        $this->response($response, REST_Controller::HTTP_OK);
+    }
+
+    public function notificationTotal_get()
+    {
+        if(!ID_LOGIN) {
+            $headers = apache_request_headers();
+            $userId =(int) $this->User_Model->getTokenToId($headers["Authorizationkeyfortoken"]);
+        }else{
+            $userId=$this->get("userid");
+        }
+        
+        $count = $this->Im_receiver_Model->getTotalNotification($userId);
+        
+
+        $responseData=array(
+            "count"=> $count,
         );
 
         $response = array(

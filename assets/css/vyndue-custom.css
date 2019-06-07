@@ -83,13 +83,15 @@ a.mention{
 }
 
 span.vyndue_email > div{
-  padding-left: 49px;
+    padding-left: 44px;
     font-size: smaller;
-    font-style: italic;
+    /*font-style: italic;*/
     color: gray;
     letter-spacing: 1px;
     font-family: monospace;
     margin-top: 2px;
+    margin-left: 20px;
+    cursor:pointer;
 }
 
 div#notificationBox{
@@ -153,7 +155,22 @@ div#joinrequestBox{
   margin-left: 15px;
   margin-top: 7px;
   position: absolute;
+  cursor: pointer;
+  color: #000;
+  text-decoration: none;
 }
+
+label.joinrequestlist_label:hover{
+  color:#2096F3;
+  text-decoration: underline;
+}
+
 .joinrequestlist_btn{
   width:45px;
+}
+
+.vyndue_at_email{
+  position: fixed;
+  margin-left: 50px;
+  margin-top: -15px; 
 }
