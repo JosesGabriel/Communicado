@@ -455,7 +455,7 @@
                     <div style="float: left;"><img style="width: 25px;height: 25px" src=" ${data.picture} " /></div> 
                     <div style="float: left; margin-left: 5px"> 
                     <div style="font-weight: bold; color: #333; font-size: 12px; line-height: 11px"> ${data.name} </div> 
-                    <div style="color: #999; font-size: 9px"> ${ data.email==null ? '&nbsp;' : data.email  } </div> 
+                    <div style="color: #999; font-size: 9px"> @${ data.username } </div> 
                     </div> 
                     </div><div style="clear:both;"></div>`; 
             }
@@ -1337,8 +1337,8 @@
                     html += "                        <img class='memberStatus' id='member_" + members[i].userId + "' src=\"" + members[i].profilePictureUrl + "\" alt=\"\" \/>";
                 }
                 html += "                        <span  class=\"name\"><div>" + members[i].firstName + " " + members[i].lastName +"</div><\/span>";
-                html += "                        <span  class=\"vyndue_email\"> <div> " + members[i].userSecret +"<\/div><\/span>";                
-                html += "<i class='fa fa-at text-info vyndue_at_email' aria-hidden='true'></i>";
+                html += "                        <span title='Visit Profile' class=\"vyndue_email\"> <div><strong class=\"vyndue_at_email\">@</strong>"+ members[i].userSecret +"<\/div><\/span>";                
+                //html += "<span class='vyndue_at_email text-info'>@</span>";
                 if (meCreator === true) {
                     html += "                        <span class=\"time\" style='padding-top: 5px' ><a href=\"#\" data-group=\"" + groupId + "\" data-member=\"" + members[i].userId + "\" class=\"btn-danger btn-extra-small btnMemberDelete\"><i class=\"fa fa-trash\"><\/i><\/a><\/span>";
                 }
@@ -1542,6 +1542,31 @@
                 $clamp(element, {clamp: 3, useNativeClamp: false});
             });
         }
+        // callback function to fetch all membered group and mingled friends
+        function getSearchList(callback){
+            resetFriendStart();
+            let url = "<?php echo base_url('user/searchList?start=') ?>" + friendStart + "&limit=" + friendLimit;
+            if (ID_BASED) {
+                url = "<?php echo base_url('user/searchList?start=') ?>" + friendStart + "&limit=" + friendLimit + "&userId=" + userId;
+            }
+            let settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": url,
+                "method": "GET",
+                "headers": {
+                    "authorization": "Basic YWRtaW46MTIzNA==",
+                    "Authorizationkeyfortoken": String(responce),
+                    "cache-control": "no-cache",
+                    "postman-token": "eb27c011-391a-0b70-37c5-609bcd1d7b6d"
+                },
+                "dataType": 'json'
+            };
+            $.ajax(settings).done(function (response) {
+               callback(response);
+            });
+        }
+
         //This function is userd to get memntion person in a group
         function getMention(callback) {
             let url = "<?php echo base_url('user/mentionList?groupId=') ?>" + activeGroupId;
@@ -2833,42 +2858,24 @@
         });
 
         $(searchGroupInput).on('focus', function(e){
-            resetFriendStart();
-            let url = "<?php echo base_url('user/searchList?start=') ?>" + friendStart + "&limit=" + friendLimit;
-            if (ID_BASED) {
-                url = "<?php echo base_url('user/searchList?start=') ?>" + friendStart + "&limit=" + friendLimit + "&userId=" + userId;
-            }
-            let settings = {
-                "async": true,
-                "crossDomain": true,
-                "url": url,
-                "method": "GET",
-                "headers": {
-                    "authorization": "Basic YWRtaW46MTIzNA==",
-                    "Authorizationkeyfortoken": String(responce),
-                    "cache-control": "no-cache",
-                    "postman-token": "eb27c011-391a-0b70-37c5-609bcd1d7b6d"
-                },
-                "dataType": 'json'
-            };
-            $.ajax(settings).done(function (response) {
-               let res = response.response.friends;
-               let q = [];
-                for (i = 0; i < res.length; i++) {
-                    if (res[i].userStatus != 0) {
-                        let md = {
-                            id: parseInt(res[i].id),
-                            name: res[i].name,
-                            picture: res[i].picture,
-                            email: res[i].email,
-                            type_id: res[i].type_id,
-                            type_description: res[i].type_description
-                        };
-                        q.push(md);
+            getSearchList(function(response){
+                let res = response.response.friends;
+                let q = [];
+                    for (i = 0; i < res.length; i++) {
+                        if (res[i].userStatus != 0) {
+                            let md = {
+                                id: parseInt(res[i].id),
+                                name: res[i].name,
+                                picture: res[i].picture,
+                                email: res[i].email,
+                                type_id: res[i].type_id,
+                                type_description: res[i].type_description
+                            };
+                            q.push(md);
+                        }
                     }
-                }
-                searchGroupInput.setData(q);
-                searchGroupInput.clear();
+                    searchGroupInput.setData(q);
+                    searchGroupInput.clear();
             });
         });
 

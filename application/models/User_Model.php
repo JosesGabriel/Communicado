@@ -744,7 +744,7 @@ class User_Model extends CI_Model
             having GROUP_CONCAT(u.userid) like '%$userId%'
             UNION ALL
             select u.userid as id, concat(u.firstName,' ',u.lastName) as name,
-            u.userProfilePicture as picture, 1 as type, u.userEmail as othername  
+            u.userProfilePicture as picture, 1 as type, concat('@',u.userSecret) as othername
             from users as u 
             inner join friend_list as fl on u.userid = fl.friendId
             where fl.userid = $userId and

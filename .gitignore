@@ -8,4 +8,5 @@ assets/userimage/*
 assets/im/*
 composer.lock
 info.php
+.eslintrc
 
