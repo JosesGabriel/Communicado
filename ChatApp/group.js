@@ -20,6 +20,7 @@ app.get_user = async function (u_id) {
         'userMobile': userData[0].userMobile,
         'userStatus': parseInt(userData[0].userStatus),
         'userGender': userData[0].userGender,
+        'userSecret': userData[0].userSecret,
         'profilePictureUrl': url,
         'active': parseInt(userData[0].active)
     }
