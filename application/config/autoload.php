@@ -59,9 +59,9 @@ $autoload['packages'] = array();
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
 if(MINIFY_SOURCE){
-    $autoload['libraries'] = array('JWT', 'database', 'session', 'form_validation','user_agent','CI_Minifier');
+    $autoload['libraries'] = array('JWT', 'JWTBuilder', 'database', 'session', 'form_validation','user_agent','CI_Minifier');
 }else{
-    $autoload['libraries'] = array('JWT', 'database', 'session', 'form_validation','user_agent');
+    $autoload['libraries'] = array('JWT', 'JWTBuilder', 'database', 'session', 'form_validation','user_agent');
 }
 
 
