@@ -183,6 +183,58 @@ class User extends Api
 
         $this->respond($this->storeUser($data));
     }
+
+    public function update_avatar_post()
+    {
+        $data = $this->post();
+
+        //region Data validation
+        if (!isset($data['user_secret']) ||
+            trim($data['user_secret']) == '') {
+            $this->respond([
+                'status' => 500,
+                'message' => 'User is not set or invalid.',
+            ]);
+        }
+
+        if (!isset($data['avatar_url']) ||
+            trim($data['avatar_url']) == '') {
+            $this->respond([
+                'status' => 500,
+                'message' => 'User avatar is not set or invalid.',
+            ]);
+        }
+        //endregion Data validation
+
+        //region Existence check
+        $user = $this->fetchUserBySecret($data['user_secret']);
+
+        if (!$this->isResponseSuccess($user['status'])) {
+            $this->respond($user);
+        }
+
+        $user = $user['data']['user'];
+        //endregion Existence check
+
+        //region Data update
+        $update = $this->User_Model->updateAvatar($user['userId'], $data['avatar_url']);
+        
+        if ($update === false) {
+            $this->respond([
+                'status' => 500,
+                'message' => 'An error has occurred while updating.',
+            ]);
+        }
+        //endregion Data update
+
+        $this->respond([
+            'status' => 200,
+            'message' => 'Successfully updated avatar.',
+            'data' => [
+                'parameters' => $data,
+            ],
+        ]);
+    }
     //endregion Route methods
 
     //region Repositories
