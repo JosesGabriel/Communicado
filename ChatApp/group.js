@@ -9,7 +9,7 @@ app.get_user = async function (u_id) {
     let [userData, f] = await mysqlCon.execute("SELECT * FROM `users` WHERE `userId` = ?", [u_id]);
     let url = baseUrl + "assets/img/download.png";
     if (userData[0].userProfilePicture !== null) {
-        url = baseUrl + "assets/userImage/" + userData[0].userProfilePicture;
+        url = userData[0].userProfilePicture;
     }
     return {
         'userId': parseInt(userData[0].userId),
