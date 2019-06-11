@@ -359,5 +359,43 @@ class User extends Api
         ];
         //endregion Data query
     }
+
+    /**
+     * Fetch a user by userSecret
+     * 
+     * @param String $secret
+     * @return Array
+     */
+    private function fetchUserBySecret($secret = '')
+    {
+        //region Data validation
+        if (!is_string($secret) ||
+            trim($secret) == '') {
+            return [
+                'status' => 500,
+                'message' => 'User is invalid.',
+            ];
+        }
+        //endregion Data validation
+
+        //region Data query
+        $user = $this->User_Model->fetchBySecret($secret);
+
+        if (!isset($user[0])) {
+            return [
+                'status' => 404,
+                'message' => 'User not found.',
+            ];
+        }
+
+        return [
+            'status' => 200,
+            'message' => 'Successfully fetched user.',
+            'data' => [
+                'user' => $user[0],
+            ],
+        ];
+        //endregion Data query
+    }
     //endregion Repositories
 }
