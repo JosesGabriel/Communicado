@@ -183,6 +183,58 @@ class User extends Api
 
         $this->respond($this->storeUser($data));
     }
+
+    public function update_avatar_post()
+    {
+        $data = $this->post();
+
+        //region Data validation
+        if (!isset($data['user_secret']) ||
+            trim($data['user_secret']) == '') {
+            $this->respond([
+                'status' => 500,
+                'message' => 'User is not set or invalid.',
+            ]);
+        }
+
+        if (!isset($data['avatar_url']) ||
+            trim($data['avatar_url']) == '') {
+            $this->respond([
+                'status' => 500,
+                'message' => 'User avatar is not set or invalid.',
+            ]);
+        }
+        //endregion Data validation
+
+        //region Existence check
+        $user = $this->fetchUserBySecret($data['user_secret']);
+
+        if (!$this->isResponseSuccess($user['status'])) {
+            $this->respond($user);
+        }
+
+        $user = $user['data']['user'];
+        //endregion Existence check
+
+        //region Data update
+        $update = $this->User_Model->updateAvatar($user['userId'], $data['avatar_url']);
+        
+        if ($update === false) {
+            $this->respond([
+                'status' => 500,
+                'message' => 'An error has occurred while updating.',
+            ]);
+        }
+        //endregion Data update
+
+        $this->respond([
+            'status' => 200,
+            'message' => 'Successfully updated avatar.',
+            'data' => [
+                'parameters' => $data,
+            ],
+        ]);
+    }
     //endregion Route methods
 
     //region Repositories
@@ -342,6 +394,44 @@ class User extends Api
 
         //region Data query
         $user = $this->User_Model->fetchByEmail($email);
+
+        if (!isset($user[0])) {
+            return [
+                'status' => 404,
+                'message' => 'User not found.',
+            ];
+        }
+
+        return [
+            'status' => 200,
+            'message' => 'Successfully fetched user.',
+            'data' => [
+                'user' => $user[0],
+            ],
+        ];
+        //endregion Data query
+    }
+
+    /**
+     * Fetch a user by userSecret
+     * 
+     * @param String $secret
+     * @return Array
+     */
+    private function fetchUserBySecret($secret = '')
+    {
+        //region Data validation
+        if (!is_string($secret) ||
+            trim($secret) == '') {
+            return [
+                'status' => 500,
+                'message' => 'User is invalid.',
+            ];
+        }
+        //endregion Data validation
+
+        //region Data query
+        $user = $this->User_Model->fetchBySecret($secret);
 
         if (!isset($user[0])) {
             return [

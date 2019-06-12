@@ -817,6 +817,17 @@ class User_Model extends CI_Model
     {
         return $this->db->where('userSecret', $secret)->get('users')->result_array();
     }
+
+    public function updateAvatar($user_id, $url)
+    {
+        $this->db->trans_start();
+        $this->db->where('userId', $user_id);
+        $this->db->update('users', [
+            'userProfilePicture' => $url,
+        ]);
+        $this->db->trans_complete();
+        return $this->db->trans_status();
+    }
     //endregion For API
 
 }
