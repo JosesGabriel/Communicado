@@ -53,7 +53,8 @@ class User extends Api
         $requester_id = $requester['data']['user']['userId'];
         $responder_id = $responder['data']['user']['userId'];
 
-        $this->FriendList_Model->insert($requester_id, $responder_id);
+        $this->FriendList_Model->insert($requester_id, $responder_id, $this->getISODateTimeWithMilliSeconds());
+        $this->FriendList_Model->insert($responder_id, $requester_id);
         //endregion Add friend relation
 
         $this->respond([
@@ -450,4 +451,24 @@ class User extends Api
         //endregion Data query
     }
     //endregion Repositories
+
+    //region Helpers
+    private function getISODateTimeWithMilliSeconds(){
+        $time = microtime(true);
+        // Determining the microsecond fraction
+        $microSeconds = sprintf("%06d", ($time - floor($time)) * 1000000);
+        // Creating our DT object
+        $tz = new DateTimeZone("Etc/UTC"); // NOT using a TZ yields the same result, and is actually quite a bit faster. This serves just as an example.
+        $dt = new DateTime(date('Y-m-d H:i:s.'. $microSeconds, $time), $tz);
+        // Compiling the date. Limiting to milliseconds, without rounding
+        $iso8601Date = sprintf(
+            "%s%03d%s",
+            $dt->format("Y-m-d\TH:i:s."),
+            floor($dt->format("u")/1000),
+            $dt->format("O")
+        );
+        // Formatting according to ISO 8601-extended
+        return $iso8601Date;
+    }
+    //endregion Helpers
 }
