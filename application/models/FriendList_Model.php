@@ -8,18 +8,10 @@ class FriendList_Model extends CI_Model{
     {
         parent::__construct();
     }
-    public function insert($userid,$friendId, $create_group = false){
+    public function insert($userid,$friendId){
         $this->userId=$userid;
         $this->friendId=$friendId;
         $this->db->insert("friend_list",$this);
-
-        if ($create_group !== false) {
-            $this->name=null;
-            $this->lastActive=$create_group;
-            $this->type=1;
-            $this->createdBy=$userid;
-            $this->db->insert("im_group",$this);
-        }
     }
     public function delete($userId,$friendId){
         $this->db->where("userId",$userId);
