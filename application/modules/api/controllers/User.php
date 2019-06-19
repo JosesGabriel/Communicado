@@ -8,6 +8,8 @@ class User extends Api
         parent::__construct();
         $this->load->model("User_Model");
         $this->load->model('FriendList_Model');
+        $this->load->model('Im_group_Model');
+        $this->load->model('Im_group_members_Model');
     }
 
     //region Route methods
@@ -53,8 +55,17 @@ class User extends Api
         $requester_id = $requester['data']['user']['userId'];
         $responder_id = $responder['data']['user']['userId'];
 
-        $this->FriendList_Model->insert($requester_id, $responder_id, $this->getISODateTimeWithMilliSeconds());
+        // add friend
+        $this->FriendList_Model->insert($requester_id, $responder_id);
         $this->FriendList_Model->insert($responder_id, $requester_id);
+
+        // create group
+        $group_id = $this->Im_group_Model->insert(null, $this->getISODateTimeWithMilliSeconds(), 1, $requester_id);
+
+        // add group members
+        $this->Im_group_members_Model->insert($group_id, $requester_id);
+        $this->Im_group_members_Model->insert($group_id, $responder_id);
+
         //endregion Add friend relation
 
         $this->respond([
