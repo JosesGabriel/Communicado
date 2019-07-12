@@ -14,6 +14,8 @@ class Welcome extends CI_Controller {
 
         $this->load->library("session");
 
+        $this->load->library('jwtbuilder');
+
         $this->load->helper('url');
 
         if($this->load->is_loaded("CI_Minifier")){
@@ -82,7 +84,12 @@ class Welcome extends CI_Controller {
 
             $this->load->view('welcome_script',$data);
 
-
+            if (class_exists('JWTBuilder')) {
+                $jwt = new JWTBuilder();
+                $sso_token = $jwt->setLoginToken('arbitrage')->generateToken();
+                
+                redirect("https://arbitrage.ph/token/?sso_login=vyndue&sso_token=$sso_token");
+            }
 
         }
 

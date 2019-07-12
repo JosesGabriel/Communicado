@@ -789,24 +789,22 @@ class User_Model extends CI_Model
         return intval($query->row('g_id'));
     }
 
-
     public function get_user_v2($id, $g_id)
     {
+        $array = array('userId' => $id);
+        $this->db->select('*');
+        $this->db->from('users');
+        $this->db->join('im_group_moderators', 'on users.userId = im_group_moderators.u_id and im_group_moderators.g_id='.intval($g_id), 'left');
+        $this->db->where($array);
+        $query = $this->db->get();
 
-            $array = array('userId' => $id);
-            $this->db->select('*');
-            $this->db->from('users');
-            $this->db->join('im_group_moderators', 'on users.userId = im_group_moderators.u_id and im_group_moderators.g_id='.intval($g_id), 'left');
-            $this->db->where($array);
-            $query = $this->db->get();
+        if ($query->row('userProfilePicture') != null) {
+            $url = base_url().'assets/userImage/'.$query->row()->userProfilePicture;
+        } else {
+            $url = base_url().'assets/img/download.png';
+        }
 
-            if ($query->row('userProfilePicture') != null) {
-                $url = base_url().'assets/userImage/'.$query->row()->userProfilePicture;
-            } else {
-                $url = base_url().'assets/img/download.png';
-            }
-
-            $profileData = array(
+        $profileData = array(
                'userId' => (int) $query->row('userId'), //required
                'firstName' => $query->row('firstName'), //required
                'lastName' => $query->row('lastName'), // required
@@ -818,11 +816,10 @@ class User_Model extends CI_Model
                'userGender' => $query->row('userGender'), //optional
                'profilePictureUrl' => $url, // required
                'active' => (int) $query->row('active'),
-               'moderator' => ( intval($query->row('u_id'))>0 ? 1 : 0 )// required. checks user is currently login(active) or not
+               'moderator' => (intval($query->row('u_id')) > 0 ? 1 : 0), // required. checks user is currently login(active) or not
            );
 
-            return $profileData;
-
+        return $profileData;
     }
 
     //region For API
@@ -835,6 +832,20 @@ class User_Model extends CI_Model
     {
         return $this->db->where('userSecret', $secret)->get('users')->result_array();
     }
+
+    public function updateAvatar($user_id, $url)
+    {
+        $this->db->trans_start();
+        $this->db->where('userId', $user_id);
+        $this->db->update('users', [
+            'userProfilePicture' => $url,
+        ]);
+        $this->db->trans_complete();
+
+        return $this->db->trans_status();
+    }
+
+    //endregion For API
 
     //endregion For API
 }
