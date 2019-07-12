@@ -9,7 +9,7 @@ How to run Vyndue App in Local Machine
 # Tweak database configuration
 
 Note: Use port 3000 in websocket 
-- assets/newTheme/assets/js/si.js
+- assets/newTheme/assets/js/si.js # var socket=io.connect("ws://localhost:3000",{"transports": ['websocket']});
 - application/config/config.php
 - ChatApp/serverConf.js
 - ChatApp/bin/www

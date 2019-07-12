@@ -10,8 +10,8 @@
 
                 <!-- #####Begin logo wrapper-->
                 <div class="logo-wrapper" style="font-size: 23px;font-weight: bold; color: white">
-                    <img src="<?php echo base_url('assets/img/ico_messager_blue.svg');?>" style="width: 20px;height:auto;margin-top: -5px;"> 
-                    <span class="bold" style="font-size:20px; color: #fff"><?=APPLICATION_NAME?></span>
+                    <img src="<?php echo base_url('assets/img/ico_messager_blue.svg'); ?>" style="width: 20px;height:auto;margin-top: -5px;"> 
+                    <span class="bold" style="font-size:20px; color: #fff"><?=APPLICATION_NAME; ?></span>
                 </div>
                 <!-- #####End logo wrapper-->
                 <!-- #####Begin primary menu-->
@@ -19,14 +19,14 @@
                     <!-- #####Begin menu item-->
                     <!--
                     <li class="mega-menu">
-                        <a id="profileLink" href="<?=base_url('userview/profile')?>" target="_blank">
-                            <span class="navUserImg"><img id="userImageTop" src="<?php echo base_url('assets/img/download.png') ?>"> </span>
+                        <a id="profileLink" href="<?=base_url('userview/profile'); ?>" target="_blank">
+                            <span class="navUserImg"><img id="userImageTop" src="<?php echo base_url('assets/img/download.png'); ?>"> </span>
                             <span id="userNameTop" class="bold">...</span>
                         </a>
                     </li>
                     -->
                     <!-- #####Begin menu item-->
-                    <li class="mega-menu"><a href="<?=base_url('userview/logout')?>" title="Log Out" class="bold"><span>Log Out</span></a>
+                    <li class="mega-menu"><a href="<?=base_url('userview/logout'); ?>" title="Log Out" class="bold"><span>Log Out</span></a>
                         <!-- #####Begin megamenu-->
                         <!-- #####End megamenu-->
                     </li>

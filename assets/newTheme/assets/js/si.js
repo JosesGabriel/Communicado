@@ -1,11 +1,9 @@
 /**
  * Created by Farhad Zaman on 3/3/2017.
  */
-
+//var socket=io.connect("wss://vyndue.com",{"transports": ['websocket']});
+      var socket=io.connect("ws://localhost:3000",{"transports": ['websocket']});
 //var socket=io.connect(location.protocol+"//"+location.hostname,{"transports": ['websocket']});
-//var socket=io.connect("wss://vyndue.com:8443"); // live server
-var socket=io.connect("ws://localhost:3000"); // local server 
-
 var sessionId=null;
 let localSessionId=localStorage.getItem("s_id");
 if(localSessionId!=null){

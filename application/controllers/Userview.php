@@ -1,241 +1,155 @@
 <?php
 
 /**
-
  * Created by PhpStorm.
 
  * User: Farhad Zaman
 
  * Date: 12/20/2016
 
- * Time: 11:29 AM
-
+ * Time: 11:29 AM.
  */
+defined('BASEPATH') or exit('No direct script access allowed');
 
-defined('BASEPATH') OR exit('No direct script access allowed');
-
-
-
-class Userview extends CI_Controller {
-
-
-
-
-
+class Userview extends CI_Controller
+{
     public function __construct()
-
     {
-
         // Call the CI_Model constructor
 
         parent::__construct();
 
-
-
         $this->load->model('User_Model');
 
-        $this->load->library("session");
+        $this->load->library('session');
 
         $this->load->helper('url');
 
-        if($this->load->is_loaded("CI_Minifier")){
-
+        if ($this->load->is_loaded('CI_Minifier')) {
             $this->ci_minifier->enable_obfuscator(3);
-
         }
-
     }
 
+    public function index()
+    {
+        $resToken = $this->session->userdata('responseToken');
 
-
-    function index(){
-
-        $resToken=$this->session->userdata("responseToken");
-
-        if(!ID_LOGIN) {
-
-            if ($this->session->userdata("session_token") != null) {  // checking session token is null or not
-
+        if (!ID_LOGIN) {
+            if ($this->session->userdata('session_token') != null) {  // checking session token is null or not
                 if ($this->User_Model->isValidToken($resToken)) {
-
-                    redirect(base_url("userview/im"));
-
+                    redirect(base_url('userview/im'));
                 } else { // if the response token is not valid
-
                     redirect(base_url('userview/logout')); // then calling the logout url. http//www.example.com/admin/logout
-
                 }
-
             } else { // if the session token is null
-
                 redirect(base_url('userview/logout')); // then calling the logout url. http//www.example.com/admin/logout
-
             }
-
-        }else{
-
-            if ($this->session->userdata("session_token") != null) {  // checking session token is null or not
-
-                if ($resToken!=null || trim($resToken)!="") {
-
-                    redirect(base_url("userview/im"));
-
+        } else {
+            if ($this->session->userdata('session_token') != null) {  // checking session token is null or not
+                if ($resToken != null || trim($resToken) != '') {
+                    redirect(base_url('userview/im'));
                 } else { // if the response token is not valid
-
                     redirect(base_url('userview/logout')); // then calling the logout url. http//www.example.com/admin/logout
-
                 }
-
             } else { // if the session token is null
-
                 redirect(base_url('userview/logout')); // then calling the logout url. http//www.example.com/admin/logout
-
             }
-
         }
-
     }
 
+    public function logout()
+    {
+        $this->session->set_userdata('session_token', null); // setting the session token to null
 
-
-    function logout(){
-
-        $this->session->set_userdata("session_token",null); // setting the session token to null
-
-        $this->session->set_userdata("responseToken",null);// setting the response token to null
+        $this->session->set_userdata('responseToken', null); // setting the response token to null
 
         $this->session->sess_destroy(); // destroying the current session
 
-        redirect(base_url(),'refresh');
-
+        redirect(base_url(), 'refresh');
     }
 
+    public function loginSuccess()
+    { //http://www.example.com/loginSuccess
+        $data['token'] = $this->input->get('r', true); // collecting response token from url query param
 
+        $token = md5(date(DATE_ISO8601, strtotime('now'))); // creating a session token
 
-    function loginSuccess(){ //http://www.example.com/loginSuccess
+        $this->session->set_userdata('session_token', $token); // assigning the session to the current session
 
-        $data["token"]=$this->input->get('r', TRUE); // collecting response token from url query param
+        $this->session->set_userdata('responseToken', $data['token']); // assigning the response token to the current session
 
-        $token=md5(date(DATE_ISO8601, strtotime("now"))); // creating a session token
+        $this->session->set_userdata('type', 'user'); // setting up the user type
 
-        $this->session->set_userdata("session_token",$token); // assigning the session to the current session
-
-        $this->session->set_userdata("responseToken",$data["token"]);// assigning the response token to the current session
-
-        $this->session->set_userdata("type","user"); // setting up the user type
-
-        if(!ID_LOGIN) {
-
-            if ($this->User_Model->isValidToken($data["token"])) {
-
-                redirect(base_url("userview")); // redirecting to http://www.example.com/userview/im
-
+        if (!ID_LOGIN) {
+            if ($this->User_Model->isValidToken($data['token'])) {
+                redirect(base_url('userview')); // redirecting to http://www.example.com/userview/im
             } else {
-
                 redirect(base_url('userview/logout')); // then calling the logout url. http//www.example.com/logout
-
             }
-
-        }else{
-
-            if ($data["token"]!=null ||trim($data["token"])!="") {
-
-                redirect(base_url("userview")); // redirecting to http://www.example.com/userview/im
-
+        } else {
+            if ($data['token'] != null || trim($data['token']) != '') {
+                redirect(base_url('userview')); // redirecting to http://www.example.com/userview/im
             } else {
-
                 redirect(base_url('userview/logout')); // then calling the logout url. http//www.example.com/logout
-
             }
-
         }
-
     }
 
+    public function im()
+    {
+        $data['date'] = date('Y-m-d');
 
+        $data['formatedDate'] = date('l, M j, Y');
 
-    function im(){
+        $data['demo'] = DEMO;
 
-        $data["date"]=date('Y-m-d');
+        $resToken = $this->session->userdata('responseToken');
 
-        $data["formatedDate"]=date('l, M j, Y');
+        if ($this->session->userdata('session_token') != null) {
+            if (!ID_LOGIN) {
+                if ($this->User_Model->isValidToken($resToken)) {
+                    $this->load->view('layout/header');
 
-        $data["demo"]=DEMO;
+                    $this->load->view('layout/navbar');
 
-        $resToken=$this->session->userdata("responseToken");
+                    $this->load->view('im', $data);
 
+                    $this->load->view('layout/header_script');
 
+                    $this->load->view('im_footer', $data);
+                } else {
+                    redirect(base_url('userview/logout'));
+                }
+            } else {
+                if ($resToken != null || trim($resToken) != '') {
+                    $this->load->view('layout/header');
 
-         if($this->session->userdata("session_token")!=null){
+                    $this->load->view('layout/navbar');
 
-             if(!ID_LOGIN) {
+                    $this->load->view('im', $data);
 
-                 if ($this->User_Model->isValidToken($resToken)) {
+                    $this->load->view('layout/header_script');
 
-                     $this->load->view('layout/header');
-
-                     $this->load->view('layout/navbar');
-
-                     $this->load->view('im', $data);
-
-                     $this->load->view('layout/header_script');
-
-                     $this->load->view('im_footer', $data);
-
-                 } else {
-
-                     redirect(base_url('userview/logout'));
-
-                 }
-
-             }else{
-
-                 if ($resToken!=null || trim($resToken)!="") {
-
-                     $this->load->view('layout/header');
-
-                     $this->load->view('layout/navbar');
-
-                     $this->load->view('im', $data);
-
-                     $this->load->view('layout/header_script');
-
-                     $this->load->view('im_footer', $data);
-
-                 } else {
-
-                     redirect(base_url('userview/logout'));
-
-                 }
-
-             }
-
-        }else{
-
-             redirect(base_url('userview/logout'));
-
+                    $this->load->view('im_footer', $data);
+                } else {
+                    redirect(base_url('userview/logout'));
+                }
+            }
+        } else {
+            redirect(base_url('userview/logout'));
         }
-
-
-
     }
 
+    public function imoto()
+    {
+        $data['date'] = date('Y-m-d');
 
+        $data['formatedDate'] = date('l, M j, Y');
 
-    function imoto(){
+        $resToken = $this->session->userdata('responseToken');
 
-        $data["date"]=date('Y-m-d');
-
-        $data["formatedDate"]=date('l, M j, Y');
-
-        $resToken=$this->session->userdata("responseToken");
-
-
-
-        if($this->session->userdata("session_token")!=null){
-
-            if($this->User_Model->isValidToken($resToken)) {
-
+        if ($this->session->userdata('session_token') != null) {
+            if ($this->User_Model->isValidToken($resToken)) {
                 $this->load->view('oneToOne/header');
 
                 $this->load->view('layout/navbar');
@@ -245,39 +159,25 @@ class Userview extends CI_Controller {
                 $this->load->view('layout/header_script');
 
                 $this->load->view('oneToOne/footer', $data);
-
-            }else{
-
+            } else {
                 redirect(base_url('userview/logout'));
-
             }
-
-        }else{
-
+        } else {
             redirect(base_url('userview/logout'));
-
         }
-
-
-
     }
 
-
-
-    function profile(){
-
+    public function profile()
+    {
         redirect(base_url('userview/im')); // added to to prevent editing profile
 
-        $resToken=$this->session->userdata("responseToken");
+        $resToken = $this->session->userdata('responseToken');
 
-        $data["demo"]=DEMO;
+        $data['demo'] = DEMO;
 
-        if($this->session->userdata("session_token")!=null){
-
-            if(!ID_LOGIN) {
-
+        if ($this->session->userdata('session_token') != null) {
+            if (!ID_LOGIN) {
                 if ($this->User_Model->isValidToken($resToken)) {
-
                     $this->load->view('layout/header');
 
                     $this->load->view('layout/navbar');
@@ -286,18 +186,12 @@ class Userview extends CI_Controller {
 
                     $this->load->view('layout/header_script');
 
-                    $this->load->view('edit_profile_footer_script',$data);
-
+                    $this->load->view('edit_profile_footer_script', $data);
                 } else {
-
                     redirect(base_url('userview/logout'));
-
                 }
-
-            }else{
-
-                if ($resToken!=null || trim($resToken)!="") {
-
+            } else {
+                if ($resToken != null || trim($resToken) != '') {
                     $this->load->view('layout/header');
 
                     $this->load->view('layout/navbar');
@@ -306,34 +200,23 @@ class Userview extends CI_Controller {
 
                     $this->load->view('layout/header_script');
 
-                    $this->load->view('edit_profile_footer_script',$data);
-
+                    $this->load->view('edit_profile_footer_script', $data);
                 } else {
-
                     redirect(base_url('userview/logout'));
-
                 }
-
             }
-
-        }
-
-        else{
-
+        } else {
             redirect(base_url('userview/logout'));
-
         }
-
     }
 
-    function pushuser($token, $alldata)
+    public function pushuser($token, $alldata)
     {
         $data = [
             'token' => $token,
-            'alldata' => $alldata
+            'alldata' => $alldata,
         ];
 
         $this->load->view('push_user', $data);
     }
-
 }

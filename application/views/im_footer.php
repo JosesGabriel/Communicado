@@ -1,30 +1,58 @@
-<script type="text/javascript" src="<?php echo base_url("assets/newTheme/assets/js/loadingoverlay.js") ?>"></script>
+<script type="text/javascript" src="<?php echo base_url('assets/newTheme/assets/js/loadingoverlay.js'); ?>"></script>
 <script type="text/javascript"
-        src="<?php echo base_url("assets/newTheme/assets/js/loadingoverlay_progress.js") ?>"></script>
-<script src="<?php echo base_url("assets/newTheme/assets/js/si.js")/* . "?" . rand(5, 50000);*/ ?>"></script>
-<script type="text/javascript" src="<?php echo base_url("assets/newTheme/assets/js/twemoji-picker.js") ?>"></script>
+        src="<?php echo base_url('assets/newTheme/assets/js/loadingoverlay_progress.js'); ?>"></script>
+<script src="<?php echo base_url('assets/newTheme/assets/js/si.js'); /* . "?" . rand(5, 50000);*/ ?>"></script>
+<script type="text/javascript" src="<?php echo base_url('assets/newTheme/assets/js/twemoji-picker.js'); ?>"></script>
 <script type="text/javascript"
-        src="<?php echo base_url("assets/newTheme/assets/js/mediaelement-and-player.min.js") ?>"></script>
-<script src="<?php echo base_url("assets/newTheme/assets/js/perfect-scrollbar.jquery.min.js") ?>"></script>
+        src="<?php echo base_url('assets/newTheme/assets/js/mediaelement-and-player.min.js'); ?>"></script>
+<script src="<?php echo base_url('assets/newTheme/assets/js/perfect-scrollbar.jquery.min.js'); ?>"></script>
 <!--<script type="text/javascript" src="<?php /*echo base_url("assets/newTheme/twemoji/2/twemoji.min.js")."?".rand(5,50000) */ ?>"></script>-->
-<script src="<?php echo base_url("assets/newTheme/assets/js/twemoji/2/twemoji.min.js") ?>"></script>
+<script src="<?php echo base_url('assets/newTheme/assets/js/twemoji/2/twemoji.min.js'); ?>"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 <!-- <script src="<?php /*echo base_url("assets/js/scripts/jwt-decode.min.js") */ ?>"></script> -->
 
 <!--<script type="text/javascript" src="<?php /*echo base_url("assets/newTheme/assets/js/perfect-scrollbar.jquery.js")."?".rand(5,50000) */ ?>"></script>-->
 <!--<script type="text/javascript" src="<?php /*echo base_url("assets/newTheme/assets/js/perfect-scrollbar.jquery.min.js") */ ?>"></script>-->
 
 <script>
+
+    // addEventListener support for IE8
+    function bindEvent(element, eventName, eventHandler) {
+        if (element.addEventListener) {
+            element.addEventListener(eventName, eventHandler, false);
+        } else if (element.attachEvent) {
+            element.attachEvent('on' + eventName, eventHandler);
+        }
+    }
+    // Send a message to the parent
+    var sendMessage = function (msg) {
+        //console.log('sending postmessage', msg)
+        // Make sure you are sending a string, and to stringify JSON
+        window.parent.postMessage(msg, '*');
+    };
+
+    var $ = jQuery
     $(document).ready(function () {
+        //console.log('vyndue readyy')
+        sendMessage({key: 'ready', data: {}});
+
+        $(window).on('message', function (e) {
+            var data = e.originalEvent.data;
+            //console.log(window);
+           // window.promptChat(data.data);
+        });
+
         let t = null;
         let name = null;
         let pic = null;
         let tc = null;
         window.Vyndue_cKey = null;
         window.Vyndue_fname = null;
+        window.Vyndue_picture = null;
         window.setInterval(function () {
             tc = localStorage.getItem("_r");
             if (tc === null || tc === "" || tc === '') {
-                location.href = "<?php echo base_url('userview/logout') ?>";
+                location.href = "<?php echo base_url('userview/logout'); ?>";
             }
             window.scrollTo(0, 0);
             if (String(localStorage.getItem("T")) == "token") {
@@ -33,43 +61,60 @@
                 pic = jwt_decode(t).profilePicture;
                 window.Vyndue_cKey  = jwt_decode(t).consumerKey;
                 window.Vyndue_fname  = jwt_decode(t).firstName;
+                window.Vyndue_picture = pic;
             } else {
                 t = JSON.parse(localStorage.getItem("_r"));
                 name = t.firstName;
                 pic = t.profilePicture;
                 window.Vyndue_cKey = t.consumerKey
-                window.Vyndue_fname  = t.firstName;
+                window.Vyndue_fname  = t.firstname;
+                window.Vyndue_picture = pic;
             }
             $("#userNameTop").html(name);
             $("#userImageTop").attr("src", pic);
+
             // set all mention link 
             let hrefAll = $('.fw-im-message-text').find('a[class="mention"]');
             $(hrefAll).each(function(){
-                var href = "<?=ARBITRAGE.'/user/'?>" + $(this).attr('data-username')+"/";
+                var href = "<?=ARBITRAGE.'/user/'; ?>" + $(this).attr('data-username')+"/";
                 $(this).attr("href",href);
                 $(this).attr("target","_blank");
             });
-        }, 1000);
+        });
+
+        // console.log(jwt_decode(localStorage.getItem("_r")));
+        // console.log(jwt_decode(localStorage.getItem("_r")));
+        var profpic = jwt_decode(localStorage.getItem("_r")).profilePicture;
+        var profnam = jwt_decode(localStorage.getItem("_r")).userName;
+        $(".prof_image").attr("src", profpic);
+        $(".prof_name").text(profnam);
 
         // Make Side Button Animate
-        $( ".floatBtn-Wrapper" ).mouseenter(function() {
-            $(this).animate({ width: "150px" },150,"linear",() => {
-                $(this).find('span').show(100,'linear');
-            });
-        });
+        // $( ".floatBtn-Wrapper" ).mouseenter(function() {
+        //     $(this).animate({ width: "150px" },150,"linear",() => {
+        //         $(this).find('span').show(100,'linear');
+        //     });
+        // });
 
-        $( ".floatBtn-Wrapper" ).mouseleave(function() {
-            $(this).animate({ width: "45px" },100,"linear",() => {
-                $(this).find('span').hide(50,'linear');
-            });
-        });
+        // $( ".floatBtn-Wrapper" ).mouseleave(function() {
+        //     $(this).animate({ width: "45px" },100,"linear",() => {
+        //         $(this).find('span').hide(50,'linear');
+        //     });
+        // });
 
         // reset community 
         localStorage.setItem("_g",null);
 
     });
+
 </script>
+
 <script type="text/javascript">
+
+   // alert(window.Vyndue_picture);
+
+   // console.log(window);
+
     $(".page-contents").hide();
     toastr.options = {
         "closeButton": false,
@@ -79,10 +124,10 @@
         "positionClass": "toast-bottom-left",
         "preventDuplicates": false,
         "onclick": null,
-        "showDuration": "300",
-        "hideDuration": "1000",
+        "showDuration": "300000",
+        "hideDuration": "10000000",
         "timeOut": "5000",
-        "extendedTimeOut": "1000",
+        "extendedTimeOut": "1000000",
         "showEasing": "swing",
         "hideEasing": "linear",
         "showMethod": "fadeIn",
@@ -102,7 +147,7 @@
         //window.scrollTo(0,0);
         $(window).bind("resize", function () {
             if (window.mobileAndTabletcheck()) {
-                location.href = "<?php echo base_url('mobile/im') ?>";
+                location.href = "<?php echo base_url('mobile/im'); ?>";
             }
             //window.scrollTo(0,0);
             viewHeight = $(window).height();
@@ -148,11 +193,12 @@
         /*
            --------Global variables
          */
-        twemoji.base = "<?php echo base_url("assets/newTheme/assets/js/twemoji/2/") ?>";
+        twemoji.base = "<?php echo base_url('assets/newTheme/assets/js/twemoji/2/'); ?>";
         let chatBox = $('#chatBox');
         let groupBox = $("#groups");
         let notificationBox = $("#notificationBox");
         let joinrequestBox = $("#joinrequestBox");
+        let communitymoderatorBox = $("#communitymoderatorBox");
         let communityBox = $("#communityBox");
         let videoObjects = [];
         let responce = null;
@@ -221,16 +267,17 @@
             // data: q,
             renderer: function (data) {
                 return '<div style="padding: 5px; overflow:hidden;">' +
-                    '<div style="float: left;"><img style="width: 25px;height: 25px" src="' + data.picture + '" /></div>' +
-                    '<div style="float: left; margin-left: 5px">' +
-                    '<div style="font-weight: bold; color: #333; font-size: 12px; line-height: 11px">' + data.name + '</div>' +
-                    '<div style="color: #999; font-size: 9px">' + data.email + '</div>' +
+                    '<div style="float: left;" class="m20"><img style="width: 25px;height: 25px" src="' + data.picture + '" /></div>' +
+                    '<div style="float: left; margin-left: 5px" class="m21">' +
+                    '<div style="font-weight: bold; color: #333; font-size: 12px; line-height: 11px" class="vvs">' + data.name + '</div>' +
+                    '<div style="color: #999; font-size: 9px" class="m">' + data.email + '</div>' +
                     '</div>' +
                     '</div><div style="clear:both;"></div>'; // make sure we have closed our dom stuff
             }
         };
         let addmember = $('#addMemberInput').magicSuggest(magicSuggestOption); // start a new conversation
         let newMemberInput = $('#addNewMemberInput').magicSuggest(magicSuggestOption); // right side, add member
+        let totalGroupMembers = 0;
         /*let momentOptions={
             sameDay: '[Today at] h:mm a',
             nextDay: '[Tomorrow at] at h:mm a',
@@ -292,6 +339,8 @@
             pickerWidth: '100%'
         };
 
+        // console.log(userId);
+        
         //----------start point-------------------
         if (responce != null && responce != '' && type == 1) {
             getGroupList(function (data) {
@@ -314,7 +363,7 @@
             });
         }
         else {
-            location.href = "<?php echo base_url("userview/logout")  ?>";
+            location.href = "<?php echo base_url('userview/logout'); ?>";
         }
         // --------- Global Functions--------------
         if (("Notification" in window)) {
@@ -435,6 +484,11 @@
             if(char=='@' && parseInt(groupType)!=1){
                 show_divMentionDiv(); 
             } 
+
+            else if(char=='$' && parseInt(groupType)!=1){
+                //alert('dollar signed');
+                //show_divMentionDiv(); 
+            } 
         }
 
         // Start of Mention Form
@@ -452,10 +506,12 @@
             renderer: function (data) {
                 let html = '';
                 return `<div style="padding: 5px; overflow:hidden;">
-                    <div style="float: left;"><img style="width: 25px;height: 25px" src=" ${data.picture} " /></div> 
-                    <div style="float: left; margin-left: 5px"> 
+                    <div style="float: left;"  class="m22"><img style="width: 25px;height: 25px" src=" ${data.picture} " /></div> 
+                    <div style="float: left; margin-left: 5px"  class="m23">
+                    <div class="c1">
                     <div style="font-weight: bold; color: #333; font-size: 12px; line-height: 11px"> ${data.name} </div> 
-                    <div style="color: #999; font-size: 9px"> @${ data.username } </div> 
+                    <div style="color: #999; font-size: 9px" class="v"> @${ data.username } </div> 
+                    </div>
                     </div> 
                     </div><div style="clear:both;"></div>`; 
             }
@@ -524,9 +580,9 @@
         // Ralph 2019-05-29
         // This function is to fecth and list a sorts of notification;
         function getTotalNotification(callback){
-            let url = "<?php echo base_url('user/notificationTotal') ?>";
+            let url = "<?php echo base_url('user/notificationTotal'); ?>";
             if (ID_BASED) {
-                url = "<?php echo base_url('user/notificationTotal?userId=') ?>" + userId;
+                url = "<?php echo base_url('user/notificationTotal?userId='); ?>" + userId;
             }
             let settings = {
                 "async": true,
@@ -550,9 +606,9 @@
 
         function getNotification(page) {
             let pageNotif = (parseInt(page)>0) ? page : 0;
-            let url = "<?php echo base_url('user/notificationList?limit=') ?>" + limitNotif + "&page=" + pageNotif;
+            let url = "<?php echo base_url('user/notificationList?limit='); ?>" + limitNotif + "&page=" + pageNotif;
             if (ID_BASED) {
-                url = "<?php echo base_url('user/notificationList?limit=') ?>" + limitNotif + "&page=" + pageNotif + "&userid=" + userId;
+                url = "<?php echo base_url('user/notificationList?limit='); ?>" + limitNotif + "&page=" + pageNotif + "&userid=" + userId;
             }
             let settings = {
                 "async": true,
@@ -582,15 +638,16 @@
                 let prev_page = response.response.prev_page;
                 notificationBox.html("");
                 if(data.length===0){
-                    notificationBox.html("<h4>Notification box is empty.</h4>");
+                    notificationBox.html("<div class='no-notf'><i class='far fa-meh-blank'></i><br><h4 class='nonotfreminder'>Notification box is empty.</h4></div>");
                     return;
                 }
                 let html = '';
                 // pages
-                html += `<span class="list-group-item list-group-item-info">
-                            <ul class="pager" style="margin:0;">
-                                <li ${ (!prev) ? 'class="disabled"' : ''  }><a href="#" data-page="${prev_page}" data-prev="${ (prev) ? 1 : 0  }" id="notifPrev">Previous</a></li>
-                                <li ${ (!next) ? 'class="disabled"' : ''  }><a href="#" data-page="${next_page}" data-next="${ (next) ? 1 : 0  }" id="notifNext">Next</a></li>
+                html += `<span class="list-group-item list-group-item-info row">
+                            <ul class="grplist col-md-6"><span class="btn-danger btn-extra-small" id="clearAllNotif"><i class="fa fa-trash fa-fw"></i> Clear All</span></ul>
+                            <ul class="pager col-md-6" style="margin:0;">
+                                <li ${ (!prev) ? 'class="disabled"' : ''  }><a href="#" data-page="${prev_page}" data-prev="${ (prev) ? 1 : 0  }" id="notifPrev"><i class="fas fa-chevron-circle-left"></i></a></a></li>
+                                <li ${ (!next) ? 'class="disabled"' : ''  }><a href="#" data-page="${next_page}" data-next="${ (next) ? 1 : 0  }" id="notifNext"><i class="fas fa-chevron-circle-right"></i></a></a></li>
                             </ul>
                             </nav>
                         </span>`;
@@ -610,10 +667,22 @@
             });
         }
 
+        $(document).on('click', '#clearAllNotif', function (e) {
+            if(!confirm('Are you sure to clear notification box?')){
+                return;
+            }
+            let username = jwt_decode(localStorage.getItem("_r")).consumerKey;
+            socket.emit("clearNotificationBox",username);
+            $("#modalNotifications").modal('hide');
+            e.preventDefault();
+        });
+
+
         $(document).on('click', '#notificationBox a.list-group-item', function (e) {
             let g_id = $(this).attr('data-id');
             let n_type = parseInt($(this).attr('data-notif-type'));
-            socket.emit("seenNotification",parseInt($(this).attr('data-notif-id')));
+            let n_id = parseInt($(this).attr('data-notif-id'));
+            socket.emit("seenNotification",n_id);
             doAfterNotification(n_type,g_id);
             $("#modalNotifications").modal('hide');
             e.preventDefault();
@@ -661,11 +730,106 @@
             e.preventDefault();
         });
 
+        // function get all community moderator
+        function getCommunityModerator(groupId, callback) {
+            let url = "<?php echo base_url('user/communitymoderatorList?groupId='); ?>" + groupId;
+            if (ID_BASED) {
+                url = "<?php echo base_url('user/communitymoderatorList?groupId='); ?>" + groupId + "&userId=" + userId;
+            }
+            let settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": url,
+                "method": "GET",
+                "headers": {
+                    "authorization": "Basic YWRtaW46MTIzNA==",
+                    "Authorizationkeyfortoken": String(responce),
+                    "cache-control": "no-cache",
+                    "postman-token": "eb27c011-391a-0b70-37c5-609bcd1d7b6d"
+                },
+                "processData": false,
+                "contentType": false,
+                "beforeSend": function () {
+                    communitymoderatorBox.html('<br><br><br><p align="center"><i class="fa fa-spinner fa-spin fa-4x fa-fw" aria-hidden="true"></i></p>');
+                },
+                "success": function () {
+                    communitymoderatorBox.html('');
+                }
+            };
+            $.ajax(settings).done(function (response) {
+                let data = response.response.data;
+                callback(data);
+            });
+        }
+
+        function listCommunityModerator(response){
+                // console.log(response);
+                let data = response;
+                if(data.length===0){
+                    communitymoderatorBox.html("<div class='no-request'><i class='far fa-meh-blank'></i><br><h4 class='nonotrequest'>Join Request box is empty.</h4></div>");
+                    return;
+                }
+                let html = '';
+                for (let i = 0; i < data.length; i++) {
+                   html += `<a style="color:black;cursor: default;" data-group-id="${data[i].group_id}" data-username="${data[i].username}" class="list-group-item"> 
+                        <img src="${ data[i].picture }" class="communitymoderatorlist_thumbnail">  
+                        <label data-username="${data[i].username}" title="View Profile" class="communitymoderatorlist_label">${ data[i].name }</label>` 
+                    
+                    switch(parseInt(data[i].userlevel)){
+                        case 1: // admin 
+                            html += `<button title="Administrator" type="button" disabled
+                                        class="btn-xs btn-warning pull-right communitymoderatorlist_btn" style="margin-right:5px;">
+                                        <i class="fa fa-star fa-fw" aria-hidden="true"></i>  
+                                    </button>`;
+                        break;
+                        case 2: // moderator
+                            html += `<button title="Moderator" type="button" 
+                                        data-group-id="${data[i].group_id}" data-username="${data[i].username}"
+                                        data-id="${data[i].id}" data-name="${data[i].name}" data-userlevel="${data[i].userlevel}"
+                                        class="btn-xs btn-success pull-right communitymoderatorlist_btn" style="margin-right:5px;">
+                                        <i class="fa fa-balance-scale fa-fw" aria-hidden="true"></i> 
+                                    </button>`;
+                        break;
+                        case 0: // member
+                            html += `<button title="Member" type="button" 
+                                        data-group-id="${data[i].group_id}" data-username="${data[i].username}"
+                                        data-id="${data[i].id}" data-name="${data[i].name}" data-userlevel="${data[i].userlevel}"
+                                        class="btn-xs btn-default pull-right communitymoderatorlist_btn" style="margin-right:5px;">
+                                        <i class="fa fa-user fa-fw" aria-hidden="true"></i> 
+                                    </button>`;
+                        break;
+                    }
+
+                    html += `</a>`;
+                }
+                communitymoderatorBox.html(html);
+
+            }
+
+        $(document).on('click', '#communitymoderatorBox a.list-group-item button.communitymoderatorlist_btn', function (e) {
+            let data = {};
+            data.g_id = parseInt($(this).attr('data-group-id'));
+            data.r_id = parseInt($(this).attr('data-id'));
+            data.username = $(this).attr('data-username');
+            data.name = $(this).attr('data-name');
+            data.userlevel = parseInt($(this).attr('data-userlevel'));
+            data.t_id = (data.userlevel) ? 8 : 7 ;
+            //data.u_id = window.Vyndue_cKey;
+            data.u_id = jwt_decode(localStorage.getItem("_r")).consumerKey;
+            if(!confirm(`Are you sure to ${ data.userlevel ? 'demote' : 'promote' } ${ data.name } as "${ data.userlevel ? 'Member' : 'Moderator' }"?`)){
+                return;
+            }
+            socket.emit('communitymoderatorProcess',data);
+            getCommunityModerator(data.g_id, listCommunityModerator);
+            e.preventDefault();
+        });
+
+
         // This function is to fecth and list of communities;
         function getCommunities(callback) {
-            let url = "<?php echo base_url('user/communityList?limit=') ?>";
+            let url = "<?php echo base_url('user/communityList?limit='); ?>";
             if (ID_BASED) {
-                url = "<?php echo base_url('user/communityList?userId=') ?>" + userId;
+                url = "<?php echo base_url('user/communityList?userId='); ?>" + userId;
             }
             let settings = {
                 "async": true,
@@ -696,9 +860,9 @@
 
         // function get all join request
         function getJoinRequest(groupId) {
-            let url = "<?php echo base_url('user/joinrequestList?groupId=') ?>" + groupId;
+            let url = "<?php echo base_url('user/joinrequestList?groupId='); ?>" + groupId;
             if (ID_BASED) {
-                url = "<?php echo base_url('user/joinrequestList?groupId=') ?>" + "&userId=" + userId;
+                url = "<?php echo base_url('user/joinrequestList?groupId='); ?>" + groupId + "&userId=" + userId;
             }
             let settings = {
                 "async": true,
@@ -723,7 +887,7 @@
             $.ajax(settings).done(function (response) {
                 let data = response.response.data;
                 if(data.length===0){
-                    joinrequestBox.html("<h4>Join Request box is empty.</h4>");
+                    joinrequestBox.html("<div class='no-request'><i class='far fa-meh-blank'></i><br><h4 class='nonotrequest'>Join Request box is empty.</h4></div>");
                     return;
                 }
                 let html = '';
@@ -750,7 +914,7 @@
         }
 
         $(document).on('click', 'label.joinrequestlist_label', function (e) {
-            let url = "<?=ARBITRAGE.'/user/'?>"+ $(this).data('username') + "/";
+            let url = "<?=ARBITRAGE.'/user/'; ?>"+ $(this).data('username') + "/";
             window.open(url.replace(' ',''), "_blank");
             e.preventDefault();
         });
@@ -829,7 +993,7 @@
         // this function used to clear new message div
         function resetNewMessage() {
             $("#newMessageFile").replaceWith($("#newMessageFile").val('').clone(true));
-            $('#newMessagefileIV').attr("src", "<?php echo base_url('assets/img/i-camera.png')?>");
+            $('#newMessagefileIV').attr("src", "<?php echo base_url('assets/img/i-camera.png'); ?>");
             $('.twemoji-textarea').html("");
             $('.twemoji-textarea-duplicate').html("");
             $('#newMessageText').text("");
@@ -839,9 +1003,9 @@
         // this function used to clear message div
         function reset() {
             $("#messageFile").replaceWith($("#messageFile").val('').clone(true));
-            $('#fileIV').attr("src", "<?php echo base_url('assets/img/i-camera.png')?>");
+            $('#fileIV').attr("src", "<?php echo base_url('assets/img/i-camera.png'); ?>");
             $("#messageFile1").replaceWith($("#messageFile1").val('').clone(true));
-            $('#fileIV1').attr("src", "<?php echo base_url('assets/img/fileAttach.png')?>");
+            $('#fileIV1').attr("src", "<?php echo base_url('assets/img/fileAttach.png'); ?>");
             $('.twemoji-textarea').html("");
             $('.twemoji-textarea-duplicate').html("");
             $('#message').text("");
@@ -1092,16 +1256,27 @@
             html += "                        <span id='time_" + group.groupId + "' class=\"time\">" + date + "<\/span>";
             if (group.messageType === "text") {
                 let recentMessage = group.recentMessage;
+                if (recentMessage.includes('🐂')){
+                        // var str = 'You: <img class="emoj" src="https://vyndue.com/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">'
+                        recentMessage = recentMessage.replace(/🐂/g,'<img class="emoj" src="https://vyndue.com/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png" style="border-radius: 0;background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">');
+                        // console.log("test2");
+                        // recentMessage = str;
+                }else if (recentMessage.includes('🐻')){
+                        // var str = 'You: <img class="emoj" src="https://vyndue.com/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">'
+                        recentMessage = recentMessage.replace(/🐻/g,'<img class="emoj" src="https://vyndue.com/assets/newTheme/assets/js/twemoji/2/72x72/1f43b.png" style="border-radius: 0;background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">');
+                        // console.log("test2");
+                        // recentMessage = str;
+                }
                 if (recentMessage === null) {
                     recentMessage = '';
                 }
-                html += "                        <span style='float: left' id='messageType_" + group.groupId + "' class=\"preview\">" + recentMessage + "<\/span>";
+                html += "<span style='float: left' id='messageType_" + group.groupId + "' class=\"preview\">" + recentMessage + "<\/span>";
             } else {
                 let messageType = group.messageType;
                 if (messageType === null) {
                     messageType = '';
                 }
-                html += "                        <span style='float: left' id='messageType_" + group.groupId + "' class=\"preview\">" + messageType + "<\/span>";
+                html += "<span style='float: left' id='messageType_" + group.groupId + "' class=\"preview\">" + messageType + "<\/span>";
             }
             if (group.mute) {
                 html += "                        <div style='' id='mute_" + group.groupId + "' class=\"mute-pad  text-right\" ><i class=\"fa fa-bell-slash\"></i><\/div>";
@@ -1127,7 +1302,9 @@
                 } else {
                     html += " <li class=\"person \" data-chat=\"person1\" id='group_" + groups[i].groupId + "' data-mecreator=\"" + groups[i].meCreator + "\"  data-type=\"" + groups[i].groupType + "\" data-block=\"" + groups[i].block + "\" data-mute=\"" + groups[i].mute + "\" data-group=\"" + groups[i].groupId + "\">";
                 }
+
                 groupImages[groups[i].groupId] = groups[i].groupImage;
+
                 html += '<span id="groupImage_' + groups[i].groupId + '">';
                 /*for (let j = 0; j < groups[i].groupImage.length; j++) {
                     if (parseInt(groups[i].groupType) == 1 && groups[i].members.length > 0) {
@@ -1146,21 +1323,33 @@
                 html += "                        <span id='time_" + groups[i].groupId + "' class=\"time\">" + date + "<\/span>";
                 if (groups[i].messageType === "text") {
                     let recentMessage = groups[i].recentMessage;
+                    if (recentMessage.includes('🐂')){
+                        // var str = 'You: <img class="emoj" src="https://vyndue.com/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">'
+                        recentMessage = recentMessage.replace(/🐂/g,'<img class="emoj" src="https://vyndue.com/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">');
+                        // console.log("test2");
+                        // recentMessage = str;
+                    }
+                    else if (recentMessage.includes('🐻')){
+                            // var str = 'You: <img class="emoj" src="https://vyndue.com/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">'
+                            recentMessage = recentMessage.replace(/🐻/g,'<img class="emoj" src="https://vyndue.com/assets/newTheme/assets/js/twemoji/2/72x72/1f43b.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">');
+                            // console.log("test2");
+                            // recentMessage = str;
+                    }
                     if (recentMessage === null) {
                         recentMessage = '';
                     }
-                    html += "                        <span style='float: left' id='messageType_" + groups[i].groupId + "' class=\"preview\">" + recentMessage + "<\/span>";
+                    html += "<span style='float: left' id='messageType_" + groups[i].groupId + "' class=\"preview\">" + recentMessage + "<\/span>";
                 } else {
                     let messageType = groups[i].messageType;
                     if (messageType === null) {
                         messageType = '';
                     }
-                    html += "                        <span style='float: left' id='messageType_" + groups[i].groupId + "' class=\"preview\">" + messageType + "<\/span>";
+                    html += "<span style='float: left' id='messageType_" + groups[i].groupId + "' class=\"preview\">" + messageType + "<\/span>";
                 }
                 if (groups[i].mute) {
-                    html += "                        <div style='' id='mute_" + groups[i].groupId + "' class=\"mute-pad  text-right\" ><i class=\"fa fa-bell-slash\"></i><\/div>";
+                    html += "<div style='' id='mute_" + groups[i].groupId + "' class=\"mute-pad  text-right\" ><i class=\"fa fa-bell-slash\"></i><\/div>";
                 } else {
-                    html += "                        <div style='' id='mute_" + groups[i].groupId + "' class=\"mute-pad hidden text-right\" ><i class=\"fa fa-bell-slash\"></i><\/div>";
+                    html += "<div style='' id='mute_" + groups[i].groupId + "' class=\"mute-pad hidden text-right\" ><i class=\"fa fa-bell-slash\"></i><\/div>";
                 }
                 html += "                    <\/li>";
             }
@@ -1183,10 +1372,14 @@
                 groupIds.push(groups[i].groupId);
                 groupObjects[groups[i].groupId] = groups[i];
                 time[groups[i].groupId] = groups[i].lastActive;
+
+                // Communities Group Section ------------------------------------------------------------------------------------
+                // if(groups[i].groupType == 2 || groups[i].groupType == 0){
                 if (groups[i].pendingMessage > 0) {
                     html += " <li class=\"person font-bold-black\" data-chat=\"person1\" id='group_" + groups[i].groupId + "' data-mecreator=\"" + groups[i].meCreator + "\"  data-type=\"" + groups[i].groupType + "\" data-block=\"" + groups[i].block + "\" data-mute=\"" + groups[i].mute + "\" data-group=\"" + groups[i].groupId + "\">";
                 } else {
                     html += " <li class=\"person \" data-chat=\"person1\" id='group_" + groups[i].groupId + "' data-mecreator=\"" + groups[i].meCreator + "\"  data-type=\"" + groups[i].groupType + "\" data-block=\"" + groups[i].block + "\" data-mute=\"" + groups[i].mute + "\" data-group=\"" + groups[i].groupId + "\">";
+                    
                 }
                 groupImages[groups[i].groupId] = groups[i].groupImage;
                 html += '<span id="groupImage_' + groups[i].groupId + '">';
@@ -1202,28 +1395,49 @@
                     }
                 }*/
                 html += '</span>';
+                
                 html += "                        <span class=\"name\" id='groupName_" + groups[i].groupId + "' style=\"overflow: hidden\"><div>" + groups[i].groupName + "</div><\/span>";
                 let date = moment(groups[i].lastActive, moment.ISO_8601).fromNow();
                 html += "                        <span id='time_" + groups[i].groupId + "' class=\"time\">" + date + "<\/span>";
                 if (groups[i].messageType === "text") {
                     let recentMessage = groups[i].recentMessage;
+                    //console.log(recentMessage);
+                    // let message = data[i].message;
+                    if (recentMessage.includes('🐂')){
+                        // var str = 'You: <img class="emoj" src="https://vyndue.com/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">'
+                        recentMessage = recentMessage.replace(/🐂/g,'<img class="emoj" src="https://vyndue.com/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">');
+                        // console.log("test2");
+                        // recentMessage = str;
+                    }
+                    else if (recentMessage.includes('🐻')){
+                            // var str = 'You: <img class="emoj" src="https://vyndue.com/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">'
+                            recentMessage = recentMessage.replace(/🐻/g,'<img class="emoj" src="https://vyndue.com/assets/newTheme/assets/js/twemoji/2/72x72/1f43b.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">');
+                            // console.log("test2");
+                            // recentMessage = str;
+                    }
+                    // if(message.message == '&#x1f402'){
+                    //     message.message = '<img src="https://vyndue.com/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png">';
+                    // }
+                    // console.log(groups[i]);
                     if (recentMessage === null) {
                         recentMessage = '';
                     }
-                    html += "                        <span style='float: left' id='messageType_" + groups[i].groupId + "' class=\"preview\">" + recentMessage + "<\/span>";
+                    html += "<span style='float: left' id='messageType_" + groups[i].groupId + "' class=\"preview lll\">" + recentMessage + "<\/span>";
                 } else {
                     let messageType = groups[i].messageType;
                     if (messageType === null) {
                         messageType = '';
                     }
-                    html += "                        <span style='float: left' id='messageType_" + groups[i].groupId + "' class=\"preview\">" + messageType + "<\/span>";
+                    html += "<span style='float: left' id='messageType_" + groups[i].groupId + "' class=\"preview mmmm\">" + messageType + "<\/span>";
                 }
                 if (groups[i].mute) {
-                    html += "                        <div style='' id='mute_" + groups[i].groupId + "' class=\"mute-pad  text-right\" ><i class=\"fa fa-bell-slash\"></i><\/div>";
+                    html += "<div style='' id='mute_" + groups[i].groupId + "' class=\"mute-pad  text-right\" ><i class=\"fa fa-bell-slash\"></i><\/div>";
                 } else {
-                    html += "                        <div style='' id='mute_" + groups[i].groupId + "' class=\"mute-pad hidden text-right\" ><i class=\"fa fa-bell-slash\"></i><\/div>";
+                    html += "<div style='' id='mute_" + groups[i].groupId + "' class=\"mute-pad hidden text-right\" ><i class=\"fa fa-bell-slash\"></i><\/div>";
                 }
                 html += "                    <\/li>";
+                // }
+                // End Communities Section ------------------------------------------------------------------------------------
             }
             $("#groups").html(html);
             for (let i = 0; i < groups.length; i++) {
@@ -1232,9 +1446,9 @@
         }
         //This function is used to get the group list
         function getGroupList(callback) {
-            let url = "<?php echo base_url('imApi/getGroups?limit=') ?>" + groupLimit + "&start=0";
+            let url = "<?php echo base_url('imApi/getGroups?limit='); ?>" + groupLimit + "&start=0";
             if (ID_BASED) {
-                url = "<?php echo base_url('imApi/getGroups?limit=') ?>" + groupLimit + "&start=0&userId=" + userId;
+                url = "<?php echo base_url('imApi/getGroups?limit='); ?>" + groupLimit + "&start=0&userId=" + userId;
             }
             let settings = {
                 "async": true,
@@ -1251,7 +1465,7 @@
                 "contentType": false,
                 "statusCode": {
                     401: function (error) {
-                        location.href = "<?php echo base_url('userview/logout') ?>";
+                        location.href = "<?php echo base_url('userview/logout'); ?>";
                     }
                 },
                 "beforeSend": function () {
@@ -1269,7 +1483,7 @@
                 if (totalGroup == 0) {
                     $('#addMember').attr('data-group', null);
                     $('#addMember').addClass("hidden");
-                    chatBox.html('<img id="blankImg" src="<?php echo base_url('assets/img/nomess.png');?>" class="img-responsive blankImg" style="width:500px;margin-top: 20px;">');
+                    chatBox.html('');
                     chatBox.addClass("text-center");
                     $(".groupInfoContent").addClass("hidden");
                     //$('#groupMembers').html("");
@@ -1297,8 +1511,8 @@
         function getFileIcon(type) {
             let defaultIcon = "fa fa-file";
             let iconArray = [
-                {type: "text", icon: "fa fa-file-text-o"}, {type: "txt", icon: "fa fa-file-text-o"},
-                {type: "video", icon: "fa fa-file-movie-o"},
+                {type: "text", icon: "fas fa-file-alt"}, {type: "txt", icon: "fas fa-file-alt"},
+                {type: "video", icon: "fas fa-file-video"},
                 {type: "audio", icon: "fa fa-file-audio-o"},
                 {type: "pdf", icon: "fa fa-file-pdf-o"},
                 {type: "doc", icon: "fa fa-file-word-o"}, {type: "docx", icon: "fa fa-file-word-o"},
@@ -1314,9 +1528,14 @@
             return defaultIcon;
         }
         //this function is used to print the group member list on the right side
-        function printGroupMembers(members, meCreator, groupId, creatorEmail=null) {
+        function printGroupMembers(members, meCreator, groupId, data={}) {
+
+            let creatorEmail = (data.creatorEmail!=undefined) ? data.creatorEmail : null ;
+            let moderator = (data.moderator!=undefined) ? data.moderator : 0 ;
+
             let html = "";
             membersId = [];
+            html += "<div class='row topor'><div class='col-md-12'><div class='TitleUpper'>Community Members:</div></div></div>";
             if (members.length <= 0) {
                 if (!$("#groupMembers").hasClass("hidden")) {
                     $("#groupMembers").addClass("hidden");
@@ -1326,31 +1545,60 @@
                     $("#groupMembers").removeClass("hidden");
                 }
             }
+            html += "<div class='l23-container'>";
             for (let i = 0; i < members.length; i++) {
+
                 membersId.push(members[i].userId);
-               
+                
+                <?php
+
+                    $hash = rand(123456789, 987654321).rand(123456789, 987654321).rand(123456789, 987654321).rand(123456789, 987654321).rand(123456789, 987654321).rand(123456789, 987654321).rand(123456789, 987654321).rand(123456789, 987654321).rand(123456789, 987654321).rand(123456789, 987654321);
+
+                ?>
+
+                let userlevel = 0;
+                if (members[i].userEmail==creatorEmail) userlevel = 1;
+                else if (parseInt(members[i].moderator)>0) userlevel = 2;
+                else userlevel = 0;  
 
                 html += "<li class=\"person\"  style=\"padding-top: 5px;padding-bottom: 0px;height:50px;cursor: default;\">";
                 if (members[i].active === 1) {
-                    html += "                        <img class='memberStatus memberActive' id='member_" + members[i].userId + "' src=\"" + members[i].profilePictureUrl + "\" alt=\"\" \/>";
+                    html += "<img class='' id='member_" + members[i].userId + "' src=\"" + members[i].profilePictureUrl + "\" alt=\"\" \/><span class='memberStatus memberActive'></span>";
                 } else {
-                    html += "                        <img class='memberStatus' id='member_" + members[i].userId + "' src=\"" + members[i].profilePictureUrl + "\" alt=\"\" \/>";
+                    html += "<img class='' id='member_" + members[i].userId + "' src=\"" + members[i].profilePictureUrl + "\" alt=\"\" \/><span class='memberStatus memberOffline'></span>";
                 }
-                html += "                        <span  class=\"name\"><div>" + members[i].firstName + " " + members[i].lastName +"</div><\/span>";
-                html += "                        <span title='Visit Profile' class=\"vyndue_email\"> <div><strong class=\"vyndue_at_email\">@</strong>"+ members[i].userSecret +"<\/div><\/span>";                
-                //html += "<span class='vyndue_at_email text-info'>@</span>";
-                if (meCreator === true) {
-                    html += "                        <span class=\"time\" style='padding-top: 5px' ><a href=\"#\" data-group=\"" + groupId + "\" data-member=\"" + members[i].userId + "\" class=\"btn-danger btn-extra-small btnMemberDelete\"><i class=\"fa fa-trash\"><\/i><\/a><\/span>";
-                }
-                
-                if(members[i].userEmail==creatorEmail){
-                    html += "<span class=\"time\" style='padding-top: 5px' ><div class=\"btn-warning btn-extra-small disabled \" style=\"cursor: default;\"><i class=\"fa fa-star fa-fw\" title=\"Community Administrator\"><\/i><\/div><\/span>";                  
-                }
-                /*if (parseInt(groupType) === 0) {
-                    html += "                        <span class=\"time\" style='padding-top: 5px' ><a href=\"#\" data-group=\"" + groupId + "\" data-member=\"" + members[i].userId + "\" class=\"btn-danger btn-extra-small btnMemberDelete\"><i class=\"fa fa-trash\"><\/i><\/a><\/span>";
-                }*/
-                html += "                    <\/li>";
+                html += "<span  class=\"name\"><div><a href='https://arbitrage.ph/getuser/?hsh=<?php echo $hash; ?>&eml=" + members[i].userEmail + "'  target='_self'>" + members[i].firstName + " " + members[i].lastName +"<\/a><\/div><\/span>";
+                html += "<span class='vyndue_at_email'><a href='https://arbitrage.ph/getuser/?hsh=<?php echo $hash; ?>&eml=" + members[i].userEmail + "' target='_self'>View Profile<\/a><\/span>";   
+
+                switch (userlevel) {
+                    case 1: // admin
+                        html += `<span class="time" style='padding-top: 5px'>
+                                    <div class="btn-warning btn-extra-small disabled" style="cursor: default;">
+                                        <i class="fa fa-star fa-fw" title="Community Administrator"></i>
+                                    </div>
+                                </span>`; 
+                    break;
+                    case 2: // moderator
+                        html += `<span class="time" style='padding-top: 5px'>
+                                    <div class="btn-success btn-extra-small disabled" style="cursor: default;">
+                                        <i class="fa fa-balance-scale" title="Community Moderator"></i>
+                                    </div>
+                                </span>`;
+                    break;
+                    case 0: // member
+                        if(meCreator || moderator){
+                            html += `<span class="time" style='padding-top: 5px;'>
+                                            <a href="#" data-group="${ groupId } " data-member="${ members[i].userId }" class="btn-danger btn-extra-small btnMemberDelete">
+                                                    <i class="fa fa-trash"></i>
+                                            </a>
+                                    </span>`;
+                        }
+                    break;
+                }                
+                html += "</li>";
+
             }
+            html += "</div>";
             $('#groupMembers').html(html);
         }
         function printGroupFiles(groupFiles) {
@@ -1404,9 +1652,9 @@
         }
         //This function is used to get the group member list
         function getGroupMembers(groupId) {
-            let url = "<?php echo base_url('imApi/getMembers?groupId=') ?>" + groupId;
+            let url = "<?php echo base_url('imApi/getMembers?groupId='); ?>" + groupId;
             if (ID_BASED) {
-                url = "<?php echo base_url('imApi/getMembers?groupId=') ?>" + groupId + "&userId=" + userId;
+                url = "<?php echo base_url('imApi/getMembers?groupId='); ?>" + groupId + "&userId=" + userId;
             }
             let settings = {
                 "async": true,
@@ -1422,19 +1670,22 @@
                 "processData": false,
                 "contentType": false,
                 "beforeSend": function () {
-                    $('#groupMembers').html('<li id="loadinggroupmembers" class="text-center"><img src="<?php echo base_url('assets/img/preloadervyn.svg')?>" style="width:50px;margin-top: 20px;"></li>');
+                    $('#groupMembers').html('<li id="loadinggroupmembers" class="text-center"><img src="<?php echo base_url('assets/img/arb_preloader.svg'); ?>" style="width:50px;margin-top: 20px;"></li>');
                 },
                 "success": function () {
                     $("#loadinggroupmembers").remove();
                 }
             };
             $.ajax(settings).done(function (response) {
+                // console.log('test');
+                // console.log(response);
                 let members = response.response.memberList;
                 let meCreator = response.response.meCreator;
                 let creatorEmail = response.response.creatorEmail;
+                let moderator = response.response.moderator;
                 //let groupFiles = response.response.groupFiles;
-                //let groupImages = response.response.groupImages;
-                printGroupMembers(members, meCreator, groupId, creatorEmail);
+                //let groupImages = response.response.groupImages; 
+                printGroupMembers(members, meCreator, groupId, { creatorEmail , moderator } );
                 //printGroupFiles(groupFiles);
                 //printGroupImages(groupImages);
             });
@@ -1448,9 +1699,9 @@
              }*/
             //$("#ImageAttachmentList").html("");
             //$("#attachmentList").html("");
-            let url = "<?php echo base_url('imApi/getGroupFiles?groupId=') ?>" + groupId;
+            let url = "<?php echo base_url('imApi/getGroupFiles?groupId='); ?>" + groupId;
             if (ID_BASED) {
-                url = "<?php echo base_url('imApi/getGroupFiles?groupId=') ?>" + groupId + "&userId=" + userId;
+                url = "<?php echo base_url('imApi/getGroupFiles?groupId='); ?>" + groupId + "&userId=" + userId;
             }
             let settings = {
                 "async": true,
@@ -1471,6 +1722,21 @@
                 printGroupImages(groupImages);
             });
         }
+        // callback function to get user info by its username
+        function getUrlParameter(sParam) {
+            var sPageURL = window.location.search.substring(1),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                }
+            }
+        };
         //This function is used to print the group name and three member image on the right side top
         function printGroupInfo(groupId, groupImages, groupName) {
             if(groupObjects[groupId].hasOwnProperty('groupImageData')) {
@@ -1545,9 +1811,9 @@
         // callback function to fetch all membered group and mingled friends
         function getSearchList(callback){
             resetFriendStart();
-            let url = "<?php echo base_url('user/searchList?start=') ?>" + friendStart + "&limit=" + friendLimit;
+            let url = "<?php echo base_url('user/searchList?start='); ?>" + friendStart + "&limit=" + friendLimit;
             if (ID_BASED) {
-                url = "<?php echo base_url('user/searchList?start=') ?>" + friendStart + "&limit=" + friendLimit + "&userId=" + userId;
+                url = "<?php echo base_url('user/searchList?start='); ?>" + friendStart + "&limit=" + friendLimit + "&userId=" + userId;
             }
             let settings = {
                 "async": true,
@@ -1569,9 +1835,9 @@
 
         //This function is userd to get memntion person in a group
         function getMention(callback) {
-            let url = "<?php echo base_url('user/mentionList?groupId=') ?>" + activeGroupId;
+            let url = "<?php echo base_url('user/mentionList?groupId='); ?>" + activeGroupId;
             if (ID_BASED) {
-                url = "<?php echo base_url('user/mentionList?groupId=') ?>" + activeGroupId + "&userId=" + userId;
+                url = "<?php echo base_url('user/mentionList?groupId='); ?>" + activeGroupId + "&userId=" + userId;
             }
             let settings = {
                 "async": true,
@@ -1594,9 +1860,9 @@
         //This function is used to  get friend list of user
         function getMembers(callback) {   // get friends list
             resetFriendStart();
-            let url = "<?php echo base_url('user/friendList?start=') ?>" + friendStart + "&limit=" + friendLimit;
+            let url = "<?php echo base_url('user/friendList?start='); ?>" + friendStart + "&limit=" + friendLimit;
             if (ID_BASED) {
-                url = "<?php echo base_url('user/friendList?start=') ?>" + friendStart + "&limit=" + friendLimit + "&userId=" + userId;
+                url = "<?php echo base_url('user/friendList?start='); ?>" + friendStart + "&limit=" + friendLimit + "&userId=" + userId;
             }
             let settings = {
                 "async": true,
@@ -1617,12 +1883,62 @@
                 callback(data);
             });
         }
+
+        // callback function to get user info by its username
+        window.promptChat = function(name) {
+            return;
+            var username = name.substring(3);
+            //var username = location.search.split('us=')[1];
+            if(!username.length) return;
+            
+            let url = "<?php echo base_url('user/hasConversation_byUserSecret?username='); ?>" + username;
+            if (ID_BASED) {
+                url = "<?php echo base_url('user/hasConversation_byUserSecret?username='); ?>" + username + "&userId=" + userId;
+            }
+
+            let settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": url,
+                "method": "GET",
+                "headers": {
+                    "authorization": "Basic YWRtaW46MTIzNA==",
+                    "Authorizationkeyfortoken": String(responce),
+                    "cache-control": "no-cache",
+                    "postman-token": "eb27c011-391a-0b70-37c5-609bcd1d7b6d"
+                },
+                "dataType": 'json'
+            };
+            $.ajax(settings).done(function (response) {
+                var groupId = response.response.groupId;
+                var fid = response.response.fid;
+                var mingled = response.response.mingled;
+                if(!mingled){
+                    //alert("Error: You are not mingled with this person");
+                    console.log("Error: You are not mingled with this person");
+                    return;
+                }
+                if(groupId>0){
+                    $("li#group_"+groupId).first().trigger("click", [{update: true}]);
+                }else{
+                    addmember.empty();
+                    addmember.clear();
+                    addmember.disable();
+                    $("div#newMessage").first().trigger("click", [{update: true}]);
+                        setTimeout(() => {
+                            addmember.setValue({id:fid});
+                            addmember.enable();
+                        }, 1000);
+                }
+            });
+        }
+
         //This function is used to clear the current chat box for retrieving new message for the new group
         function clearChatBox() {
             chatBox.html('');
         }
         function getImagePreview(message){
-            let defaultImage = "<?php echo base_url('/assets/img/compact_camera1600.png') ?>";
+            let defaultImage = "<?php echo base_url('/assets/img/compact_camera1600.png'); ?>";
             let linkData=JSON.parse(message.linkData);
             let  html = "<div id='message_" + message.m_id + "' class=\"fw-im-attachments fw-im-message-text\"><a style='display: inline-block; max-height: 450px;' href=\"" + message.message + "\" class=\"hover-5 ol-lightbox\"><img onerror='this.style.display=\"none\";' style='max-height: 450px; width: auto;' src=\"" + message.message + "\" alt=\"image hover\">";
             if(linkData!=null && linkData.hasOwnProperty("playerOrImageUrl") && linkData.playerOrImageUrl.hasOwnProperty("size") && linkData.playerOrImageUrl.size!=null && linkData.playerOrImageUrl.size.hasOwnProperty("height") && linkData.playerOrImageUrl.size.height!=null &&linkData.playerOrImageUrl.size.hasOwnProperty("width") && linkData.playerOrImageUrl.size.width!=null ){
@@ -1635,7 +1951,7 @@
         }
         //This function is used to create the preview for a link sheared in message
         function getLinkPreview(linkData, link) {
-            let defaultImage = "<?php echo base_url('/assets/img/compact_camera1600.png') ?>";
+            let defaultImage = "<?php echo base_url('/assets/img/compact_camera1600.png'); ?>";
             if (linkData.playerOrImageUrl.type === 'player') {
                 return "<div class='i-wrapper'><iframe src='" + linkData.playerOrImageUrl.url + "' class='medea-frame iframe-wrapper' allowfullscreen></iframe></div>";
             }
@@ -1652,7 +1968,7 @@
                     "</a>";
             }
             else {
-                let image = "<img src='<?php echo base_url("/assets/img/compact_camera1600.png") ?>' id='tImg_blank' width='100%'>";
+                let image = "<img src='<?php echo base_url('/assets/img/compact_camera1600.png'); ?>' id='tImg_blank' width='100%'>";
                 let returnString="";
                 if (linkData.playerOrImageUrl.url != null) {
                     image = "<img src='" + linkData.playerOrImageUrl.url + "' id='tImg' width='100%' onerror='this.style.display=\"none\";' >";
@@ -1737,9 +2053,9 @@
             if (start == 1) {
                 start = 0;
             }
-            let url = "<?php echo base_url('imApi/getMessage?groupId=') ?>" + groupId + "&limit=" + limit + "&start=" + start;
+            let url = "<?php echo base_url('imApi/getMessage?groupId='); ?>" + groupId + "&limit=" + limit + "&start=" + start;
             if (ID_BASED) {
-                url = "<?php echo base_url('imApi/getMessage?groupId=') ?>" + groupId + "&limit=" + limit + "&start=" + start + "&userId=" + userId;
+                url = "<?php echo base_url('imApi/getMessage?groupId='); ?>" + groupId + "&limit=" + limit + "&start=" + start + "&userId=" + userId;
             }
             let settings = {
                 "async": true,
@@ -1756,7 +2072,7 @@
                 "contentType": false,
                 "beforeSend": function () {
                     messageLoading = true;
-                    chatBox.html('<img id="loadingMessage" src="<?php echo base_url('assets/img/preloadervyn.svg')?>" class="img-responsive blankImg" style="width:80px;">');
+                    chatBox.html('<img id="loadingMessage" src="<?php echo base_url('assets/img/arb_preloader.svg'); ?>" class="img-responsive blankImg" style="width:60px;">');
                     chatBox.addClass("text-center");
                     chatBox.addClass("vertical-alignment");
                 },
@@ -1772,7 +2088,8 @@
                 let html = "";
                 totalRetivedMessage += data.length;
                 if (data.length === 0) {
-                    chatBox.html('<img id="blankImg" src="<?php echo base_url('assets/img/nomess.png')?>" class="img-responsive blankImg">');
+                    chatBox.html('');
+                    // <img id="blankImg" src="<?php echo base_url('assets/img/nomess.png'); ?>" class="img-responsive blankImg">
                     chatBox.addClass("text-center");
                     chatBox.addClass("vertical-alignment");
                 } else {
@@ -1783,34 +2100,44 @@
                     let currentDate = moment(moment().toISOString());
                     topMessage = data[0].message.m_id;
                     let today = false;
+                    
                     for (let i = 0; i < data.length; i++) {
                         let sender = data[i].sender;
                         let message = data[i].message;
                         let senderId = data[i].sender.userId;
                         let messageDate = moment(data[i].message.ios_date_time);
                         let seen = data[i].seen;
+                        
                         if (moment(moment().toISOString()).diff(messageDate, 'days') === 0 && !today) {
                             html += "<div class=\"fw-im-message  text-center fw-im-othersender\" data-og-container=\"\">";
+                            html += "<div class=\"centerblock\">";
                             html += moment(message.ios_date_time, moment.ISO_8601).calendar(null, momentOptions2);
+                            html += "                <\/div>";
                             html += "                <\/div>";
                             currentDate = messageDate;
                             today = true;
                         }
                         else if (currentDate.diff(messageDate, 'days') !== 0 && (currentDate.diff(messageDate, 'days') >= 1 || currentDate.diff(messageDate, 'days') <= -1)) {
                             html += "<div class=\"fw-im-message  text-center fw-im-othersender\" data-og-container=\"\">";
+                            html += "<div class=\"centerblock\">";
                             html += moment(message.ios_date_time, moment.ISO_8601).calendar(null, momentOptions2);
+                            html += "                <\/div>";
                             html += "                <\/div>";
                             currentDate = messageDate;
                         }
                         else if (moment(moment().toISOString()).diff(messageDate, 'days') === 0 && (currentDate.diff(messageDate, 'minutes') <= -30 || currentDate.diff(messageDate, 'minutes') >= 30)) {
                             html += "<div class=\"fw-im-message  text-center fw-im-othersender\" data-og-container=\"\">";
+                            html += "<div class=\"centerblock\">";
                             html += moment(message.ios_date_time, moment.ISO_8601).calendar(null, momentOptions2);
+                            html += "                <\/div>";
                             html += "                <\/div>";
                             currentDate = messageDate;
                         }
                         if (message.type === "update") {
                             html += "<div id='message_" + message.m_id + "' class=\"fw-im-message  text-center fw-im-othersender update-message-font\"  data-og-container=\"\">";
+                            html += "<div class=\"centerblock\">";
                             html += "<i  class='fa fa-tags'></i> " + message.message;
+                            html += "                <\/div>";
                             html += "                <\/div>";
                         }
                         else {
@@ -1818,7 +2145,7 @@
                                 html += "<div class=\"fw-im-message  fw-im-isme fw-im-othersender \"  data-og-container=\"\" title=\"" + moment(message.ios_date_time, moment.ISO_8601).calendar(null, momentOptions) + "\" >";
                                 if (message.type === "text") {
                                     if (message.onlyemoji) {
-                                        html += "                    <div id='message_" + message.m_id + "' class=\"fw-im-message-text\" style='background-color:transparent;'>" + parseMessage(message.message, true) + "<\/div>";
+                                        html += "                    <div id='message_" + message.m_id + "' class=\"fw-im-message-text ss\" style='background-color:transparent;'>" + parseMessage(message.message, true) + "<\/div>";
                                     } else {
                                         html += "                    <div id='message_" + message.m_id + "' class=\"fw-im-message-text\">" + parseMessage(message.message, false) + "<\/div>";
                                     }
@@ -1831,7 +2158,7 @@
                                 }
                                 if (message.type === "video") {
                                     html += "<div id='message_" + message.m_id + "' class=\"fw-im-attachments\" >";
-                                    html += "                        <video class='mediaVideo' id='video_" + message.m_id + "' poster='" + message.poster + "'  width=\"250px\" height=\"150px\" controls=\"true\" preload='none' name=\"media\"><source src=\"" + message.message + "\" type=\"video\/mp4\"><\/video>";
+                                    html += "                        <video class='mediaVideo' id='video_" + message.m_id + "' poster='" + message.poster + "'  width=\"100%\" height=\"\" controls=\"true\" preload='none' name=\"media\"><source src=\"" + message.message + "\" type=\"video\/mp4\"><\/video>";
                                     html += "                    <\/div>";
                                 }
                                 if (message.type === "audio") {
@@ -1864,8 +2191,7 @@
                                     html += "                    <\/div>";
                                 }
                                 html += "                <\/div>";
-                            }
-                            else {
+                            }else {
                                 html += "                <div class=\"fw-im-message  fw-im-isnotme fw-im-othersender\" data-og-container=\"\" title=\"" + moment(message.ios_date_time, moment.ISO_8601).calendar(null, momentOptions) + "\">";
                                 if (isUnicode(sender.firstName)) {
                                     html += "<div class='fw-im-message-author-name font-Tahoma'>" + sender.firstName + "</div>";
@@ -1887,7 +2213,7 @@
                                 }
                                 if (message.type === "video") {
                                     html += "<div id='message_" + message.m_id + "' class=\"fw-im-attachments\">";
-                                    html += "                        <video class='mediaVideo' id='video_" + message.m_id + "' poster='" + message.poster + "' width=\"250px\" height=\"150px\" controls=\"true\" preload='none'  name=\"media\"><source src=\"" + message.message + "\" type=\"video\/mp4\"><\/video>";
+                                    html += "                        <video class='mediaVideo' id='video_" + message.m_id + "' poster='" + message.poster + "' width=\"100%\" height=\"\" controls=\"true\" preload='none'  name=\"media\"><source src=\"" + message.message + "\" type=\"video\/mp4\"><\/video>";
                                     html += "                    <\/div>";
                                 }
                                 if (message.type === "audio") {
@@ -1902,9 +2228,9 @@
                                 }
                                 html += "                    <div class=\"fw-im-message-author\"  title=\"" + sender.firstName + " " + sender.lastName + "\">";
                                 if (sender.active === 1) {
-                                    html += "                        <img class='auth_" + senderId + " authStatus memberActive'  src=\"" + sender.profilePictureUrl + "\" >";
+                                    html += "                        <img class='auth_" + senderId + "'  src=\"" + sender.profilePictureUrl + "\" ><span class='authStatus memberActive'></span>";
                                 } else {
-                                    html += "                        <img class='auth_" + senderId + " authStatus' src=\"" + sender.profilePictureUrl + "\" >";
+                                    html += "                        <img class='auth_" + senderId + " authStatus' src=\"" + sender.profilePictureUrl + "\" ><span class='authStatus memberOffline'></span>";
                                 }
                                 html += "                    <\/div>";
                                 /* html += "                    <div class=\"fw-im-message-time\">";
@@ -1914,6 +2240,8 @@
                             }
                         }
                     }
+                    
+
                     firstmessageDate = currentDate;
                     chatBox.html("");
                     chatBox.append(html);
@@ -1922,6 +2250,7 @@
                         let allMessage = data[i].message;
                         let sender = data[i].sender;
                         let isme = parseInt(sender.userId) !== parseInt(userId);
+                        // console.log(sender);
                         if (allMessage.type == "video") {
                             initVideo("video_" + allMessage.m_id, isme);
                         } else if (allMessage.type == "audio") {
@@ -1953,7 +2282,7 @@
                 form.append("file",file);
                 form.append("groupId", activeGroupId);
             let progress1 = new LoadingOverlayProgress();
-            let url = "<?php echo base_url('imApi/updateGroupImage') ?>";
+            let url = "<?php echo base_url('imApi/updateGroupImage'); ?>";
            let settings = {
                 "async": true,
                 "crossDomain": true,
@@ -2012,7 +2341,7 @@
                 form.append("userId", userId);
                 socketData.userId = userId;
             }
-            let url = "<?php echo base_url('imApi/sendMessage') ?>";
+            let url = "<?php echo base_url('imApi/sendMessage'); ?>";
             if (sendFile) {
                 let progress1 = new LoadingOverlayProgress();
                 settings = {
@@ -2202,7 +2531,7 @@
             let settings = {
                 "async": true,
                 "crossDomain": true,
-                "url": "<?php echo base_url('user/filterFriendList?key=') ?>" + value,
+                "url": "<?php echo base_url('user/filterFriendList?key='); ?>" + value,
                 "method": "GET",
                 "headers": {
                     "authorization": "Basic YWRtaW46MTIzNA==",
@@ -2237,7 +2566,7 @@
             let settings = {
                 "async": true,
                 "crossDomain": true,
-                "url": "<?php echo base_url('user/filterFriendList?key=') ?>" + value,
+                "url": "<?php echo base_url('user/filterFriendList?key='); ?>" + value,
                 "method": "GET",
                 "headers": {
                     "authorization": "Basic YWRtaW46MTIzNA==",
@@ -2276,7 +2605,7 @@
                     let settings = {
                         "async": true,
                         "crossDomain": true,
-                        "url": "<?php echo base_url('user/friendList?start=') ?>" + friendStart + "&limit=" + friendLimit,
+                        "url": "<?php echo base_url('user/friendList?start='); ?>" + friendStart + "&limit=" + friendLimit,
                         "method": "GET",
                         "headers": {
                             "authorization": "Basic YWRtaW46MTIzNA==",
@@ -2317,7 +2646,7 @@
                     let settings = {
                         "async": true,
                         "crossDomain": true,
-                        "url": "<?php echo base_url('user/friendList?start=') ?>" + friendStart + "&limit=" + friendLimit,
+                        "url": "<?php echo base_url('user/friendList?start='); ?>" + friendStart + "&limit=" + friendLimit,
                         "method": "GET",
                         "headers": {
                             "authorization": "Basic YWRtaW46MTIzNA==",
@@ -2354,7 +2683,7 @@
             increaseGroupLimit();
             if (requested && groupStart < totalGroup) {
                 requested = false;
-                let url = "<?php echo base_url('imApi/getGroups?limit=') ?>" + groupLimit + "&start=" + groupStart;
+                let url = "<?php echo base_url('imApi/getGroups?limit='); ?>" + groupLimit + "&start=" + groupStart;
                 let settings = {
                     "async": true,
                     "crossDomain": true,
@@ -2386,7 +2715,7 @@
             if (notRequested && chatBox.scrollTop() === 0) {
                 notRequested = false;
                 increaseStart();
-                let url = "<?php echo base_url('imApi/getMessage?groupId=') ?>" + activeGroupId + "&limit=" + limit + "&start=" + start + "&userId=" + userId;
+                let url = "<?php echo base_url('imApi/getMessage?groupId='); ?>" + activeGroupId + "&limit=" + limit + "&start=" + start + "&userId=" + userId;
                 let settings = {
                     "async": true,
                     "crossDomain": true,
@@ -2433,14 +2762,18 @@
                             
                             if (currentDate !== messageDate) {
                                 html += "<div class=\"fw-im-message  text-center fw-im-othersender\" data-og-container=\"\">";
+                                html += "<div class=\"centerblock\">";
                                 html += moment(message.ios_date_time, moment.ISO_8601).calendar(null, momentOptions2);
+                                html += "                <\/div>";
                                 html += "                <\/div>";
                                 currentDate = messageDate;
                             }
                         }
                         if (message.type === "update") {
                             html += "<div id='message_" + message.m_id + "' class=\"fw-im-message  text-center fw-im-othersender update-message-font\"  data-og-container=\"\">";
+                            html += "<div class=\"centerblock\">";
                             html += "<i   class='fa fa-tags'></i> " + message.message;
+                            html += "                <\/div>";
                             html += "                <\/div>";
                         }
                         else {
@@ -2461,7 +2794,7 @@
                                 }
                                 if (message.type === "video") {
                                     html += "<div id='message_" + message.m_id + "' class=\"fw-im-attachments\" >";
-                                    html += "                        <video class='mediaVideo' id='video_" + message.m_id + "' poster='" + message.poster + "'  width=\"250px\" height=\"150px\" controls=\"true\" preload='none'  name=\"media\"><source src=\"" + message.message + "\" type=\"video\/mp4\"><\/video>";
+                                    html += "                        <video class='mediaVideo' id='video_" + message.m_id + "' poster='" + message.poster + "'  width=\"100%\" height=\"\" controls=\"true\" preload='none'  name=\"media\"><source src=\"" + message.message + "\" type=\"video\/mp4\"><\/video>";
                                     html += "                    <\/div>";
                                 }
                                 if (message.type === "audio") {
@@ -2477,6 +2810,7 @@
                                 html += "                    <div class=\"fw-im-message-author\"   title=\"" + sender.firstName + " " + sender.lastName + "\">";
                                 html += "                        <img src=\"" + sender.profilePictureUrl + "\" >";
                                 html += "                    <\/div>";
+                                // console.log(sender.profilePictureUrl);
                                 /*html += "                    <div class=\"fw-im-message-time\">";
                                 html += "                        <span title=\"" + moment(message.ios_date_time,moment.ISO_8601).format('LLLL') + "\">" + moment(message.ios_date_time,moment.ISO_8601).calendar(null,momentOptions) + "<\/span>";
                                 html += "                    <\/div>";*/
@@ -2504,7 +2838,7 @@
                                 }
                                 if (message.type === "video") {
                                     html += "<div id='message_" + message.m_id + "' class=\"fw-im-attachments\">";
-                                    html += "                        <video class='mediaVideo' id='video_" + message.m_id + "' poster='" + message.poster + "'   width=\"250px\" height=\"150px\" controls=\"true\"  preload='none' name=\"media\"><source src=\"" + message.message + "\" type=\"video\/mp4\"><\/video>";
+                                    html += "                        <video class='mediaVideo' id='video_" + message.m_id + "' poster='" + message.poster + "'   width=\"100%\" height=\"\" controls=\"true\"  preload='none' name=\"media\"><source src=\"" + message.message + "\" type=\"video\/mp4\"><\/video>";
                                     html += "                    <\/div>";
                                 }
                                 if (message.type === "audio") {
@@ -2519,7 +2853,7 @@
                                 }
                                 html += "                    <div class=\"fw-im-message-author\"  title=\"" + sender.firstName + " " + sender.lastName + "\">";
                                 if (sender.active === 1) {
-                                    html += "                        <img class='auth_" + senderId + " authStatus memberActive'  src=\"" + sender.profilePictureUrl + "\" >";
+                                    html += "                        <img class='auth_" + senderId + "'  src=\"" + sender.profilePictureUrl + "\" ><span class='authStatus memberActive'></span>";
                                 } else {
                                     html += "                        <img class='auth_" + senderId + " authStatus' src=\"" + sender.profilePictureUrl + "\" >";
                                 }
@@ -2577,6 +2911,15 @@
                 }
             },5000)
         }
+
+        function showComponents(obj=[]){
+            if(obj.length){
+                for(j in obj){
+                    $(`#${obj[j]}`).removeClass("hidden");
+                } 
+            }
+        }
+
         //$(".rightSection").perfectScrollbar();
         $('#groups').on("click", ".person", function (e, update) {
             if ($(this).hasClass('active')) {
@@ -2611,97 +2954,87 @@
             $("#rightSection").scrollTop(0);
             resetStart();
             resetRetiveMessage();
+
             groupType = parseInt(groupObjects[groupId].groupType);
             mute = parseInt(groupObjects[groupId].mute);
             block = parseInt(groupObjects[groupId].block);
             meBlocker = parseInt(groupObjects[groupId].meBlocker);
 
-            // Ralph 2019-04-13
-            let meCreator = groupObjects[groupId].meCreator;
-            let info = groupObjects[groupId];
-    
-            if(groupType==1)
-            {
-                // Personal
-                if ($("#blockOptions").hasClass("hidden")) {
-                    $("#blockOptions").removeClass("hidden");
-                }
+            totalGroupMembers = groupObjects[groupId].groupType==1 ? 0 : groupObjects[groupId].totalMember;
+        
+            // Ralph 2019-07-10
+            let userlevel = 0;
+            if (parseInt(groupObjects[groupId].meCreator)>0) userlevel = 1;
+            else if (parseInt(groupObjects[groupId].moderator)>0) userlevel = 2;
+            else userlevel = 0;      
 
-                if (!$('#addMember').hasClass('hidden')) {
-                    $('#addMember').addClass('hidden');
-                }
-                if (!$("#editGroupName").hasClass('hidden')) {
-                    $("#editGroupName").addClass('hidden');
-                }
-                if (!$("#changeGroupImage").hasClass('hidden')) {
-                    $("#changeGroupImage").addClass('hidden');
-                }
-                if (!$("#leaveGroup").hasClass('hidden')) {
-                    $("#leaveGroup").addClass('hidden');
-                }
-                if (!$("#joinRequest").hasClass('hidden')) {
-                    $("#joinRequest").addClass('hidden');
-                }
-                $("#groupMembers").html("");
+            // mute
+            if (!$('#muteOptions').hasClass('hidden')) $('#muteOptions').addClass('hidden');
+            // block
+            if (!$('#blockOptions').hasClass('hidden')) $('#blockOptions').addClass('hidden');
+            // leave group
+            if (!$('#leaveGroup').hasClass('hidden')) $('#leaveGroup').addClass('hidden');
+            // add people
+            if (!$('#addMember').hasClass('hidden')) $('#addMember').addClass('hidden');
+            // edit thumbnail
+            if (!$('#changeGroupImage').hasClass('hidden')) $('#changeGroupImage').addClass('hidden');
+            // change name
+            if (!$('#editGroupName').hasClass('hidden')) $('#editGroupName').addClass('hidden');
+            // join request
+            if (!$('#joinRequest').hasClass('hidden')) $('#joinRequest').addClass('hidden');
+            // assign moderator
+            if (!$('#communityModerator').hasClass('hidden')) $('#communityModerator').addClass('hidden');
+            // invitation link
+            //if (!$('#invitationLink').hasClass('hidden')) $('#invitationLink').addClass('hidden');
+            //console.log(groupType);
+            //console.log(userlevel);
 
-            }else{
-                // Group
-                // blocking is not allowed in group chat
-                if (!$("#blockOptions").hasClass("hidden")) {
-                    $("#blockOptions").addClass("hidden");
-                }
-                
-                if(groupType==2){
-                    if (!$("#leaveGroup").hasClass('hidden')) {
-                        $("#leaveGroup").addClass('hidden');
+            switch(groupType){
+
+                case 1: // Personal
+                   $("#groupMembers").html("");
+                    switch(userlevel){
+                        case 0: // Member
+                        case 1: // Admin
+                            showComponents(['muteOptions','blockOptions']);
+                        break;                    
+                        case 2: // Moderator
+                            showComponents([]);
+                        break; 
                     }
-                    if (!$("#joinRequest").hasClass('hidden')) {
-                        $("#joinRequest").addClass('hidden');
+                break;
+
+                case 2: // Public Community
+                    switch(userlevel){
+                        case 0: // Member
+                            showComponents(['muteOptions']);
+                        break;
+                        case 1: // Admin
+                            showComponents(['muteOptions','changeGroupImage','editGroupName']);
+                        break;                    
+                        case 2: // Moderator
+                            showComponents(['muteOptions']);
+                        break; 
                     }
-                }else{
-                    if(meCreator){
-                        if (!$("#leaveGroup").hasClass('hidden')) {
-                            $("#leaveGroup").addClass('hidden');
-                        }
-                    }else{
-                        if ($("#leaveGroup").hasClass('hidden')) {
-                            $("#leaveGroup").removeClass('hidden');
-                        }
+                break;
+
+                case 0: // Private Community
+                    switch(userlevel){
+                        case 0: // Member
+                            showComponents(['muteOptions']);
+                        break;
+                        case 1: // Admin
+                            showComponents(['muteOptions','addMember','changeGroupImage','editGroupName','joinRequest','communityModerator']);
+                        break;                    
+                        case 2: // Moderator
+                            showComponents(['muteOptions','joinRequest']);
+                        break; 
                     }
-                }
-                
-                
-                if(!meCreator){
-                    if (!$('#addMember').hasClass('hidden')) {
-                        $('#addMember').addClass('hidden');
-                    }
-                    if (!$("#editGroupName").hasClass('hidden')) {
-                        $("#editGroupName").addClass('hidden');
-                    }
-                    if (!$("#changeGroupImage").hasClass('hidden')) {
-                        $("#changeGroupImage").addClass('hidden');
-                    }
-                    if (!$("#joinRequest").hasClass('hidden')) {
-                        $("#joinRequest").removeClass('hidden');
-                    }
-                }else{
-                    if ($('#addMember').hasClass('hidden')) {
-                        $('#addMember').removeClass('hidden');
-                    }
-                    if ($("#editGroupName").hasClass('hidden')) {
-                        $("#editGroupName").removeClass('hidden');
-                    }
-                    if ($("#changeGroupImage").hasClass('hidden')) {
-                        $("#changeGroupImage").removeClass('hidden');
-                    }
-                    if ($("#joinRequest").hasClass('hidden')) {
-                        $("#joinRequest").removeClass('hidden');
-                    }
-                }
-                
+                break;
+
             }
 
-
+            // Specific Function for Block and Mute
             // Block
             if (block) {
                 $("#messageForm").hide();
@@ -2762,11 +3095,26 @@
                 }
             }
 
+
+            let numbermembers = totalGroupMembers;
+            if(groupObjects[groupId].groupType == 2 || groupObjects[groupId].groupType == 0) {
+                $('.numbermember').html(numbermembers);
+                $('.numbermember').append(" Participants");
+            }else if(groupObjects[groupId].groupType == 1){
+                $('.numbermember').html('');
+            }
+            // console.log(groupObjects[groupId]);
+
+            let imgselected = groupObjects[groupId].groupImageData;
+            $('.imgselecteds img').attr('src', imgselected);
+            // console.log(groupObjects[groupId].groupImageData);
+
             let personName = groupObjects[groupId].groupName;
             if ($("#group_" + groupId).hasClass("font-bold-black")) {
                 $("#group_" + groupId).removeClass("font-bold-black");
             }
             $('.UserNames').html(personName);
+            // console.log(groupObjects[groupId]);
             $('.person').removeClass('active');
             $(this).addClass('active');
             $('#addMember').attr('data-group', groupId);
@@ -2779,6 +3127,9 @@
                 getGroupMembers(groupId);
                 //printGroupMembers(groupObjects[groupId].members, groupObjects[groupId].meCreator, groupId);
             }
+
+
+            //console.log(totalGroupMembers);
             getGroupFiles(groupId);
             clearChatBox();
             getMessage(groupId, start, limit);
@@ -2802,7 +3153,7 @@
             let settings = {
                 "async": true,
                 "crossDomain": true,
-                "url": "<?php echo base_url('imApi/deleteMember') ?>",
+                "url": "<?php echo base_url('imApi/deleteMember'); ?>",
                 "method": "POST",
                 "headers": {
                     "authorization": "Basic YWRtaW46MTIzNA==",
@@ -2848,10 +3199,10 @@
             renderer: function (data) {
                 let html = '';
                 return `<div style="padding: 5px; overflow:hidden;">
-                    <div style="float: left;"><img style="width: 25px;height: 25px" src=" ${data.picture} " /></div> 
-                    <div style="float: left; margin-left: 5px"> 
+                    <div style="float: left;" class="mxjak-left"><img style="width: 25px;height: 25px" src=" ${data.picture} " /></div> 
+                    <div style="float: left; margin-left: 9px" class="mxjak-right"> 
                     <div style="font-weight: bold; color: #333; font-size: 12px; line-height: 11px"> ${data.name} </div> 
-                    <div style="color: #999; font-size: 9px"> ${ data.email==null ? '&nbsp;' : data.email  } </div> 
+                    <div style="color: #999; font-size: 9px" class="s"> ${ data.email==null ? '&nbsp;' : data.email  } </div> 
                     </div> 
                     </div><div style="clear:both;"></div>`; 
             }
@@ -2890,9 +3241,9 @@
                 break;
             
                 case 1:
-                    let url = "<?php echo base_url('user/hasConversation?friendId=') ?>" + data.id;
+                    let url = "<?php echo base_url('user/hasConversation?friendId='); ?>" + data.id;
                     if (ID_BASED) {
-                        url = "<?php echo base_url('user/hasConversation?friendId=') ?>" + data.id + "&userId=" + userId;
+                        url = "<?php echo base_url('user/hasConversation?friendId='); ?>" + data.id + "&userId=" + userId;
                     }
                     let settings = {
                         "async": true,
@@ -2967,7 +3318,7 @@
                 let settings = {
                     "async": true,
                     "crossDomain": true,
-                    "url": "<?php echo base_url('imApi/addGroupMember/') ?>",
+                    "url": "<?php echo base_url('imApi/addGroupMember/'); ?>",
                     "method": "POST",
                     "headers": {
                         "authorization": "Basic YWRtaW46MTIzNA==",
@@ -3001,7 +3352,6 @@
             }
         });
 
-     
         // getmembers creating a new conversation, found at the left side bar
         $('#newMessage').on("click", function (e) {
             resetNewMessage();
@@ -3106,6 +3456,7 @@
                 }
             });
             let message = $('#message').text();
+            //console.log(message);
             //return;
             let mainFileObject = null;
             let file = $("#messageFile").val();
@@ -3170,6 +3521,12 @@
             sendMessage(form, false, true, socketData);
             $('#groups').scrollTop(0);
             //updateGroupList();
+            getGroupList(function(data){
+                // setTimeout(() => {
+                //     $("li#group_"+g_id).first().trigger("click", [{update: true}]);
+                //     toastr.success(`Hello ${window.Vyndue_fname}, welcome to your new private community.`);
+                // }, 1000);
+            });  
         });
         $('#editGroupName').on("click", function (event) {
             $("#groupName").css("border", "1px solid #ccc");
@@ -3199,7 +3556,7 @@
             let settings = {
                 "async": true,
                 "crossDomain": true,
-                "url": "<?php echo base_url('imApi/changeGroupName') ?>",
+                "url": "<?php echo base_url('imApi/changeGroupName'); ?>",
                 "method": "POST",
                 "headers": {
                     "authorization": "Basic YWRtaW46MTIzNA==",
@@ -3236,7 +3593,7 @@
             let settings = {
                 "async": true,
                 "crossDomain": true,
-                "url": "<?php echo base_url('imApi/blockGroup') ?>",
+                "url": "<?php echo base_url('imApi/blockGroup'); ?>",
                 "method": "POST",
                 "headers": {
                     "Authorization": "Basic YWRtaW46MTIzNA==",
@@ -3270,7 +3627,7 @@
             let settings = {
                 "async": true,
                 "crossDomain": true,
-                "url": "<?php echo base_url('imApi/unblockGroup') ?>",
+                "url": "<?php echo base_url('imApi/unblockGroup'); ?>",
                 "method": "POST",
                 "headers": {
                     "Authorization": "Basic YWRtaW46MTIzNA==",
@@ -3304,7 +3661,7 @@
             let settings = {
                 "async": true,
                 "crossDomain": true,
-                "url": "<?php echo base_url('imApi/muteGroup') ?>",
+                "url": "<?php echo base_url('imApi/muteGroup'); ?>",
                 "method": "POST",
                 "headers": {
                     "Authorization": "Basic YWRtaW46MTIzNA==",
@@ -3338,7 +3695,7 @@
             let settings = {
                 "async": true,
                 "crossDomain": true,
-                "url": "<?php echo base_url('imApi/unmuteGroup') ?>",
+                "url": "<?php echo base_url('imApi/unmuteGroup'); ?>",
                 "method": "POST",
                 "headers": {
                     "Authorization": "Basic YWRtaW46MTIzNA==",
@@ -3385,7 +3742,7 @@
             let settings = {
                 "async": true,
                 "crossDomain": true,
-                "url": "<?php echo base_url('imApi/leaveGroup') ?>",
+                "url": "<?php echo base_url('imApi/leaveGroup'); ?>",
                 "method": "POST",
                 "headers": {
                     "Authorization": "Basic YWRtaW46MTIzNA==",
@@ -3416,7 +3773,7 @@
             let settings = {
                 "async": true,
                 "crossDomain": true,
-                "url": "<?php echo base_url('imApi/getUnreadMessageGroups') ?>",
+                "url": "<?php echo base_url('imApi/getUnreadMessageGroups'); ?>",
                 "method": "GET",
                 "headers": {
                     "Authorization": "Basic YWRtaW46MTIzNA==",
@@ -3457,6 +3814,14 @@
 
         });
 
+        //Join Request Modal
+        $('#communityModerator').on("click", function (e) {
+
+            $("#modalCommunityModerator").modal("show");
+            getCommunityModerator(activeGroupId, listCommunityModerator);
+
+        });
+        
         //Join Request Modal
         $('#joinRequest').on("click", function (e) {
 
@@ -3512,10 +3877,11 @@
                 ret.prev = 0;
             }
             ret.next = (ret.page==ret.last_page) ? 0 : 1;
-            let html = `<span class="list-group-item list-group-item-info">
-                    <ul class="pager" style="margin:0;">
-                        <li ${ (!ret.prev) ? 'class="disabled"' : '' }><a href="#" data-page="${ret.prev_page}" data-prev="${ (ret.prev) ? 1 : 0  }" id="communityPrev">Previous</a></li>
-                        <li ${ (!ret.next) ? 'class="disabled"' : '' }><a href="#" data-page="${ret.next_page}" data-next="${ (ret.next) ? 1 : 0  }" id="communityNext">Next</a></li>
+            let html = `<span class="list-group-item list-group-item-info row">
+                    <ul class="grplist col-md-6">Group name</ul>
+                    <ul class="pager col-md-6" style="margin:0;">
+                        <li ${ (!ret.prev) ? 'class="disabled"' : '' }><a href="#" data-page="${ret.prev_page}" data-prev="${ (ret.prev) ? 1 : 0  }" id="communityPrev"><i class="fas fa-chevron-circle-left"></i></a></li>
+                        <li ${ (!ret.next) ? 'class="disabled"' : '' }><a href="#" data-page="${ret.next_page}" data-next="${ (ret.next) ? 1 : 0  }" id="communityNext"><i class="fas fa-chevron-circle-right"></i></a></li>
                     </ul>
                     </nav>
                 </span>`;
@@ -3531,28 +3897,28 @@
                 let btn_icon, btn_color, btn_label, btn_disabled;
                 switch (rec.status_id) {
                     case 0:
-                        btn_icon = 'fa-plus-square';
+                        btn_icon = 'fas fa-plus-circle';
                         btn_color = 'info';
                         btn_label = 'Join';
                         btn_disabled = '';
                     break;
         
                     case 1:
-                        btn_icon = 'fa-paper-plane-o';
+                        btn_icon = 'fas fa-clock';
                         btn_color = 'primary';
                         btn_label = 'Requested';
                         btn_disabled = 'disabled';
                     break;
 
                     case 2:
-                        btn_icon = 'fa-check-square';
+                        btn_icon = 'fas fa-check-circle';
                         btn_color = 'success';
                         btn_label = 'Joined';
                         btn_disabled = 'disabled';
                     break;
 
                     case 3:
-                        btn_icon = 'fa-star';
+                        btn_icon = 'fas fa-star';
                         btn_color = 'warning';
                         btn_label = 'Admin';
                         btn_disabled = 'disabled';
@@ -3566,7 +3932,7 @@
                             data-raw-data="${ raw.data }"
                             data-raw-page="${ raw.page }" 
                             data-id="${rec.id}" data-name="${ rec.name }" >
-                            <i class="fa ${btn_icon} fa-fw" aria-hidden="true"></i> <span>${btn_label}</span>
+                            <i class="${btn_icon} fa-fw" aria-hidden="true"></i> <span>${btn_label}</span>
                         </button></a>`;       
             }
             return html;
@@ -3591,7 +3957,7 @@
             let form=new FormData();
             form.append("groupId", group_id);
             form.append("rawData", raw_data);
-            let url = "<?php echo base_url('user/communityJoin') ?>";
+            let url = "<?php echo base_url('user/communityJoin'); ?>";
             let settings = {
                 "async": true,
                 "crossDomain": true,
@@ -3663,7 +4029,7 @@
             }else{              
      
                 if(find.length==undefined || find.length<3){
-                    communityBox.html('<br><br><br><p align="center"><i class="fa fa-ellipsis-h fa-4x fa-fw" aria-hidden="true"></i></p><br><h2 align=center>Then Hit Enter</h2><p align="center"><small><b>Simply click "ESC" to get back in Normal List</b></small></p>');
+                    communityBox.html('<p align="center"><i class="fa fa-ellipsis-h fa-4x fa-fw" aria-hidden="true"></i></p><h2 align=center>Then Hit Enter</h2><p align="center"><small><b>Simply click "ESC" to get back in Normal List</b></small></p>');
                     return; 
                 }
                 
@@ -3724,7 +4090,7 @@
                 let find = e.target.value;
                 find = find.trim();
                 if(find.length<=2){
-                    communityBox.html('<br><br><br><p align="center"><i class="fa fa-ellipsis-h fa-4x fa-fw" aria-hidden="true"></i></p><br><h2 align=center>Then Hit Enter</h2><p align="center"><small><b>Simply click "ESC" to get back in Normal List</b></small></p>');
+                    communityBox.html('<p align="center"><i class="fa fa-ellipsis-h fa-4x fa-fw" aria-hidden="true"></i></p><br><h2 align=center>Then Hit Enter</h2><p align="center"><small><b>Simply click "ESC" to get back in Normal List</b></small></p>');
                     toastr.error('Notice: Please enter a minimum of 3 characters');
                     return;
                 }else{
@@ -3744,7 +4110,7 @@
 
 
         $(document).on('click', 'span.vyndue_email div', function (e) {
-            let url = "<?=ARBITRAGE.'/user/'?>"+ $(this).text() + "/";
+            let url = "<?=ARBITRAGE.'/user/'; ?>"+ $(this).text() + "/";
             window.open(url.replace(' ',''), "_blank");
             e.preventDefault();
         });
@@ -3837,30 +4203,39 @@
             let message = data.message;
             let html = "";
             let seen = data.seen;
+            // console.log(seen);
             let messageDate = moment(message.ios_date_time, moment.ISO_8601);
             LastMessageId = parseInt(message.m_id);
             if (!lastMessageDate) {
                 html += "<div class=\"fw-im-message  text-center fw-im-othersender\" data-og-container=\"\">";
+                html += "<div class=\"centerblock\">";
                 html += moment(message.ios_date_time, moment.ISO_8601).calendar(null, momentOptions2);
+                html += "                <\/div>";
                 html += "                <\/div>";
                 lastMessageDate = messageDate;
             }
             else if (lastMessageDate.date() - messageDate.date() >= 1 || lastMessageDate.date() - messageDate.date() <= -1) {
                 if (lastMessageDate !== messageDate) {
                     html += "<div class=\"fw-im-message  text-center fw-im-othersender\" data-og-container=\"\">";
+                    html += "<div class=\"centerblock\">";
                     html += moment(message.ios_date_time, moment.ISO_8601).calendar(null, momentOptions2);
+                    html += "                <\/div>";
                     html += "                <\/div>";
                     lastMessageDate = messageDate;
                 }
             } else if (lastMessageDate.diff(messageDate, 'minutes') <= -30) {
                 html += "<div class=\"fw-im-message  text-center fw-im-othersender\" data-og-container=\"\">";
+                html += "<div class=\"centerblock\">";
                 html += moment(message.ios_date_time, moment.ISO_8601).calendar(null, momentOptions2);
+                html += "                <\/div>";
                 html += "                <\/div>";
                 lastMessageDate = messageDate;
             }
             if (message.type === "update") {
                 html += "<div id='message_" + message.m_id + "' class=\"fw-im-message  text-center fw-im-othersender update-message-font\" data-og-container=\"\">";
+                html += "<div class=\"centerblock\">";
                 html += "<i class='fa fa-tags'></i> " + message.message;
+                html += "                <\/div>";
                 html += "                <\/div>";
             }
             else {
@@ -3887,7 +4262,7 @@
                     }
                     if (message.type === "video") {
                         html += "<div id='message_" + message.m_id + "' class=\"fw-im-attachments\" >";
-                        html += "                        <video class='mediaVideo' id='video_" + message.m_id + "' poster='" + message.poster + "'  width=\"250px\" height=\"150px\" controls=\"true\" preload='none' name=\"media\"><source src=\"" + message.message + "\" type=\"video\/mp4\"><\/video>";
+                        html += "                        <video class='mediaVideo' id='video_" + message.m_id + "' poster='" + message.poster + "'  width=\"100%\" height=\"\" controls=\"true\" preload='none' name=\"media\"><source src=\"" + message.message + "\" type=\"video\/mp4\"><\/video>";
                         html += "                    <\/div>";
                     }
                     if (message.type === "audio") {
@@ -3902,23 +4277,23 @@
                     }
                     html += "                    <div class=\"fw-im-message-author\"  title=\"" + sender.firstName + " " + sender.lastName + "\">";
                     if (sender.active === 1) {
-                        html += "                        <img class='auth_" + sender.userId + " authStatus memberActive'  src=\"" + sender.profilePictureUrl + "\" >";
+                        html += "                        <img class='auth_" + sender.userId + "'  src=\"" + sender.profilePictureUrl + "\" ><span class='authStatus memberActive'></span>";
                     } else {
                         html += "                        <img class='auth_" + sender.userId + " authStatus' src=\"" + sender.profilePictureUrl + "\" >";
                     }
                     html += "                    <\/div>";
                     html += "                <\/div>";
                     if (!mute) {
-                        $.playSound("<?php echo base_url('assets/img/nf')?>");
+                        $.playSound("<?php echo base_url('assets/img/nf'); ?>");
                         toastr.info("New Message from " + sender.firstName + " " + sender.lastName);
                     }
                 } else {
                     html += "<div  class=\"fw-im-message  fw-im-isme fw-im-othersender\" data-og-container=\"\" title=\"" + moment(message.ios_date_time, moment.ISO_8601).calendar(null, momentOptions) + "\">";
                     if (message.type === "text") {
                         if (message.onlyemoji) {
-                            html += "                    <div id='message_" + message.m_id + "' class=\"fw-im-message-text\" style='background-color:transparent;'>" + parseMessage(message.message, true) + "<\/div>";
+                            html += "<div id='message_" + message.m_id + "' class=\"fw-im-message-text asdasd\" style='background-color:transparent;'>" + parseMessage(message.message, true) + "<\/div>";
                         } else {
-                            html += "                    <div id='message_" + message.m_id + "' class=\"fw-im-message-text\">" + parseMessage(message.message, false) + "<\/div>";
+                            html += "<div id='message_" + message.m_id + "' class=\"fw-im-message-text \">" + parseMessage(message.message, false) + "<\/div>";
                         }
                         if (message.linkData !== null) {
                             html += getLinkPreview(JSON.parse(message.linkData), message.link);
@@ -3929,22 +4304,23 @@
                     }
                     if (message.type === "video") {
                         html += "<div id='message_" + message.m_id + "' class=\"fw-im-attachments\" >";
-                        html += "                        <video class='mediaVideo' class='mediaVideo' id='video_" + message.m_id + "' poster='" + message.poster + "' width=\"250px\" height=\"150px\" controls=\"true\" preload='none'  name=\"media\"><source src=\"" + message.message + "\" type=\"video\/mp4\"><\/video>";
+                        html += "                        <video class='mediaVideo' class='mediaVideo' id='video_" + message.m_id + "' poster='" + message.poster + "' width=\"100%\" height=\"\" controls=\"true\" preload='none'  name=\"media\"><source src=\"" + message.message + "\" type=\"video\/mp4\"><\/video>";
                         html += "                    <\/div>";
                     }
                     if (message.type === "audio") {
                         html += "<div id='message_" + message.m_id + "' class=\"fw-im-attachments mediaAudio-player-wrapper\" >";
-                        html += "                        <audio class='mediaAudio' id='audio_" + message.m_id + "' style='width:100%;height:100%;' width='100%' height='100%'  controls=\"true\" preload='none' name=\"media\"><source src=\"" + message.message + "\" type=\"audio\/mp3\"><\/audio>";
+                        html += "<audio class='mediaAudio' id='audio_" + message.m_id + "' style='width:100%;height:100%;' width='100%' height='100%'  controls=\"true\" preload='none' name=\"media\"><source src=\"" + message.message + "\" type=\"audio\/mp3\"><\/audio>";
                         html += "                    <\/div>";
                     }
                     if (message.type === "document") {
                         //html += "<div id='message_" + message.m_id + "' class=\"fw-im-attachments\" >";
-                        html += "                        <div class=\"fw-im-message-text\"><a target='_blank' id='document_" + message.m_id + "' href=" + message.message + " ><i class=\"fa fa-arrow-circle-down\"></i> " + message.fileName + "<\/a></div>";
+                        html += "<div class=\"fw-im-message-text\"><a target='_blank' id='document_" + message.m_id + "' href=" + message.message + " ><i class=\"fa fa-arrow-circle-down\"></i> " + message.fileName + "<\/a></div>";
                         //html += "                    <\/div>";
                     }
                     html += "                    <div class=\"fw-im-message-author\"  title=\"" + sender.firstName + " " + sender.lastName + "\">";
                     html += "                        <img src=\"" + sender.profilePictureUrl + "\" >";
                     html += "                    <\/div>";
+                    // console.log(seen.seen);
                     if (seen) {
                         if (seen.time) {
                             html += "                    <div class=\"fw-im-message-time seen  seenId_" + message.m_id + "\">";
@@ -3963,11 +4339,14 @@
                     html += "                <\/div>";
                 }
             }
+
             if (presentTypingDiv) {
                 $(html).insertBefore(presentTypingDiv);
             } else {
                 chatBox.append(html);
             }
+
+
             let isme = parseInt(sender.userId) !== parseInt(userId);
             if (message.type == "video") {
                 initVideo("video_" + message.m_id, isme);
@@ -3976,6 +4355,8 @@
             } else if (message.type == "text" && isUnicode(message.message)) {
                 $("#message_" + message.m_id).css({"direction": "rtl", "font-family": "Tahoma"});
             }
+
+
             let groupId = data.to;
             if (message.type == "text") {
                 if (parseInt(sender.userId) == parseInt(userId)) {
@@ -3988,6 +4369,7 @@
                 lightBox.init();
                 getGroupFiles(groupId);
             }
+
             $('#time_' + groupId).html(moment(message.ios_date_time, moment.ISO_8601).fromNow());
             time[groupId] = message.ios_date_time;
             groupObjects[groupId].lastActive = message.ios_date_time;
@@ -4009,6 +4391,8 @@
             let seen = null;
             let messageDate = null;
             let sender = null;
+            let isme = parseInt(userId);
+            
             if (messages.length > 0) {
                 LastMessageId = parseInt(messages[messages.length - 1].message.m_id);
                 time[activeGroupId] = messages[messages.length - 1].message.ios_date_time;
@@ -4017,29 +4401,38 @@
                     message = messages[i].message;
                     sender = messages[i].sender;
                     seen = message.seen;
+                    // console.log(seen);
                     messageDate = moment(message.ios_date_time, moment.ISO_8601);
                     if (!lastMessageDate) {
                         html += "<div class=\"fw-im-message  text-center fw-im-othersender\" data-og-container=\"\">";
+                        html += "<div class=\"centerblock\">";
                         html += moment(message.ios_date_time, moment.ISO_8601).calendar(null, momentOptions2);
+                        html += "                <\/div>";
                         html += "                <\/div>";
                         lastMessageDate = messageDate;
                     }
                     else if (lastMessageDate.date() - messageDate.date() >= 1 || lastMessageDate.date() - messageDate.date() <= -1) {
                         if (lastMessageDate !== messageDate) {
                             html += "<div class=\"fw-im-message  text-center fw-im-othersender\" data-og-container=\"\">";
+                            html += "<div class=\"centerblock\">";
                             html += moment(message.ios_date_time, moment.ISO_8601).calendar(null, momentOptions2);
+                            html += "                <\/div>";
                             html += "                <\/div>";
                             lastMessageDate = messageDate;
                         }
                     } else if (lastMessageDate.diff(messageDate, 'minutes') <= -30) {
                         html += "<div class=\"fw-im-message  text-center fw-im-othersender\" data-og-container=\"\">";
+                        html += "<div class=\"centerblock\">";
                         html += moment(message.ios_date_time, moment.ISO_8601).calendar(null, momentOptions2);
+                        html += "                <\/div>";
                         html += "                <\/div>";
                         lastMessageDate = messageDate;
                     }
                     if (message.type === "update") {
                         html += "<div id='message_" + message.m_id + "' class=\"fw-im-message  text-center fw-im-othersender update-message-font\" data-og-container=\"\">";
+                        html += "<div class=\"centerblock\">";
                         html += "<i class='fa fa-tags'></i> " + message.message;
+                        html += "                <\/div>";
                         html += "                <\/div>";
                     }
                     else {
@@ -4050,7 +4443,7 @@
                             } else {
                                 html += "<div class='fw-im-message-author-name'>" + sender.firstName + "</div>";
                             }
-                            if (message.type === "text") {
+                            if (message.type === "image") {
                                 if (message.onlyemoji) {
                                     html += "                    <div id='message_" + message.m_id + "' class=\"fw-im-message-text\" style='background-color:transparent;'>" + parseMessage(message.message, true) + "<\/div>";
                                 } else {
@@ -4065,7 +4458,7 @@
                             }
                             if (message.type === "video") {
                                 html += "<div id='message_" + message.m_id + "' class=\"fw-im-attachments\" >";
-                                html += "                        <video class='mediaVideo' id='video_" + message.m_id + "' poster='" + message.poster + "' width=\"250px\" height=\"150px\" controls=\"true\" preload='none' name=\"media\"><source src=\"" + message.message + "\" type=\"video\/mp4\"><\/video>";
+                                html += "                        <video class='mediaVideo' id='video_" + message.m_id + "' poster='" + message.poster + "' width=\"100%\" height=\"\" controls=\"true\" preload='none' name=\"media\"><source src=\"" + message.message + "\" type=\"video\/mp4\"><\/video>";
                                 html += "                    <\/div>";
                             }
                             if (message.type === "audio") {
@@ -4080,13 +4473,18 @@
                             }
                             html += "                    <div class=\"fw-im-message-author\"  title=\"" + sender.firstName + " " + sender.lastName + "\">";
                             if (sender.active === 1) {
-                                html += "                        <img class='auth_" + sender.userId + " authStatus memberActive'  src=\"" + sender.profilePictureUrl + "\" >";
+                                html += "                        <img class='auth_" + sender.userId + "'  src=\"" + sender.profilePictureUrl + "\" ><span class='authStatus memberActive'></span>";
                             } else {
                                 html += "                        <img class='auth_" + sender.userId + " authStatus' src=\"" + sender.profilePictureUrl + "\" >";
                             }
                             html += "                    <\/div>";
                             html += "                <\/div>";
                         } else {
+
+
+                            
+
+
                             html += "<div  class=\"fw-im-message  fw-im-isme fw-im-othersender\" data-og-container=\"\" title=\"" + moment(message.ios_date_time, moment.ISO_8601).calendar(null, momentOptions) + "\">";
                             if (message.type === "text") {
                                 if (message.onlyemoji) {
@@ -4103,7 +4501,7 @@
                             }
                             if (message.type === "video") {
                                 html += "<div id='message_" + message.m_id + "' class=\"fw-im-attachments\" >";
-                                html += "                        <video class='mediaVideo' class='mediaVideo' id='video_" + message.m_id + "' poster='" + message.poster + "' width=\"250px\" height=\"150px\" controls=\"true\" preload='none'  name=\"media\"><source src=\"" + message.message + "\" type=\"video\/mp4\"><\/video>";
+                                html += "                        <video class='mediaVideo' class='mediaVideo' id='video_" + message.m_id + "' poster='" + message.poster + "' width=\"100%\" height=\"\" controls=\"true\" preload='none'  name=\"media\"><source src=\"" + message.message + "\" type=\"video\/mp4\"><\/video>";
                                 html += "                    <\/div>";
                             }
                             if (message.type === "audio") {
@@ -4156,6 +4554,7 @@
                 let lastMessage = messages[messages.length - 1].message;
                 let lastMessageSender = messages[messages.length - 1].sender;
                 if (lastMessage.type == "text") {
+                    // console.log(lastmessage);
                     if (parseInt(lastMessageSender.userId) == parseInt(userId)) {
                         $('#messageType_' + activeGroupId).html("You: " + message.message);
                     } else {
@@ -4191,7 +4590,7 @@
                 }
             }
             if (messages.length !== 0 || groups.length !== 0) {
-                $.playSound("<?php echo base_url('assets/img/nf')?>");
+                $.playSound("<?php echo base_url('assets/img/nf'); ?>");
             }
             // removing not present groups
             let difference = data.removedGroupIds;
@@ -4226,18 +4625,21 @@
                 chatBox.scrollTop(height);
                 presentTypingDiv = $("#group_" + data.groupId + data.userId);
                 if (!mute) {
-                    $.playSound("<?php echo base_url('assets/img/typing')?>");
+                    $.playSound("<?php echo base_url('assets/img/typing'); ?>");
                 }
             }
         });
         socket.on("receiveSeen", function (data) {
             let m_id = data.forMessage;
             let seenMessage = data.seen;
+            // console.log(data);
             $(".seenId_" + m_id).removeClass("hidden");
             if (seenMessage) {
                 if (seenMessage.time && seenMessage.seen) {
                     $(".seenMessage_" + m_id).html(seenMessage.seen + moment(seenMessage.time, moment.ISO_8601).calendar(null, momentOptions2));
+                    // console.log(seenMessage);
                 } else if (seenMessage.seen) {
+                    // console.log(seenMessage);
                     $(".seenMessage_" + m_id).html(seenMessage.seen);
                 }
             }
@@ -4423,7 +4825,7 @@
                 $('#group_' + currentGroupId).addClass('active');
                 // if(parseInt(data.totalPending)!=0){
                 if (!groupObjects[groupData.groupId].mute) {
-                    $.playSound("<?php echo base_url('assets/img/nf')?>");
+                    $.playSound("<?php echo base_url('assets/img/nf'); ?>");
                     //toastr.info("New message received");
                     let NotifyMessage = "";
                     if (groupData.messageType === "text") {
@@ -4465,8 +4867,8 @@
                 if (!$("#member_" + data.userId).hasClass("memberActive")) {
                     $("#member_" + data.userId).addClass("memberActive");
                 }
-                if (!$(".auth_" + data.userId).hasClass("memberActive")) {
-                    $(".auth_" + data.userId).addClass("memberActive");
+                if (!$(".auth_" + data.userId + ".authStatus").hasClass("memberActive")) {
+                    $(".auth_" + data.userId + ".authStatus").addClass("memberActive");
                 }
                 if (!$(".group_member_" + data.userId).hasClass("memberActive")) {
                     $(".group_member_" + data.userId).addClass("memberActive");
@@ -4475,8 +4877,8 @@
                 if ($("#member_" + data.userId).hasClass("memberActive")) {
                     $("#member_" + data.userId).removeClass("memberActive");
                 }
-                if ($(".auth_" + data.userId).hasClass("memberActive")) {
-                    $(".auth_" + data.userId).removeClass("memberActive");
+                if ($(".auth_" + data.userId + ".authStatus").hasClass("memberActive")) {
+                    $(".auth_" + data.userId + ".authStatus").removeClass("memberActive");
                 }
                 if ($(".group_member_" + data.userId).hasClass("memberActive")) {
                     $(".group_member_" + data.userId).removeClass("memberActive");
@@ -4489,8 +4891,8 @@
                 if (!$("#member_" + data.friendsIds[i].userId).hasClass("memberActive")) {
                     $("#member_" + data.friendsIds[i].userId).addClass("memberActive");
                 }
-                if (!$(".auth_" + data.friendsIds[i].userId).hasClass("memberActive")) {
-                    $(".auth_" + data.friendsIds[i].userId).addClass("memberActive");
+                if (!$(".auth_" + data.friendsIds[i].userId + ".authStatus").hasClass("memberActive")) {
+                    $(".auth_" + data.friendsIds[i].userId + ".authStatus").addClass("memberActive");
                 }
                 if (!$(".group_member_" + data.userId).hasClass("memberActive")) {
                     $(".group_member_" + data.userId).addClass("memberActive");
@@ -4623,6 +5025,14 @@
             }
         });
         //$('#connectionErrorModal').show();
+        // console.log('test')
+        // console.log(window.Vyndue_fname);
+        // console.log(window);
+
+        socket.on("promptWarning", function (message) {
+           toastr.warning(message);
+        });
+
 //------------------ End of web socket section -------------------------
         setInterval(updateTime, 60000);
         setInterval(disconnectModal,9999);
@@ -4636,6 +5046,85 @@
             }
         });
     });
+</script>
+<!-- <script src="https://code.jquery.com/jquery-1.10.2.js"></script> -->
+<script type="text/javascript">
+    $(document).ready(function(){
+        // var els = jQuery('.fw-im-isme .fw-im-message-author img').attr('src');
+
+        // console.log(numItems);
+        $('.searchGroupInput').prepend('<i class="fas fa-search"></i>');
+    });
+    $(document).ready(function(){
+        $('.rightSection').hide();
+        $('#nav-icon1').click(function(){
+            $(this).toggleClass('open');
+            var rhidesection = $('.rightSection').hasClass('hideshowme');
+            var sidebtn = $('#nav-icon1').hasClass('open')
+            if (rhidesection) {
+                $('.rightSection').hide().addClass('hideshowme');
+            } else {
+                $('.rightSection').show().removeClass('hideshowme');
+            }
+            if(sidebtn){
+                $(".kosaks").css("width","80%");
+            } else {
+                $(".kosaks").css("width","86%");
+            }
+        });
+        $('#nav-icon1').click(function(){
+            $('.middleSection').toggleClass('tosix');
+        });
+        // $('.vyndue-floatBtn-container_3').click(function(){
+        //     $('div#newMessageText_icon_picker').append('<span>Emoji</span>');
+        // });
+
+    });
+    // $(document).ready(function(){
+    //     $('#nav-icon3-a').click(function(){
+    //         $(this).toggleClass('open');
+    //     });
+    // //         // $('.groupInfoContent .optionHubar').hide();
+    // //     $('.himea').hide();
+    // //     $('#nav-icon3-a').click(function(){
+    // //         $('.himea').toggle();
+    // //     });
+    // });
+
+        $(document).ready(function(){
+            $('.attachment').hide();
+            $('#nav-icon3').click(function(){
+                $(this).toggleClass('open');
+                $('.attachment').toggle('hideshowme');
+            });
+            $('#ImageAttachmentList').hide();
+            $('#nav-icon3-c').click(function(){
+                $(this).toggleClass('open');
+                $('#ImageAttachmentList').toggle('lllx');
+            });
+        });
+    // $(document).ready(function(){
+    //     $('#unmute').mouseenter(function(){
+    //         $('.x1x2-1').show().addClass('swmpls');
+    //     });
+    //     $('#mute').mouseenter(function(){
+    //         $('.x1x2-2').show().addClass('swmpls');
+    //     });
+    //     $('#leaveGroup').mouseenter(function(){
+    //         $('.x1x2-3').show().addClass('swmpls');
+    //     });
+    // });
+    // $(document).ready(function(){
+    //     $('#unmute').mouseleave(function(){
+    //         $('.x1x2-1').hide().removeClass('swmpls');
+    //     });
+    //     $('#mute').mouseleave(function(){
+    //         $('.x1x2-2').hide().removeClass('swmpls');
+    //     });
+    //     $('#leaveGroup').mouseleave(function(){
+    //         $('.x1x2-3').hide().removeClass('swmpls');
+    //     });
+    // });
 </script>
 </body>
 </html>

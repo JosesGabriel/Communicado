@@ -1,6 +1,6 @@
 <?php
 
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 ?>
 
@@ -34,8 +34,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 												<h5 class="title" id="vyndue_login_title">
-												<img src="<?php echo base_url('assets/img/ico_messager_blue.svg');?>" style="height:20px;">
-												<span><?=APPLICATION_NAME?></span>
+												<img src="<?php echo base_url('assets/img/ico_messager_blue.svg'); ?>" style="height:20px;">
+												<span><?=APPLICATION_NAME; ?></span>
 												</h5>
 												
 
@@ -47,11 +47,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 														<input type="submit" value="Login" id="loginSubmit" class="btn btn-small btn-block">
 
-                                                        <?php if(isset($demo) && $demo==true){ ?>
+                                                        <?php if (isset($demo) && $demo == true) {
+    ?>
 
                                                         <input type="button" value="Demo Login Info" id="loginInfo" class="btn btn-small btn-block">
 
-                                                        <?php } ?>
+                                                        <?php
+} ?>
 
 														
 														<!--

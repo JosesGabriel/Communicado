@@ -13,6 +13,7 @@ let Im_message_Model={};
 let Im_receiver_Model={};
 let Im_notifications_Model={};
 let Im_group_requests_Model={};
+let Im_group_moderators_Model={};
 
 
 //--------- Im_block_list_model-------//
@@ -61,7 +62,6 @@ Im_group_members_Model.insert=async function (g_id,u_id){
     await mysqlCon.execute(query,[g_id,u_id]);
 };
 
-
 Im_group_members_Model.insertUserMention=async (u_id,r_id,g_id,date_time)=>{
     let query="INSERT INTO im_mention (u_id,r_id,g_id,date_time) VALUES (?,?,?,?)";
     let[res,err]=await mysqlCon.execute(query,[u_id,r_id,g_id,date_time]);
@@ -89,6 +89,18 @@ Im_group_Model.isBlocked=async (g_id)=>{
 Im_group_Model.updateLastActiveDate=async (g_id,lastActive)=>{
     let query="UPDATE im_group SET lastActive=? WHERE g_id=?";
     await mysqlCon.execute(query,[lastActive,g_id]);
+};
+
+Im_group_Model.getAdminUserIdbyGroupId=async (g_id)=>{
+    let query="select createdBy as userId from im_group where g_id=?";
+    let[result,err]=await mysqlCon.execute(query,[g_id]);
+    return parseInt(result[0].userId);
+};
+
+Im_group_Model.getGroupMaxModerator=async (g_id)=>{
+    let query="select if(count(u_id)>=2,1,0) as maximum from im_group_moderators where g_id=?";
+    let[result,err]=await mysqlCon.execute(query,[g_id]);
+    return parseInt(result[0].maximum);
 };
 
 //---------------- Im_message_Model -------------//
@@ -172,19 +184,31 @@ Im_notifications_Model.fetchDetails = async function(n_id){
 
 //------------ join request --------------//
 
-Im_group_requests_Model.approveJoinRequest = async function(member_id,group_id,admin_id){
+Im_group_requests_Model.approveJoinRequest = async function(member_id,group_id){
     let query=`update im_group_requests as r
         inner join im_group as g on r.g_id = g.g_id 
         set r.accepted_date=now()
-        where r.g_id=? and r.u_id=? and g.createdBy=? and isnull(r.accepted_date);`;
-    await mysqlCon.execute(query,[group_id,member_id,admin_id]);
+        where r.g_id=? and r.u_id=? and isnull(r.accepted_date);`;
+    await mysqlCon.execute(query,[group_id,member_id]);
 }; 
 
-Im_group_requests_Model.removeJoinRequest = async function(member_id,group_id,admin_id){
+Im_group_requests_Model.removeJoinRequest = async function(member_id,group_id){
     let query=`delete r from im_group_requests as r
         inner join im_group as g on r.g_id = g.g_id     
-        where r.g_id=? and r.u_id=? and g.createdBy=? and isnull(r.accepted_date);`;
-    await mysqlCon.execute(query,[group_id,member_id,admin_id]);
+        where r.g_id=? and r.u_id=? and isnull(r.accepted_date);`;
+    await mysqlCon.execute(query,[group_id,member_id]);
+}; 
+
+//------------ Community moderator --------------//
+
+Im_group_moderators_Model.insert = async function(group_id,user_id){
+    let query=`insert ignore into im_group_moderators (g_id,u_id) values (?,?);`;
+    await mysqlCon.execute(query,[group_id,user_id]);
+}; 
+
+Im_group_moderators_Model.remove = async function(group_id,user_id){
+    let query=`delete from im_group_moderators where g_id=? and u_id=?;`;
+    await mysqlCon.execute(query,[group_id,user_id]);
 }; 
 
 // ralph 2019-05-24
@@ -192,6 +216,12 @@ Im_user_Model.getUserIdByUserSecret=async function (usersecret){
     let query="select userid from users where usersecret=?";
     let [result,err]=await mysqlCon.execute(query,[usersecret]);
     return parseInt(result[0].userid);
+};
+
+Im_user_Model.getUserSocketIdByUserSecret=async function (usersecret){
+    let query="SELECT s.socketId FROM im_usersocket s LEFT JOIN users u ON u.userSecret=?";
+    let [result,err]=await mysqlCon.execute(query,[usersecret]);
+    return result[0].socketId;
 };
 
 app.Im_user_Model=Im_user_Model;
@@ -202,4 +232,5 @@ app.Im_message_Model=Im_message_Model;
 app.Im_receiver_Model=Im_receiver_Model;
 app.Im_notifications_Model=Im_notifications_Model;
 app.Im_group_requests_Model=Im_group_requests_Model;
+app.Im_group_moderators_Model=Im_group_moderators_Model;
 module.exports=app;

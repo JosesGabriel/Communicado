@@ -19,6 +19,6 @@
         transform: translate(-50%, -50%);
     }
 </style>
-<script src="<?php echo base_url("assets/newTheme/assets/js/vendors/jquery.min.js") ?>"></script>
-<script src="<?php echo base_url("assets/newTheme/assets/js/vendors/vendors.js") ?>"></script>
-<script src="<?php echo base_url("assets/newTheme/assets/js/custom.js") ?>"></script>
+<script src="<?php echo base_url('assets/newTheme/assets/js/vendors/jquery.min.js'); ?>"></script>
+<script src="<?php echo base_url('assets/newTheme/assets/js/vendors/vendors.js'); ?>"></script>
+<script src="<?php echo base_url('assets/newTheme/assets/js/custom.js'); ?>"></script>

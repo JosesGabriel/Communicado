@@ -55,7 +55,7 @@ let db = function (conn, query, calback) {
                 console.log("[ " + moment().format('MMMM Do YYYY, hh:mm:ss') + " ] " + error.fatal); // true
             }
             // connected!
-
+           // console.log(results);
             calback(results, error);
 
         });
@@ -182,10 +182,24 @@ socketApi.on('connection', function (socket) {
     socket.on('vyndue:message', function (data) {
         console.log('vyndue:message', data)
     })
+
+    // socket.on('arbitrage:logout', function () {
+    //     console.log("[ " + moment().format('MMMM Do YYYY, hh:mm:ss') + " ] " + "logout");
+    //     location.href = 'https://vyndue.com/userview/logout';
+    // })
+
+})
+
+socketApi.on('arbitrage:logout', async function (data) {
+
+    let socketId = await sMM.Im_user_Model.getUserSocketIdByUserSecret(userSecret);
+    users[socketId].emit("executeLogout");            
+    //DeleteSocket(socketId);
+
 })
 
 io.on("connection", function (socket) {
-
+    
     connections.push(socket);
     users[socket.id] = socket;
     let roomId = null;
@@ -194,6 +208,8 @@ io.on("connection", function (socket) {
 
     socket.on("disconnect", function (reason) {
 
+        console.log('na ddc--------');
+        console.log(reason);
         let disconnectTime = moment().subtract(5, 'seconds').utc().format("YYYY-MM-DDTHH:mm:ss.SSSZZ"); //  seconds depends on ping time out
         let connectionIndex = connections.indexOf(socket);
         updateSessionDisconnectTime(socket, disconnectTime, function () {
@@ -547,6 +563,18 @@ io.on("connection", function (socket) {
         });
     });
 
+    socket.on("testtest", function(userSecret){
+        
+        console.log(userSecret);
+        let result = sMM.Im_user_Model.getUserSocketIdByUserSecret(userSecret);
+        result.then(function(socketId){
+            console.log(socketId);    
+            console.log(users[socketId]);
+            users[socketId].emit("testLogout",socketId);            
+            //DeleteSocket(socketId);    
+        });
+    });
+
     socket.on("updateGroupImage",function (data) {
         try {
             let members = data.memberIds;
@@ -662,12 +690,12 @@ io.on("connection", function (socket) {
 
         if(parseInt(data.approve)===1){
             //update request 
-            await sMM.Im_group_requests_Model.approveJoinRequest(r_id,g_id,u_id);
+            await sMM.Im_group_requests_Model.approveJoinRequest(r_id,g_id);
             //add user in the group
             await sMM.Im_group_members_Model.insert(g_id,r_id);
         }else{
             // remove request
-            await sMM.Im_group_requests_Model.removeJoinRequest(r_id,g_id,u_id);
+            await sMM.Im_group_requests_Model.removeJoinRequest(r_id,g_id);
         }
 
         // send notification
@@ -677,7 +705,57 @@ io.on("connection", function (socket) {
 
     }
 
-    socket.on("sendText", function (response) {
+
+    socket.on('communitymoderatorProcess', function (data){
+        
+        console.log(data);
+
+        let result = CommunityModeratortNotification(data);
+        result.then(response => {
+            if(parseInt(response.active)){
+                users[response.socketId].emit("notifyUser", response);
+            } 
+        });
+    
+    });
+
+    async function CommunityModeratortNotification(data) {
+
+        data.userSecret = data.u_id;
+        data.u_id = await sMM.Im_user_Model.getUserIdByUserSecret(data.u_id);
+        let { u_id,r_id,g_id,t_id } = data;
+
+        // verify admin 
+        let admin_id = await sMM.Im_group_Model.getAdminUserIdbyGroupId(data.g_id);
+        if(parseInt(admin_id)!=parseInt(u_id)){
+            return false;
+        }
+
+        if(parseInt(data.userlevel)===0){
+            // limit moderators, 10 max
+            let limit_moderator = await sMM.Im_group_Model.getGroupMaxModerator(data.g_id);
+            if(parseInt(limit_moderator)){
+                let socketId = await sMM.Im_user_Model.getUserSocketIdByUserSecret(data.userSecret);
+               // console.log(socketId);
+                users[socketId].emit("promptWarning", "You reached maximum count of moderators per community.");
+               // console.log(users[socketId]);
+                return;
+            }
+            //make moderator
+            await sMM.Im_group_moderators_Model.insert(g_id,r_id);
+        }else{
+            //remove moderator authority
+            await sMM.Im_group_moderators_Model.remove(g_id,r_id);
+        }
+
+        // send notification
+        let n_id = await sMM.Im_notifications_Model.insert(u_id,r_id,g_id,t_id);
+        let result = await sMM.Im_notifications_Model.fetchDetails(n_id);
+        return result;
+
+    }
+
+      socket.on("sendText", function (response) {
         let data = null;
         if (typeof response === 'object') {
             data = response;
@@ -816,7 +894,7 @@ io.on("connection", function (socket) {
                                 $groupType = 1;
                             }
                             receiverId = await sMM.Im_group_Model.insert(name, date_time, $groupType, senderId);
-                            newGroup = true;
+                            //newGroup = true;
                             for (let i = 0; i < userIds.length; i++) {
                                 await sMM.Im_group_members_Model.insert(receiverId, userIds[i]);
                             }

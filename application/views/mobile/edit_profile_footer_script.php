@@ -9,11 +9,11 @@
             return check;
         };
         if(!window.mobileAndTabletcheck()){
-            location.href="<?php echo base_url('userview/profile') ?>";
+            location.href="<?php echo base_url('userview/profile'); ?>";
         }
         $(window).bind("resize",function () {
             if(!window.mobileAndTabletcheck()){
-                location.href="<?php echo base_url('userview/profile') ?>";
+                location.href="<?php echo base_url('userview/profile'); ?>";
             }
         });
         let tc=null;
@@ -23,7 +23,7 @@
             tc=localStorage.getItem("_r");
 
             if(tc===null){
-                location.href="<?php echo base_url('userview/logout') ?>";
+                location.href="<?php echo base_url('userview/logout'); ?>";
             }
             if(String(localStorage.getItem("T"))=="token"){
                 t=localStorage.getItem("_r");
@@ -60,12 +60,14 @@
         "hideMethod": "fadeOut"
     };
     $(document).ready(function () {
-        <?php if(isset($demo) && $demo==true){ ?>
+        <?php if (isset($demo) && $demo == true) {
+    ?>
         $("#userPassword").prop("disabled",true);
         $("#newPassword").prop("disabled",true);
         $("#RePassword").prop("disabled",true);
         $("#passwordFormSubmit").prop("disabled",true);
-        <?php }?>
+        <?php
+}?>
         $(".jumper").on("click", function( e ) {
 
             e.preventDefault();
@@ -96,7 +98,7 @@
             var settings = {
                 "async": true,
                 "crossDomain": true,
-                "url": "<?php echo base_url('imApi/getBlockList') ?>",
+                "url": "<?php echo base_url('imApi/getBlockList'); ?>",
                 "method": "POST",
                 "headers": {
                     "Authorization": "Basic YWRtaW46MTIzNA==",
@@ -124,9 +126,9 @@
         }
         if(responce!=null && responce!='' && type==1)
         {
-            let url="<?php echo base_url('user/userProfile/')?>";
+            let url="<?php echo base_url('user/userProfile/'); ?>";
             if(ID_BASED){
-                url="<?php echo base_url('user/userProfile?userId=')?>"+userId;
+                url="<?php echo base_url('user/userProfile?userId='); ?>"+userId;
             }
             var settings = {
                 "async": true,
@@ -143,7 +145,7 @@
                 "contentType": false,
                 "statusCode": {
                     401: function(error) {
-                        location.href="<?php echo base_url('userview/logout') ?>"
+                        location.href="<?php echo base_url('userview/logout'); ?>"
                     }
                 }
             };
@@ -159,7 +161,7 @@
             getblockList();
         }
         else {
-            location.href="<?php echo base_url("userview/logout")  ?>";
+            location.href="<?php echo base_url('userview/logout'); ?>";
         }
         $("#profileImage").click(function () {
 
@@ -176,7 +178,7 @@
             var settings = {
                 "async": true,
                 "crossDomain": true,
-                "url": "<?php echo base_url('imApi/unblockGroup') ?>",
+                "url": "<?php echo base_url('imApi/unblockGroup'); ?>",
                 "method": "POST",
                 "headers": {
                     "Authorization": "Basic YWRtaW46MTIzNA==",
@@ -207,9 +209,11 @@
                     toastr.error("Old password is empty");
                     return;
                 }
-                <?php if(isset($demo) && $demo==true){ ?>
+                <?php if (isset($demo) && $demo == true) {
+        ?>
                     return;
-                <?php }?>
+                <?php
+    }?>
                 if(newPass==rePass && (oldPass!=null && oldPass!='') && (newPass!=null && newPass!='')){
                     var form = new FormData($(this)[0]);
                     if(ID_BASED){
@@ -333,7 +337,7 @@
                             toastr.error(" "+msg.stauts.message);
                         },
                         401: function(error) {
-                            location.href="<?php echo base_url('userview/logout') ?>"
+                            location.href="<?php echo base_url('userview/logout'); ?>"
                         }
                     }
                 };

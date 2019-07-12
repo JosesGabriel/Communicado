@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: Farhad Zaman
  * Date: 3/11/2017
- * Time: 3:03 PM
+ * Time: 3:03 PM.
  */
 ?>
 <body class="bg-dark" style="background-image: url('<?php echo base_url('assets/img/bg.png'); ?>');">
@@ -13,9 +13,9 @@
     <div class="container">
         <div class="login-content">
             <div class="login-logo">
-                <a href="<?php echo base_url("admin") ?>">
-                <img src="<?php echo base_url('assets/img/ico_messager_blue.svg');?>" style="width: 20px;height:auto;margin-top: -5px;"> 
-                    <span><?=APPLICATION_NAME?></span>
+                <a href="<?php echo base_url('admin'); ?>">
+                <img src="<?php echo base_url('assets/img/ico_messager_blue.svg'); ?>" style="width: 20px;height:auto;margin-top: -5px;"> 
+                    <span><?=APPLICATION_NAME; ?></span>
                 </a>
             </div>
             <div class="login-form">
@@ -40,10 +40,12 @@
     ( function ( $ ) {
         "use strict";
 
-        <?php if(isset($demo) && $demo==true){ ?>
+        <?php if (isset($demo) && $demo == true) {
+    ?>
         $("#loginEmail").val("admin@admin.com");
         $("#loginPassword").val("123456");
-        <?php }?>
+        <?php
+}?>
         function loginValid(){
             var userPassword= $('#loginPassword').val();
             var userEmail=$('#loginEmail').val().trim();
@@ -91,10 +93,10 @@
                         localStorage.setItem("_r",responseToken);
                         var type=jwt_decode(responseToken).userType;
                         if(type==0){
-                            location.href="<?php echo base_url('admin/loginSuccess')."?r="; ?>"+responseToken;
+                            location.href="<?php echo base_url('admin/loginSuccess').'?r='; ?>"+responseToken;
                         }
                         else {
-                            location.href="<?php echo base_url('admin')."?error=true"; ?>";
+                            location.href="<?php echo base_url('admin').'?error=true'; ?>";
                         }
 
                     }

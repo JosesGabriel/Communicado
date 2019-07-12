@@ -46,7 +46,7 @@
 
         window.mobileAndTabletcheck = function() {
 
-            //return false; // prevent mobile
+            return false; // prevent mobile
 
             var check = false;
 
@@ -56,7 +56,8 @@
 
         };
 
-        <?php if(isset($demo) && $demo==true) {?>
+        <?php if (isset($demo) && $demo == true) {
+    ?>
 
             $("#loginInfoModal").modal("show");
 
@@ -66,7 +67,8 @@
 
             });
 
-        <?php }?>
+        <?php
+}?>
 
         $("#login").on("click",function () {
 
@@ -165,11 +167,11 @@
 
                         if(window.mobileAndTabletcheck()){
 
-                            location.href="<?php echo base_url('mobile/loginSuccess')."?r="; ?>"+responseToken;
+                            location.href="<?php echo base_url('mobile/loginSuccess').'?r='; ?>"+responseToken;
 
                         }else{
 
-                            location.href="<?php echo base_url('userview/loginSuccess')."?r="; ?>"+responseToken;
+                            location.href="<?php echo base_url('userview/loginSuccess').'?r='; ?>"+responseToken;
 
                         }
 
@@ -323,11 +325,11 @@
 
                     if(window.mobileAndTabletcheck()){
 
-                        location.href="<?php echo base_url('mobile/loginSuccess')."?r="; ?>"+responseToken;
+                        location.href="<?php echo base_url('mobile/loginSuccess').'?r='; ?>"+responseToken;
 
                     }else{
 
-                        location.href="<?php echo base_url('userview/loginSuccess')."?r="; ?>"+responseToken;
+                        location.href="<?php echo base_url('userview/loginSuccess').'?r='; ?>"+responseToken;
 
                     }
 
@@ -345,13 +347,12 @@
 
         <?php
 
-        if($token!=null && $token!=''){
-
-        ?>
-
+        if ($token != null && $token != '') {
+            ?>
 
 
-        var verifyToken="<?php echo $token ?>";
+
+        var verifyToken="<?php echo $token; ?>";
 
         if(verifyToken!=null && verifyToken!=''){
 
@@ -444,7 +445,6 @@
 
 
         <?php
-
         }
 
         ?>

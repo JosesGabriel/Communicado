@@ -1,6 +1,19 @@
-.twemoji-wrap { position: relative; }
-
-.twemoji-wrap img { margin: 0 .05em 0 .1em; vertical-align: -0.1em; }
+.twemoji-wrap {
+    display: inline-block;
+    margin: 0 !important;
+    position: relative;
+}
+.row.kosaks div .twemoji-wrap {
+    width: 81% !important;
+    display: inline-block;
+    margin: 0 !important;
+    position: relative;
+    display: inline-table;
+    vertical-align: middle;
+}
+.twemoji-wrap img { 
+    margin:5px 0.05em 0 .1em;
+    vertical-align: -5px; }
 
 .twemoji-textarea {
 	font-size: 13px;
@@ -14,13 +27,20 @@
     overflow-y: scroll;
 }
 
-.twemoji-icon-picker img { 
-	position: absolute;
-    right: 11px;
-    top: 13px;
+.twemoji-icon-picker#message_icon_picker img { 
+/*    position: absolute;
+    right: -9px;
+    top: 8px;*/
+    position: absolute;
+    left: -5px;
+    top: 12.1px;
+    width: 22px !important;
+    height: 20px !important;
+    margin: 0;
+    /*box-shadow: 0px 0px 5px -1px rgba(0, 0, 0, 0.50);*/
 }
 
-.twemoji-picker { background-color: #fff; border: 1px solid #e7e7e7; border-radius: 3px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05); position: absolute; right: 0; z-index: 1; }
+.twemoji-picker { background-color: #fff; border: 1px solid #e7e7e7; border-radius: 3px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05); position: absolute; right: 0; z-index: 999999999; }
 
 .twemoji-icon-picker img, .twemoji-picker img { cursor: pointer; -moz-user-select: none; -ms-user-select: none; -webkit-user-select: none; user-select: none; }
 
@@ -30,15 +50,18 @@
 
 .twemoji-picker-category .active, .twemoji-picker-category span:hover { border-bottom: 2px solid #728691; line-height: 22px; }
 
-.twemoji-picker-category .close { cursor: pointer; float: right; font-size: 25px; font-weight: 700; line-height: 1; margin-right: 2px; opacity: .5; }
+.twemoji-picker-category .close { text-shadow: none; cursor: pointer; float: right; font-size: 25px; font-weight: 700; line-height: 1; margin-right: 9px; opacity: 1; color: #718ca1; }
 
-.twemoji-picker-category .close:hover { opacity: .3 }
+.twemoji-picker-category .close:hover { opacity: 1 }
 
 .twemoji-list { overflow-y: scroll; }
 
-.twemoji-list img { margin-top: 2px; padding: 5px; }
+.twemoji-list img { 
+    margin-top: 2px;
+    padding: 5px;
+    margin: 0; }
 
-.twemoji-list img:hover { background-color: #e7e7e7; }
+.twemoji-list img:hover {   background-color: #0d2539; }
 
 .twemoji-textarea::-webkit-scrollbar{
 
@@ -47,7 +70,10 @@
 }
 
 [contenteditable=true]:empty:not(:focus):before{
-
-    content:attr(data-text) ;
-
+    content: attr(data-text);
+    cursor: text;
+    display: inline-block;
+    vertical-align: middle;
+    height: 100%;
+    padding: 2px 0;
 }
