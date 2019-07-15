@@ -7,7 +7,7 @@ How to run Vyndue App in Local Machine
 
 **clone vydnue app in gitlab / github** 
  - `cd vyndue-chat-app` folder
- - **install composer** then run `composer update`
+ - **install composer** then run `composer install`
  - **install npm** then run `cd chatapp && npm install`
  - sudo chmod -R 777 application/cache/session/ -- **Optional*
  - Create database in MySQL **vyndue03_msgr**
