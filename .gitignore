@@ -1,7 +1,6 @@
 # Ignore Mac system files
 .DS_store
 # Ignore node_modules folder
-vendor/*
 node_modules/
 application/cache/session/*
 assets/userimage/*
