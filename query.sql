@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jun 08, 2019 at 06:34 AM
+-- Generation Time: Jul 15, 2019 at 09:18 AM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 7.1.28
 
@@ -24,7 +24,6 @@ USE `vyndue03_msgr`;
 -- Table structure for table `admingroup`
 --
 
-DROP TABLE IF EXISTS `admingroup`;
 CREATE TABLE `admingroup` (
   `id` int(10) UNSIGNED NOT NULL,
   `adminType` int(11) DEFAULT NULL,
@@ -40,7 +39,7 @@ TRUNCATE TABLE `admingroup`;
 -- Dumping data for table `admingroup`
 --
 
-INSERT IGNORE INTO `admingroup` (`id`, `adminType`, `adminInfo`) VALUES
+INSERT DELAYED INTO `admingroup` (`id`, `adminType`, `adminInfo`) VALUES
 (1, 0, 'superUser'),
 (2, 1, 'subUser'),
 (3, 2, 'supersuperUser');
@@ -51,7 +50,6 @@ INSERT IGNORE INTO `admingroup` (`id`, `adminType`, `adminInfo`) VALUES
 -- Table structure for table `admintype`
 --
 
-DROP TABLE IF EXISTS `admintype`;
 CREATE TABLE `admintype` (
   `id` int(10) UNSIGNED NOT NULL,
   `adminId` int(11) DEFAULT NULL,
@@ -67,7 +65,7 @@ TRUNCATE TABLE `admintype`;
 -- Dumping data for table `admintype`
 --
 
-INSERT IGNORE INTO `admintype` (`id`, `adminId`, `adminType`) VALUES
+INSERT DELAYED INTO `admintype` (`id`, `adminId`, `adminType`) VALUES
 (1, 1, 3);
 
 -- --------------------------------------------------------
@@ -76,7 +74,6 @@ INSERT IGNORE INTO `admintype` (`id`, `adminId`, `adminType`) VALUES
 -- Table structure for table `admin_contactinfo`
 --
 
-DROP TABLE IF EXISTS `admin_contactinfo`;
 CREATE TABLE `admin_contactinfo` (
   `id` int(10) UNSIGNED NOT NULL,
   `email` varchar(500) DEFAULT NULL,
@@ -94,7 +91,6 @@ TRUNCATE TABLE `admin_contactinfo`;
 -- Table structure for table `friend_list`
 --
 
-DROP TABLE IF EXISTS `friend_list`;
 CREATE TABLE `friend_list` (
   `userId` bigint(11) UNSIGNED DEFAULT NULL,
   `friendId` bigint(11) UNSIGNED DEFAULT NULL
@@ -109,12 +105,13 @@ TRUNCATE TABLE `friend_list`;
 -- Dumping data for table `friend_list`
 --
 
-INSERT IGNORE INTO `friend_list` (`userId`, `friendId`) VALUES
+INSERT DELAYED INTO `friend_list` (`userId`, `friendId`) VALUES
 (5, 3),
 (5, 4),
 (5, 8),
 (5, 7),
-(3, 5);
+(3, 5),
+(3, 10);
 
 -- --------------------------------------------------------
 
@@ -122,7 +119,6 @@ INSERT IGNORE INTO `friend_list` (`userId`, `friendId`) VALUES
 -- Table structure for table `group_type`
 --
 
-DROP TABLE IF EXISTS `group_type`;
 CREATE TABLE `group_type` (
   `id` int(11) UNSIGNED NOT NULL,
   `description` varchar(50) DEFAULT NULL
@@ -137,7 +133,7 @@ TRUNCATE TABLE `group_type`;
 -- Dumping data for table `group_type`
 --
 
-INSERT IGNORE INTO `group_type` (`id`, `description`) VALUES
+INSERT DELAYED INTO `group_type` (`id`, `description`) VALUES
 (0, 'Private Community'),
 (1, 'People'),
 (2, 'Public Community');
@@ -148,7 +144,6 @@ INSERT IGNORE INTO `group_type` (`id`, `description`) VALUES
 -- Table structure for table `im_blocklist`
 --
 
-DROP TABLE IF EXISTS `im_blocklist`;
 CREATE TABLE `im_blocklist` (
   `u_id` bigint(11) UNSIGNED NOT NULL,
   `g_id` bigint(11) UNSIGNED NOT NULL
@@ -165,7 +160,6 @@ TRUNCATE TABLE `im_blocklist`;
 -- Table structure for table `im_group`
 --
 
-DROP TABLE IF EXISTS `im_group`;
 CREATE TABLE `im_group` (
   `g_id` bigint(11) UNSIGNED NOT NULL,
   `name` varchar(200) DEFAULT NULL,
@@ -185,16 +179,16 @@ TRUNCATE TABLE `im_group`;
 -- Dumping data for table `im_group`
 --
 
-INSERT IGNORE INTO `im_group` (`g_id`, `name`, `createdBy`, `type`, `block`, `lastActive`, `custom_image`) VALUES
+INSERT DELAYED INTO `im_group` (`g_id`, `name`, `createdBy`, `type`, `block`, `lastActive`, `custom_image`) VALUES
 (1, 'Arbitrage Public Community', 2, 2, 0, '2019-06-07T01:16:33.018+0000', '05102019105210imfEypb1.png'),
-(2, NULL, 5, 0, 0, '2019-06-07T01:23:06.071+0000', NULL),
+(2, 'New Kappa', 5, 0, 0, '2019-07-11T06:41:28.606+0000', NULL),
 (3, NULL, 3, 1, 0, '2019-05-20T05:55:40.711+0000', NULL),
 (4, NULL, 8, 1, 0, '2019-05-14T01:25:19.242+0000', NULL),
-(5, NULL, 8, 0, 0, '2019-06-04T10:14:53.809+0000', NULL),
+(5, NULL, 8, 0, 0, '2019-07-11T08:45:59.436+0000', NULL),
 (6, NULL, 8, 1, 0, '2019-05-14T08:53:25.274+0000', NULL),
 (7, NULL, 8, 0, 0, '2019-06-04T12:01:19.428+0000', NULL),
-(8, NULL, 5, 1, 0, '2019-06-07T01:16:21.010+0000', NULL),
-(9, 'Payaman Palang', 5, 0, 0, '2019-06-07T02:33:53.774+0000', '05172019124118impHCVn9.jpg'),
+(8, NULL, 5, 1, 0, '2019-07-05T08:23:29.311+0000', NULL),
+(9, 'Payaman Palang', 5, 0, 0, '2019-07-11T08:43:15.642+0000', '05172019124118impHCVn9.jpg'),
 (10, 'My new community', 5, 0, 0, '2019-06-07T01:18:18.392+0000', NULL);
 
 -- --------------------------------------------------------
@@ -203,7 +197,6 @@ INSERT IGNORE INTO `im_group` (`g_id`, `name`, `createdBy`, `type`, `block`, `la
 -- Table structure for table `im_group_members`
 --
 
-DROP TABLE IF EXISTS `im_group_members`;
 CREATE TABLE `im_group_members` (
   `g_id` bigint(11) UNSIGNED DEFAULT NULL,
   `u_id` bigint(11) UNSIGNED DEFAULT NULL
@@ -218,13 +211,20 @@ TRUNCATE TABLE `im_group_members`;
 -- Dumping data for table `im_group_members`
 --
 
-INSERT IGNORE INTO `im_group_members` (`g_id`, `u_id`) VALUES
+INSERT DELAYED INTO `im_group_members` (`g_id`, `u_id`) VALUES
 (1, 2),
 (1, 3),
 (2, 3),
 (3, 3),
 (5, 3),
 (8, 3),
+(9, 3),
+(15, 3),
+(16, 3),
+(17, 3),
+(18, 3),
+(19, 3),
+(20, 3),
 (1, 4),
 (2, 4),
 (3, 4),
@@ -238,10 +238,8 @@ INSERT IGNORE INTO `im_group_members` (`g_id`, `u_id`) VALUES
 (10, 5),
 (1, 6),
 (4, 6),
-(5, 6),
 (7, 6),
 (1, 7),
-(9, 7),
 (10, 7),
 (1, 8),
 (4, 8),
@@ -250,7 +248,41 @@ INSERT IGNORE INTO `im_group_members` (`g_id`, `u_id`) VALUES
 (7, 8),
 (1, 9),
 (7, 9),
-(1, 10);
+(1, 10),
+(15, 10),
+(16, 10),
+(17, 10),
+(18, 10),
+(19, 10),
+(20, 10);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `im_group_moderators`
+--
+
+CREATE TABLE `im_group_moderators` (
+  `g_id` bigint(11) UNSIGNED NOT NULL,
+  `u_id` bigint(11) UNSIGNED NOT NULL,
+  `assigned_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Truncate table before insert `im_group_moderators`
+--
+
+TRUNCATE TABLE `im_group_moderators`;
+--
+-- Dumping data for table `im_group_moderators`
+--
+
+INSERT DELAYED INTO `im_group_moderators` (`g_id`, `u_id`, `assigned_date`) VALUES
+(2, 3, '2019-07-11 07:36:12'),
+(2, 4, '2019-07-11 06:41:36'),
+(5, 3, '2019-07-11 08:45:33'),
+(9, 4, '2019-07-11 06:14:54'),
+(9, 5, '2019-07-08 09:19:04');
 
 -- --------------------------------------------------------
 
@@ -258,7 +290,6 @@ INSERT IGNORE INTO `im_group_members` (`g_id`, `u_id`) VALUES
 -- Table structure for table `im_group_requests`
 --
 
-DROP TABLE IF EXISTS `im_group_requests`;
 CREATE TABLE `im_group_requests` (
   `g_id` bigint(11) UNSIGNED NOT NULL,
   `u_id` bigint(11) UNSIGNED NOT NULL,
@@ -275,8 +306,8 @@ TRUNCATE TABLE `im_group_requests`;
 -- Dumping data for table `im_group_requests`
 --
 
-INSERT IGNORE INTO `im_group_requests` (`g_id`, `u_id`, `requested_date`, `accepted_date`) VALUES
-(9, 3, '2019-06-07 02:33:53', NULL);
+INSERT DELAYED INTO `im_group_requests` (`g_id`, `u_id`, `requested_date`, `accepted_date`) VALUES
+(9, 3, '2019-06-07 02:33:53', '2019-07-11 17:13:13');
 
 -- --------------------------------------------------------
 
@@ -284,7 +315,6 @@ INSERT IGNORE INTO `im_group_requests` (`g_id`, `u_id`, `requested_date`, `accep
 -- Table structure for table `im_mention`
 --
 
-DROP TABLE IF EXISTS `im_mention`;
 CREATE TABLE `im_mention` (
   `u_id` bigint(11) UNSIGNED NOT NULL,
   `r_id` bigint(11) UNSIGNED NOT NULL,
@@ -303,7 +333,7 @@ TRUNCATE TABLE `im_mention`;
 -- Dumping data for table `im_mention`
 --
 
-INSERT IGNORE INTO `im_mention` (`u_id`, `r_id`, `g_id`, `date_time`, `seen`, `seen_tstamp`) VALUES
+INSERT DELAYED INTO `im_mention` (`u_id`, `r_id`, `g_id`, `date_time`, `seen`, `seen_tstamp`) VALUES
 (3, 5, 10, '2019-05-29T07:41:38.199+0000', 1, '2019-05-30 19:36:20'),
 (3, 5, 2, '2019-05-29T07:52:10.287+0000', 1, '2019-06-07 09:24:15'),
 (3, 5, 2, '2019-05-29T07:52:25.875+0000', 1, '2019-06-07 09:24:15'),
@@ -336,7 +366,6 @@ INSERT IGNORE INTO `im_mention` (`u_id`, `r_id`, `g_id`, `date_time`, `seen`, `s
 -- Table structure for table `im_message`
 --
 
-DROP TABLE IF EXISTS `im_message`;
 CREATE TABLE `im_message` (
   `m_id` bigint(11) UNSIGNED NOT NULL,
   `sender` bigint(11) UNSIGNED DEFAULT NULL,
@@ -362,7 +391,7 @@ TRUNCATE TABLE `im_message`;
 -- Dumping data for table `im_message`
 --
 
-INSERT IGNORE INTO `im_message` (`m_id`, `sender`, `receiver`, `message`, `onlyemoji`, `type`, `fileName`, `link`, `linkData`, `receiver_type`, `date`, `time`, `date_time`) VALUES
+INSERT DELAYED INTO `im_message` (`m_id`, `sender`, `receiver`, `message`, `onlyemoji`, `type`, `fileName`, `link`, `linkData`, `receiver_type`, `date`, `time`, `date_time`) VALUES
 (2, 3, 1, 'New Group', 0, 'text', NULL, NULL, NULL, 'group', '2019-05-10', '13:18:19', '2019-05-10T13:18:19.078+0000'),
 (3, 5, 2, 'test group', 0, 'text', NULL, NULL, NULL, 'group', '2019-05-10', '13:20:01', '2019-05-10T13:20:01.548+0000'),
 (4, 3, 3, 'test john!', 0, 'text', NULL, NULL, NULL, 'personal', '2019-05-10', '22:59:16', '2019-05-10T22:59:16.061+0000'),
@@ -631,7 +660,20 @@ INSERT IGNORE INTO `im_message` (`m_id`, `sender`, `receiver`, `message`, `onlye
 (285, 5, 8, 'hey', 0, 'text', NULL, NULL, NULL, 'personal', '2019-06-07', '01:16:21', '2019-06-07T01:16:21.010+0000'),
 (286, 5, 1, '<a href=\"#\" data-username=\"b17ZyhRR5y\" class=\"mention\">@Ralph Tolipas</a>', 0, 'text', NULL, NULL, NULL, 'group', '2019-06-07', '01:16:33', '2019-06-07T01:16:33.018+0000'),
 (287, 5, 10, 'hey', 0, 'text', NULL, NULL, NULL, 'group', '2019-06-07', '01:18:18', '2019-06-07T01:18:18.392+0000'),
-(288, 3, 2, '<a href=\"#\" data-username=\"Zjk3hVyYNy\" class=\"mention\">@Billy Cruz</a>', 0, 'text', NULL, NULL, NULL, 'group', '2019-06-07', '01:23:06', '2019-06-07T01:23:06.071+0000');
+(288, 3, 2, '<a href=\"#\" data-username=\"Zjk3hVyYNy\" class=\"mention\">@Billy Cruz</a>', 0, 'text', NULL, NULL, NULL, 'group', '2019-06-07', '01:23:06', '2019-06-07T01:23:06.071+0000'),
+(289, 3, 15, 'dsadsadas', 0, 'text', NULL, NULL, NULL, 'personal', '2019-06-15', '05:44:11', '2019-06-15T05:44:11.179+0000'),
+(290, 3, 16, 'dsdsadsadsa', 0, 'text', NULL, NULL, NULL, 'personal', '2019-06-15', '05:47:44', '2019-06-15T05:47:44.273+0000'),
+(291, 3, 17, 'dsads', 0, 'text', NULL, NULL, NULL, 'personal', '2019-06-15', '05:55:28', '2019-06-15T05:55:28.428+0000'),
+(292, 3, 18, 'sdadsa', 0, 'text', NULL, NULL, NULL, 'personal', '2019-06-15', '06:12:26', '2019-06-15T06:12:26.513+0000'),
+(293, 3, 19, 'test', 0, 'text', NULL, NULL, NULL, 'personal', '2019-06-15', '06:15:55', '2019-06-15T06:15:55.391+0000'),
+(294, 3, 20, 'dsadsa', 0, 'text', NULL, NULL, NULL, 'personal', '2019-06-15', '06:25:50', '2019-06-15T06:25:50.777+0000'),
+(295, 3, 8, 'test', 0, 'text', NULL, NULL, NULL, 'personal', '2019-07-05', '08:23:29', '2019-07-05T08:23:29.311+0000'),
+(296, 3, 5, 'test', 0, 'text', NULL, NULL, NULL, 'group', '2019-07-05', '08:55:57', '2019-07-05T08:55:57.102+0000'),
+(297, 3, 5, 'test', 0, 'text', NULL, NULL, NULL, 'group', '2019-07-08', '04:28:52', '2019-07-08T04:28:52.495+0000'),
+(298, 5, 2, '5 change the group name to New Community', 0, 'update', NULL, NULL, NULL, 'group', '2019-07-11', '06:41:09', '2019-07-11T06:41:09.081+0000'),
+(299, 5, 2, '5 change the group name to New Kappa', 0, 'update', NULL, NULL, NULL, 'group', '2019-07-11', '06:41:29', '2019-07-11T06:41:29.020+0000'),
+(300, 4, 9, '7 is removed by 4', 0, 'update', NULL, NULL, NULL, 'group', '2019-07-11', '08:43:15', '2019-07-11T08:43:15.216+0000'),
+(301, 3, 5, '6 is removed by 3', 0, 'update', NULL, NULL, NULL, 'group', '2019-07-11', '08:45:59', '2019-07-11T08:45:59.012+0000');
 
 -- --------------------------------------------------------
 
@@ -639,7 +681,6 @@ INSERT IGNORE INTO `im_message` (`m_id`, `sender`, `receiver`, `message`, `onlye
 -- Table structure for table `im_mutelist`
 --
 
-DROP TABLE IF EXISTS `im_mutelist`;
 CREATE TABLE `im_mutelist` (
   `u_id` bigint(11) UNSIGNED NOT NULL,
   `g_id` bigint(11) UNSIGNED NOT NULL
@@ -656,7 +697,6 @@ TRUNCATE TABLE `im_mutelist`;
 -- Table structure for table `im_notifications`
 --
 
-DROP TABLE IF EXISTS `im_notifications`;
 CREATE TABLE `im_notifications` (
   `n_id` bigint(11) NOT NULL,
   `u_id` bigint(11) UNSIGNED NOT NULL,
@@ -677,8 +717,53 @@ TRUNCATE TABLE `im_notifications`;
 -- Dumping data for table `im_notifications`
 --
 
-INSERT IGNORE INTO `im_notifications` (`n_id`, `u_id`, `r_id`, `g_id`, `t_id`, `date_time`, `seen`, `seen_tstamp`) VALUES
-(1, 3, 5, 9, 1, '2019-06-07 2:33:53', 1, '2019-06-07 11:56:03');
+INSERT DELAYED INTO `im_notifications` (`n_id`, `u_id`, `r_id`, `g_id`, `t_id`, `date_time`, `seen`, `seen_tstamp`) VALUES
+(1, 3, 5, 9, 1, '2019-06-07 2:33:53', 1, '2019-06-07 11:56:03'),
+(2, 5, 7, 9, 8, '2019-07-09 13:21:22', 0, NULL),
+(3, 5, 7, 9, 8, '2019-07-09 13:27:38', 0, NULL),
+(4, 5, 7, 9, 7, '2019-07-09 13:27:46', 0, NULL),
+(5, 5, 7, 9, 8, '2019-07-09 13:27:48', 0, NULL),
+(6, 5, 4, 9, 8, '2019-07-09 13:31:53', 0, NULL),
+(7, 5, 4, 9, 7, '2019-07-09 13:32:45', 0, NULL),
+(8, 5, 4, 9, 8, '2019-07-09 13:34:27', 0, NULL),
+(9, 5, 4, 9, 7, '2019-07-09 13:34:36', 1, '2019-07-09 16:58:22'),
+(10, 5, 4, 9, 8, '2019-07-09 13:38:01', 1, '2019-07-09 16:58:20'),
+(11, 5, 4, 9, 7, '2019-07-09 13:38:09', 1, '2019-07-09 16:58:18'),
+(12, 5, 4, 9, 8, '2019-07-09 13:39:44', 1, '2019-07-09 16:58:16'),
+(13, 5, 4, 9, 7, '2019-07-09 13:59:22', 1, '2019-07-09 16:58:13'),
+(14, 5, 4, 9, 8, '2019-07-09 14:04:25', 1, '2019-07-09 16:58:11'),
+(15, 5, 4, 9, 7, '2019-07-09 14:05:07', 1, '2019-07-09 16:58:09'),
+(16, 5, 4, 9, 8, '2019-07-09 14:06:09', 1, '2019-07-09 16:58:07'),
+(17, 5, 4, 9, 7, '2019-07-09 14:31:08', 1, '2019-07-09 16:58:05'),
+(18, 5, 4, 9, 8, '2019-07-09 14:31:16', 1, '2019-07-09 16:57:59'),
+(19, 5, 4, 9, 7, '2019-07-09 14:51:11', 1, '2019-07-09 16:57:57'),
+(20, 5, 4, 9, 8, '2019-07-09 15:02:54', 1, '2019-07-09 16:57:55'),
+(21, 5, 4, 9, 7, '2019-07-09 15:04:22', 1, '2019-07-09 16:57:51'),
+(22, 5, 4, 9, 8, '2019-07-09 15:06:38', 1, '2019-07-09 16:57:49'),
+(23, 5, 4, 9, 7, '2019-07-09 15:07:37', 1, '2019-07-09 16:57:47'),
+(24, 5, 4, 9, 8, '2019-07-09 16:00:40', 1, '2019-07-09 16:57:44'),
+(25, 5, 7, 9, 7, '2019-07-09 16:07:17', 0, NULL),
+(26, 5, 7, 9, 8, '2019-07-09 16:27:20', 0, NULL),
+(27, 5, 4, 9, 7, '2019-07-09 16:27:22', 1, '2019-07-09 16:57:41'),
+(28, 5, 4, 9, 8, '2019-07-09 16:38:46', 1, '2019-07-09 16:53:15'),
+(29, 5, 7, 9, 7, '2019-07-09 16:38:49', 0, NULL),
+(30, 5, 7, 9, 8, '2019-07-09 16:38:55', 0, NULL),
+(31, 5, 4, 9, 7, '2019-07-09 16:38:57', 1, '2019-07-09 16:50:25'),
+(32, 5, 4, 9, 8, '2019-07-09 16:39:04', 1, '2019-07-09 16:47:51'),
+(33, 5, 4, 9, 7, '2019-07-09 16:39:05', 1, '2019-07-09 16:50:20'),
+(34, 5, 4, 9, 8, '2019-07-09 16:39:06', 1, '2019-07-09 16:50:17'),
+(35, 5, 7, 9, 7, '2019-07-09 16:39:09', 0, NULL),
+(36, 5, 7, 9, 8, '2019-07-10 15:34:40', 0, NULL),
+(37, 5, 7, 9, 7, '2019-07-10 15:34:42', 0, NULL),
+(38, 5, 7, 9, 8, '2019-07-10 15:35:20', 0, NULL),
+(39, 5, 4, 9, 7, '2019-07-10 15:58:18', 0, NULL),
+(40, 5, 4, 9, 8, '2019-07-11 14:14:52', 0, NULL),
+(41, 5, 4, 9, 7, '2019-07-11 14:14:54', 0, NULL),
+(42, 5, 4, 2, 7, '2019-07-11 14:41:36', 0, NULL),
+(43, 5, 3, 2, 7, '2019-07-11 15:36:12', 0, NULL),
+(44, 8, 3, 5, 7, '2019-07-11 16:45:33', 1, '2019-07-11 16:45:52'),
+(45, 4, 3, 9, 2, '2019-07-11 17:12:42', 0, NULL),
+(46, 4, 3, 9, 2, '2019-07-11 17:13:13', 1, '2019-07-11 17:13:28');
 
 -- --------------------------------------------------------
 
@@ -686,7 +771,6 @@ INSERT IGNORE INTO `im_notifications` (`n_id`, `u_id`, `r_id`, `g_id`, `t_id`, `
 -- Table structure for table `im_notification_types`
 --
 
-DROP TABLE IF EXISTS `im_notification_types`;
 CREATE TABLE `im_notification_types` (
   `id` int(10) UNSIGNED NOT NULL,
   `type` varchar(100) DEFAULT NULL,
@@ -704,13 +788,15 @@ TRUNCATE TABLE `im_notification_types`;
 -- Dumping data for table `im_notification_types`
 --
 
-INSERT IGNORE INTO `im_notification_types` (`id`, `type`, `description`, `badge`, `icon`) VALUES
+INSERT DELAYED INTO `im_notification_types` (`id`, `type`, `description`, `badge`, `icon`) VALUES
 (1, 'Community Join Request', 'has a request to join', 'user-plus', 'users'),
 (2, 'Community Join Request Approved', 'has approved your request to join', 'thumbs-up', 'users'),
 (3, 'Member chatted a community', 'has a new message', 'info-circle', 'users'),
 (4, 'Member mentioned a member', 'has mentioned you', 'at', 'users'),
 (5, 'Person received a personal chat', 'has a new message', 'info-circle', 'user'),
-(6, 'Community Join Request Disapproved', 'has disapproved your request to join', 'thumbs-down', 'users');
+(6, 'Community Join Request Disapproved', 'has disapproved your request to join', 'thumbs-down', 'users'),
+(7, 'Community Administrator promote Member to Moderator', 'has promoted you as a Moderator', 'balance-scale', 'user\n'),
+(8, 'Community Administrator demote Moderator to Member', 'has removed you as a Moderator', 'info-circle', 'user\n');
 
 -- --------------------------------------------------------
 
@@ -718,7 +804,6 @@ INSERT IGNORE INTO `im_notification_types` (`id`, `type`, `description`, `badge`
 -- Table structure for table `im_receiver`
 --
 
-DROP TABLE IF EXISTS `im_receiver`;
 CREATE TABLE `im_receiver` (
   `g_id` bigint(11) UNSIGNED NOT NULL,
   `m_id` bigint(11) UNSIGNED NOT NULL,
@@ -737,23 +822,29 @@ TRUNCATE TABLE `im_receiver`;
 -- Dumping data for table `im_receiver`
 --
 
-INSERT IGNORE INTO `im_receiver` (`g_id`, `m_id`, `r_id`, `received`, `announced`, `time`) VALUES
-(8, 285, 3, 1, 1, '2019-06-07T02:30:36.637+0000'),
-(8, 285, 5, 1, 1, '2019-06-07T01:16:21.130+0000'),
+INSERT DELAYED INTO `im_receiver` (`g_id`, `m_id`, `r_id`, `received`, `announced`, `time`) VALUES
 (1, 286, 2, 0, 0, '2019-06-07T01:16:33.018+0000'),
 (1, 286, 3, 1, 1, '2019-06-07T02:30:27.257+0000'),
-(1, 286, 4, 0, 0, '2019-06-07T01:16:33.018+0000'),
+(1, 286, 4, 1, 1, '2019-07-10T07:27:11.158+0000'),
 (1, 286, 5, 1, 1, '2019-06-07T01:16:33.348+0000'),
 (1, 286, 6, 0, 0, '2019-06-07T01:16:33.018+0000'),
 (1, 286, 7, 0, 0, '2019-06-07T01:16:33.018+0000'),
-(1, 286, 8, 0, 0, '2019-06-07T01:16:33.018+0000'),
+(1, 286, 8, 1, 1, '2019-07-11T08:45:18.101+0000'),
 (1, 286, 9, 0, 0, '2019-06-07T01:16:33.018+0000'),
-(1, 286, 10, 0, 0, '2019-06-07T01:16:33.018+0000'),
-(10, 287, 4, 0, 0, '2019-06-07T01:18:18.392+0000'),
+(1, 286, 10, 1, 1, '2019-06-15T06:11:02.508+0000'),
+(10, 287, 4, 1, 1, '2019-07-09T09:07:23.796+0000'),
 (10, 287, 5, 1, 1, '2019-06-07T01:18:18.563+0000'),
 (10, 287, 7, 0, 0, '2019-06-07T01:18:18.392+0000'),
-(2, 288, 4, 0, 0, '2019-06-07T01:23:06.071+0000'),
-(2, 288, 5, 1, 1, '2019-06-07T01:24:15.413+0000');
+(2, 288, 4, 1, 1, '2019-07-09T09:00:39.062+0000'),
+(2, 288, 5, 1, 1, '2019-06-07T01:24:15.413+0000'),
+(15, 289, 10, 0, 0, '2019-06-15T05:44:11.179+0000'),
+(16, 290, 10, 0, 0, '2019-06-15T05:47:44.273+0000'),
+(17, 291, 10, 1, 1, '2019-06-15T06:10:52.364+0000'),
+(18, 292, 10, 0, 0, '2019-06-15T06:12:26.513+0000'),
+(19, 293, 10, 0, 0, '2019-06-15T06:15:55.391+0000'),
+(20, 294, 10, 0, 0, '2019-06-15T06:25:50.777+0000'),
+(8, 295, 5, 1, 1, '2019-07-08T06:01:36.866+0000'),
+(5, 297, 8, 1, 1, '2019-07-11T08:45:19.335+0000');
 
 -- --------------------------------------------------------
 
@@ -761,7 +852,6 @@ INSERT IGNORE INTO `im_receiver` (`g_id`, `m_id`, `r_id`, `received`, `announced
 -- Table structure for table `im_usersessions`
 --
 
-DROP TABLE IF EXISTS `im_usersessions`;
 CREATE TABLE `im_usersessions` (
   `u_id` bigint(11) NOT NULL,
   `token` longtext NOT NULL,
@@ -779,13 +869,9 @@ TRUNCATE TABLE `im_usersessions`;
 -- Dumping data for table `im_usersessions`
 --
 
-INSERT IGNORE INTO `im_usersessions` (`u_id`, `token`, `socketId`, `lastActiveTime`, `validity`) VALUES
-(7, 'X5WbQjeQQR17Mopg2skV3ejsnKqliy4bkGSiHJhOx9KJmuSBqX8u3CM1UrS4', 'A11y62PrJXA6OegOAAAf', '2019-06-08T04:31:51.828+0000', '2019-05-30T06:35:56.167+0000'),
-(4, 'apQ8IlJ9A3ssOrpf3ddU7zY91rWXlkb5MtbQUodbhrP6qE4TfcjCzcSslyE4', 'lEkeOYLEKz9fcgpBAAAA', '2019-06-08T04:31:51.828+0000', '2019-05-31T03:35:33.755+0000'),
-(5, 'FOeyaby9VpbAkJTuIbVmkSTcG7kwcCXMCIeEHpP0gSnybuMdqdBlYQQSQNk4', 'mBL9jnV0fDRI706BAAAY', '2019-06-08T04:31:51.828+0000', '2019-05-31T03:38:20.774+0000'),
-(3, 'urKqHq9uoWiEhaJBjoAtW3YND7tPgpfWykbVqEQdnkMzwNYpzHrAYArartde', 'sWr_l_LNb2xCKY7rAABc', '2019-06-08T04:31:51.828+0000', '2019-06-05T09:19:42.050+0000'),
-(5, 'xut5EtkO8UNgYeVUn6MAzAxj9FDeBMixNI0Fl0MOho7jW9ycE40fWrGSSPzv', 'aBIuMmYy6sDtIBUuAAAF', '2019-06-08T04:31:51.828+0000', '2019-06-12T03:56:18.358+0000'),
-(3, 'FLwuKTH3YXi2ce0LcUuN7CPmKDgzyaRWdFG9wvwvA4KWL5P0VtwyHCvwlp4C', 'QheFjDXZFld3GtW5AAAD', '2019-06-08T04:31:51.828+0000', '2019-06-13T01:20:25.791+0000');
+INSERT DELAYED INTO `im_usersessions` (`u_id`, `token`, `socketId`, `lastActiveTime`, `validity`) VALUES
+(4, 'xyz4gMGNJrblTzihHla1slN9qNRKTaCjrn3q4l8SuIhAm9f0PMhS0diWalY2', 'K6UvlPerLP0a9nqUAAAA', '2019-07-11T09:26:51.138+0000', '2019-07-16T09:13:04.162+0000'),
+(3, 'xut5EtkO8UNgYeVUn6MAzAxj9FDeBMixNI0Fl0MOho7jW9ycE40fWrGSSPzv', 'FS8RBDH0Kmx0siISAAAC', '2019-07-11T09:15:51.895+0000', '2019-07-16T09:13:09.195+0000');
 
 -- --------------------------------------------------------
 
@@ -793,7 +879,6 @@ INSERT IGNORE INTO `im_usersessions` (`u_id`, `token`, `socketId`, `lastActiveTi
 -- Table structure for table `im_usersocket`
 --
 
-DROP TABLE IF EXISTS `im_usersocket`;
 CREATE TABLE `im_usersocket` (
   `userId` bigint(11) UNSIGNED NOT NULL,
   `socketId` varchar(200) NOT NULL
@@ -810,7 +895,6 @@ TRUNCATE TABLE `im_usersocket`;
 -- Table structure for table `migrations`
 --
 
-DROP TABLE IF EXISTS `migrations`;
 CREATE TABLE `migrations` (
   `version` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -824,7 +908,7 @@ TRUNCATE TABLE `migrations`;
 -- Dumping data for table `migrations`
 --
 
-INSERT IGNORE INTO `migrations` (`version`) VALUES
+INSERT DELAYED INTO `migrations` (`version`) VALUES
 (11);
 
 -- --------------------------------------------------------
@@ -833,7 +917,6 @@ INSERT IGNORE INTO `migrations` (`version`) VALUES
 -- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `userId` bigint(11) UNSIGNED NOT NULL,
   `userSecret` varchar(255) NOT NULL,
@@ -863,7 +946,7 @@ TRUNCATE TABLE `users`;
 -- Dumping data for table `users`
 --
 
-INSERT IGNORE INTO `users` (`userId`, `userSecret`, `firstName`, `lastName`, `userEmail`, `userPassword`, `userMobile`, `userDateOfBirth`, `userGender`, `userStatus`, `active`, `userVerification`, `userAddress`, `userProfilePicture`, `userResetToken`, `userType`, `lastModified`) VALUES
+INSERT DELAYED INTO `users` (`userId`, `userSecret`, `firstName`, `lastName`, `userEmail`, `userPassword`, `userMobile`, `userDateOfBirth`, `userGender`, `userStatus`, `active`, `userVerification`, `userAddress`, `userProfilePicture`, `userResetToken`, `userType`, `lastModified`) VALUES
 (1, 'OpMuUlPy7Z', 'Arbitrage', 'Admininistrator', 'arbitrage@email.com', '$2y$10$VvPprLmMbfplQHCAiMiiluNUVHLk1DoN7deghMoX9cDvbEFaS2zPe', NULL, NULL, NULL, 1, 0, 1, NULL, NULL, NULL, 0, '2019-05-10 7:28:59'),
 (2, 'Ncoi35f9k4', 'Arbitrage', 'Admininistrator', 'admin@email.com', '$2y$10$VsTBWYP0ylgNPcdAwqg4UunoTjF/hqrY2eW/dlKAsEW/T9Kj81fQa', NULL, NULL, NULL, 1, 0, 1, NULL, NULL, NULL, 1, '2019-05-10 10:17:57'),
 (3, 'b17ZyhRR5y', 'Ralph', 'Tolipas', 'ralph@email.com', '$2y$10$0ifKcoGF8uHOyFC/y5rRcewn5Y3zti9eNQmk022E3UV8h/nl2U07G', NULL, NULL, NULL, 1, 0, 1, NULL, NULL, NULL, 1, '2019-05-10 12:32:56'),
@@ -881,7 +964,6 @@ INSERT IGNORE INTO `users` (`userId`, `userSecret`, `firstName`, `lastName`, `us
 -- Table structure for table `users_roles`
 --
 
-DROP TABLE IF EXISTS `users_roles`;
 CREATE TABLE `users_roles` (
   `type` int(2) UNSIGNED NOT NULL,
   `role` varchar(50) NOT NULL
@@ -896,7 +978,7 @@ TRUNCATE TABLE `users_roles`;
 -- Dumping data for table `users_roles`
 --
 
-INSERT IGNORE INTO `users_roles` (`type`, `role`) VALUES
+INSERT DELAYED INTO `users_roles` (`type`, `role`) VALUES
 (0, 'ROLE_ADMIN'),
 (1, 'ROLE_USER');
 
@@ -906,7 +988,6 @@ INSERT IGNORE INTO `users_roles` (`type`, `role`) VALUES
 -- Table structure for table `user_device`
 --
 
-DROP TABLE IF EXISTS `user_device`;
 CREATE TABLE `user_device` (
   `userId` bigint(11) UNSIGNED NOT NULL,
   `deviceId` varchar(200) NOT NULL
@@ -963,6 +1044,12 @@ ALTER TABLE `im_group`
 --
 ALTER TABLE `im_group_members`
   ADD UNIQUE KEY `nodup` (`u_id`,`g_id`);
+
+--
+-- Indexes for table `im_group_moderators`
+--
+ALTER TABLE `im_group_moderators`
+  ADD PRIMARY KEY (`g_id`,`u_id`);
 
 --
 -- Indexes for table `im_group_requests`
@@ -1038,19 +1125,19 @@ ALTER TABLE `im_group`
 -- AUTO_INCREMENT for table `im_message`
 --
 ALTER TABLE `im_message`
-  MODIFY `m_id` bigint(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=289;
+  MODIFY `m_id` bigint(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=302;
 
 --
 -- AUTO_INCREMENT for table `im_notifications`
 --
 ALTER TABLE `im_notifications`
-  MODIFY `n_id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `n_id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT for table `im_notification_types`
 --
 ALTER TABLE `im_notification_types`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `users`
