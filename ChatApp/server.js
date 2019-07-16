@@ -708,7 +708,7 @@ io.on("connection", function (socket) {
 
     socket.on('communitymoderatorProcess', function (data){
         
-        console.log(data);
+        //console.log(data);
 
         let result = CommunityModeratortNotification(data);
         result.then(response => {
