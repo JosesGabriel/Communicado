@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 15, 2019 at 09:18 AM
+-- Generation Time: Jul 16, 2019 at 05:10 AM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 7.1.28
 
@@ -15,8 +15,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `vyndue03_msgr`
 --
-CREATE DATABASE IF NOT EXISTS `vyndue03_msgr` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `vyndue03_msgr`;
 
 -- --------------------------------------------------------
 
@@ -24,6 +22,7 @@ USE `vyndue03_msgr`;
 -- Table structure for table `admingroup`
 --
 
+DROP TABLE IF EXISTS `admingroup`;
 CREATE TABLE `admingroup` (
   `id` int(10) UNSIGNED NOT NULL,
   `adminType` int(11) DEFAULT NULL,
@@ -39,7 +38,7 @@ TRUNCATE TABLE `admingroup`;
 -- Dumping data for table `admingroup`
 --
 
-INSERT DELAYED INTO `admingroup` (`id`, `adminType`, `adminInfo`) VALUES
+INSERT INTO `admingroup` (`id`, `adminType`, `adminInfo`) VALUES
 (1, 0, 'superUser'),
 (2, 1, 'subUser'),
 (3, 2, 'supersuperUser');
@@ -50,6 +49,7 @@ INSERT DELAYED INTO `admingroup` (`id`, `adminType`, `adminInfo`) VALUES
 -- Table structure for table `admintype`
 --
 
+DROP TABLE IF EXISTS `admintype`;
 CREATE TABLE `admintype` (
   `id` int(10) UNSIGNED NOT NULL,
   `adminId` int(11) DEFAULT NULL,
@@ -65,7 +65,7 @@ TRUNCATE TABLE `admintype`;
 -- Dumping data for table `admintype`
 --
 
-INSERT DELAYED INTO `admintype` (`id`, `adminId`, `adminType`) VALUES
+INSERT INTO `admintype` (`id`, `adminId`, `adminType`) VALUES
 (1, 1, 3);
 
 -- --------------------------------------------------------
@@ -74,6 +74,7 @@ INSERT DELAYED INTO `admintype` (`id`, `adminId`, `adminType`) VALUES
 -- Table structure for table `admin_contactinfo`
 --
 
+DROP TABLE IF EXISTS `admin_contactinfo`;
 CREATE TABLE `admin_contactinfo` (
   `id` int(10) UNSIGNED NOT NULL,
   `email` varchar(500) DEFAULT NULL,
@@ -91,6 +92,7 @@ TRUNCATE TABLE `admin_contactinfo`;
 -- Table structure for table `friend_list`
 --
 
+DROP TABLE IF EXISTS `friend_list`;
 CREATE TABLE `friend_list` (
   `userId` bigint(11) UNSIGNED DEFAULT NULL,
   `friendId` bigint(11) UNSIGNED DEFAULT NULL
@@ -105,7 +107,7 @@ TRUNCATE TABLE `friend_list`;
 -- Dumping data for table `friend_list`
 --
 
-INSERT DELAYED INTO `friend_list` (`userId`, `friendId`) VALUES
+INSERT INTO `friend_list` (`userId`, `friendId`) VALUES
 (5, 3),
 (5, 4),
 (5, 8),
@@ -119,6 +121,7 @@ INSERT DELAYED INTO `friend_list` (`userId`, `friendId`) VALUES
 -- Table structure for table `group_type`
 --
 
+DROP TABLE IF EXISTS `group_type`;
 CREATE TABLE `group_type` (
   `id` int(11) UNSIGNED NOT NULL,
   `description` varchar(50) DEFAULT NULL
@@ -133,7 +136,7 @@ TRUNCATE TABLE `group_type`;
 -- Dumping data for table `group_type`
 --
 
-INSERT DELAYED INTO `group_type` (`id`, `description`) VALUES
+INSERT INTO `group_type` (`id`, `description`) VALUES
 (0, 'Private Community'),
 (1, 'People'),
 (2, 'Public Community');
@@ -144,6 +147,7 @@ INSERT DELAYED INTO `group_type` (`id`, `description`) VALUES
 -- Table structure for table `im_blocklist`
 --
 
+DROP TABLE IF EXISTS `im_blocklist`;
 CREATE TABLE `im_blocklist` (
   `u_id` bigint(11) UNSIGNED NOT NULL,
   `g_id` bigint(11) UNSIGNED NOT NULL
@@ -160,6 +164,7 @@ TRUNCATE TABLE `im_blocklist`;
 -- Table structure for table `im_group`
 --
 
+DROP TABLE IF EXISTS `im_group`;
 CREATE TABLE `im_group` (
   `g_id` bigint(11) UNSIGNED NOT NULL,
   `name` varchar(200) DEFAULT NULL,
@@ -179,7 +184,7 @@ TRUNCATE TABLE `im_group`;
 -- Dumping data for table `im_group`
 --
 
-INSERT DELAYED INTO `im_group` (`g_id`, `name`, `createdBy`, `type`, `block`, `lastActive`, `custom_image`) VALUES
+INSERT INTO `im_group` (`g_id`, `name`, `createdBy`, `type`, `block`, `lastActive`, `custom_image`) VALUES
 (1, 'Arbitrage Public Community', 2, 2, 0, '2019-06-07T01:16:33.018+0000', '05102019105210imfEypb1.png'),
 (2, 'New Kappa', 5, 0, 0, '2019-07-11T06:41:28.606+0000', NULL),
 (3, NULL, 3, 1, 0, '2019-05-20T05:55:40.711+0000', NULL),
@@ -197,6 +202,7 @@ INSERT DELAYED INTO `im_group` (`g_id`, `name`, `createdBy`, `type`, `block`, `l
 -- Table structure for table `im_group_members`
 --
 
+DROP TABLE IF EXISTS `im_group_members`;
 CREATE TABLE `im_group_members` (
   `g_id` bigint(11) UNSIGNED DEFAULT NULL,
   `u_id` bigint(11) UNSIGNED DEFAULT NULL
@@ -211,7 +217,7 @@ TRUNCATE TABLE `im_group_members`;
 -- Dumping data for table `im_group_members`
 --
 
-INSERT DELAYED INTO `im_group_members` (`g_id`, `u_id`) VALUES
+INSERT INTO `im_group_members` (`g_id`, `u_id`) VALUES
 (1, 2),
 (1, 3),
 (2, 3),
@@ -262,6 +268,7 @@ INSERT DELAYED INTO `im_group_members` (`g_id`, `u_id`) VALUES
 -- Table structure for table `im_group_moderators`
 --
 
+DROP TABLE IF EXISTS `im_group_moderators`;
 CREATE TABLE `im_group_moderators` (
   `g_id` bigint(11) UNSIGNED NOT NULL,
   `u_id` bigint(11) UNSIGNED NOT NULL,
@@ -277,7 +284,7 @@ TRUNCATE TABLE `im_group_moderators`;
 -- Dumping data for table `im_group_moderators`
 --
 
-INSERT DELAYED INTO `im_group_moderators` (`g_id`, `u_id`, `assigned_date`) VALUES
+INSERT INTO `im_group_moderators` (`g_id`, `u_id`, `assigned_date`) VALUES
 (2, 3, '2019-07-11 07:36:12'),
 (2, 4, '2019-07-11 06:41:36'),
 (5, 3, '2019-07-11 08:45:33'),
@@ -290,6 +297,7 @@ INSERT DELAYED INTO `im_group_moderators` (`g_id`, `u_id`, `assigned_date`) VALU
 -- Table structure for table `im_group_requests`
 --
 
+DROP TABLE IF EXISTS `im_group_requests`;
 CREATE TABLE `im_group_requests` (
   `g_id` bigint(11) UNSIGNED NOT NULL,
   `u_id` bigint(11) UNSIGNED NOT NULL,
@@ -306,7 +314,7 @@ TRUNCATE TABLE `im_group_requests`;
 -- Dumping data for table `im_group_requests`
 --
 
-INSERT DELAYED INTO `im_group_requests` (`g_id`, `u_id`, `requested_date`, `accepted_date`) VALUES
+INSERT INTO `im_group_requests` (`g_id`, `u_id`, `requested_date`, `accepted_date`) VALUES
 (9, 3, '2019-06-07 02:33:53', '2019-07-11 17:13:13');
 
 -- --------------------------------------------------------
@@ -315,6 +323,7 @@ INSERT DELAYED INTO `im_group_requests` (`g_id`, `u_id`, `requested_date`, `acce
 -- Table structure for table `im_mention`
 --
 
+DROP TABLE IF EXISTS `im_mention`;
 CREATE TABLE `im_mention` (
   `u_id` bigint(11) UNSIGNED NOT NULL,
   `r_id` bigint(11) UNSIGNED NOT NULL,
@@ -333,7 +342,7 @@ TRUNCATE TABLE `im_mention`;
 -- Dumping data for table `im_mention`
 --
 
-INSERT DELAYED INTO `im_mention` (`u_id`, `r_id`, `g_id`, `date_time`, `seen`, `seen_tstamp`) VALUES
+INSERT INTO `im_mention` (`u_id`, `r_id`, `g_id`, `date_time`, `seen`, `seen_tstamp`) VALUES
 (3, 5, 10, '2019-05-29T07:41:38.199+0000', 1, '2019-05-30 19:36:20'),
 (3, 5, 2, '2019-05-29T07:52:10.287+0000', 1, '2019-06-07 09:24:15'),
 (3, 5, 2, '2019-05-29T07:52:25.875+0000', 1, '2019-06-07 09:24:15'),
@@ -366,6 +375,7 @@ INSERT DELAYED INTO `im_mention` (`u_id`, `r_id`, `g_id`, `date_time`, `seen`, `
 -- Table structure for table `im_message`
 --
 
+DROP TABLE IF EXISTS `im_message`;
 CREATE TABLE `im_message` (
   `m_id` bigint(11) UNSIGNED NOT NULL,
   `sender` bigint(11) UNSIGNED DEFAULT NULL,
@@ -391,7 +401,7 @@ TRUNCATE TABLE `im_message`;
 -- Dumping data for table `im_message`
 --
 
-INSERT DELAYED INTO `im_message` (`m_id`, `sender`, `receiver`, `message`, `onlyemoji`, `type`, `fileName`, `link`, `linkData`, `receiver_type`, `date`, `time`, `date_time`) VALUES
+INSERT INTO `im_message` (`m_id`, `sender`, `receiver`, `message`, `onlyemoji`, `type`, `fileName`, `link`, `linkData`, `receiver_type`, `date`, `time`, `date_time`) VALUES
 (2, 3, 1, 'New Group', 0, 'text', NULL, NULL, NULL, 'group', '2019-05-10', '13:18:19', '2019-05-10T13:18:19.078+0000'),
 (3, 5, 2, 'test group', 0, 'text', NULL, NULL, NULL, 'group', '2019-05-10', '13:20:01', '2019-05-10T13:20:01.548+0000'),
 (4, 3, 3, 'test john!', 0, 'text', NULL, NULL, NULL, 'personal', '2019-05-10', '22:59:16', '2019-05-10T22:59:16.061+0000'),
@@ -681,6 +691,7 @@ INSERT DELAYED INTO `im_message` (`m_id`, `sender`, `receiver`, `message`, `only
 -- Table structure for table `im_mutelist`
 --
 
+DROP TABLE IF EXISTS `im_mutelist`;
 CREATE TABLE `im_mutelist` (
   `u_id` bigint(11) UNSIGNED NOT NULL,
   `g_id` bigint(11) UNSIGNED NOT NULL
@@ -697,6 +708,7 @@ TRUNCATE TABLE `im_mutelist`;
 -- Table structure for table `im_notifications`
 --
 
+DROP TABLE IF EXISTS `im_notifications`;
 CREATE TABLE `im_notifications` (
   `n_id` bigint(11) NOT NULL,
   `u_id` bigint(11) UNSIGNED NOT NULL,
@@ -717,7 +729,7 @@ TRUNCATE TABLE `im_notifications`;
 -- Dumping data for table `im_notifications`
 --
 
-INSERT DELAYED INTO `im_notifications` (`n_id`, `u_id`, `r_id`, `g_id`, `t_id`, `date_time`, `seen`, `seen_tstamp`) VALUES
+INSERT INTO `im_notifications` (`n_id`, `u_id`, `r_id`, `g_id`, `t_id`, `date_time`, `seen`, `seen_tstamp`) VALUES
 (1, 3, 5, 9, 1, '2019-06-07 2:33:53', 1, '2019-06-07 11:56:03'),
 (2, 5, 7, 9, 8, '2019-07-09 13:21:22', 0, NULL),
 (3, 5, 7, 9, 8, '2019-07-09 13:27:38', 0, NULL),
@@ -771,6 +783,7 @@ INSERT DELAYED INTO `im_notifications` (`n_id`, `u_id`, `r_id`, `g_id`, `t_id`, 
 -- Table structure for table `im_notification_types`
 --
 
+DROP TABLE IF EXISTS `im_notification_types`;
 CREATE TABLE `im_notification_types` (
   `id` int(10) UNSIGNED NOT NULL,
   `type` varchar(100) DEFAULT NULL,
@@ -788,7 +801,7 @@ TRUNCATE TABLE `im_notification_types`;
 -- Dumping data for table `im_notification_types`
 --
 
-INSERT DELAYED INTO `im_notification_types` (`id`, `type`, `description`, `badge`, `icon`) VALUES
+INSERT INTO `im_notification_types` (`id`, `type`, `description`, `badge`, `icon`) VALUES
 (1, 'Community Join Request', 'has a request to join', 'user-plus', 'users'),
 (2, 'Community Join Request Approved', 'has approved your request to join', 'thumbs-up', 'users'),
 (3, 'Member chatted a community', 'has a new message', 'info-circle', 'users'),
@@ -804,6 +817,7 @@ INSERT DELAYED INTO `im_notification_types` (`id`, `type`, `description`, `badge
 -- Table structure for table `im_receiver`
 --
 
+DROP TABLE IF EXISTS `im_receiver`;
 CREATE TABLE `im_receiver` (
   `g_id` bigint(11) UNSIGNED NOT NULL,
   `m_id` bigint(11) UNSIGNED NOT NULL,
@@ -822,7 +836,7 @@ TRUNCATE TABLE `im_receiver`;
 -- Dumping data for table `im_receiver`
 --
 
-INSERT DELAYED INTO `im_receiver` (`g_id`, `m_id`, `r_id`, `received`, `announced`, `time`) VALUES
+INSERT INTO `im_receiver` (`g_id`, `m_id`, `r_id`, `received`, `announced`, `time`) VALUES
 (1, 286, 2, 0, 0, '2019-06-07T01:16:33.018+0000'),
 (1, 286, 3, 1, 1, '2019-06-07T02:30:27.257+0000'),
 (1, 286, 4, 1, 1, '2019-07-10T07:27:11.158+0000'),
@@ -852,6 +866,7 @@ INSERT DELAYED INTO `im_receiver` (`g_id`, `m_id`, `r_id`, `received`, `announce
 -- Table structure for table `im_usersessions`
 --
 
+DROP TABLE IF EXISTS `im_usersessions`;
 CREATE TABLE `im_usersessions` (
   `u_id` bigint(11) NOT NULL,
   `token` longtext NOT NULL,
@@ -869,9 +884,10 @@ TRUNCATE TABLE `im_usersessions`;
 -- Dumping data for table `im_usersessions`
 --
 
-INSERT DELAYED INTO `im_usersessions` (`u_id`, `token`, `socketId`, `lastActiveTime`, `validity`) VALUES
-(4, 'xyz4gMGNJrblTzihHla1slN9qNRKTaCjrn3q4l8SuIhAm9f0PMhS0diWalY2', 'K6UvlPerLP0a9nqUAAAA', '2019-07-11T09:26:51.138+0000', '2019-07-16T09:13:04.162+0000'),
-(3, 'xut5EtkO8UNgYeVUn6MAzAxj9FDeBMixNI0Fl0MOho7jW9ycE40fWrGSSPzv', 'FS8RBDH0Kmx0siISAAAC', '2019-07-11T09:15:51.895+0000', '2019-07-16T09:13:09.195+0000');
+INSERT INTO `im_usersessions` (`u_id`, `token`, `socketId`, `lastActiveTime`, `validity`) VALUES
+(3, 'xut5EtkO8UNgYeVUn6MAzAxj9FDeBMixNI0Fl0MOho7jW9ycE40fWrGSSPzv', 'FS8RBDH0Kmx0siISAAAC', '2019-07-15T09:01:30.925+0000', '2019-07-16T09:13:09.195+0000'),
+(3, 'X49AfdAhf0kaLkfChGp1e2lvlmp184c4wy2ehJIneMtYo0uv6YrYXBbClFoO', 'CXKQ24ZxQRsGOiBgAAAI', '2019-07-16T03:04:20.724+0000', '2019-07-21T03:09:01.556+0000'),
+(5, 'xyz4gMGNJrblTzihHla1slN9qNRKTaCjrn3q4l8SuIhAm9f0PMhS0diWalY2', 'v_8lPNEcIpFKD6GBAAAG', NULL, '2019-07-21T03:05:26.288+0000');
 
 -- --------------------------------------------------------
 
@@ -879,6 +895,7 @@ INSERT DELAYED INTO `im_usersessions` (`u_id`, `token`, `socketId`, `lastActiveT
 -- Table structure for table `im_usersocket`
 --
 
+DROP TABLE IF EXISTS `im_usersocket`;
 CREATE TABLE `im_usersocket` (
   `userId` bigint(11) UNSIGNED NOT NULL,
   `socketId` varchar(200) NOT NULL
@@ -889,12 +906,21 @@ CREATE TABLE `im_usersocket` (
 --
 
 TRUNCATE TABLE `im_usersocket`;
+--
+-- Dumping data for table `im_usersocket`
+--
+
+INSERT INTO `im_usersocket` (`userId`, `socketId`) VALUES
+(5, 'v_8lPNEcIpFKD6GBAAAG'),
+(3, 'CXKQ24ZxQRsGOiBgAAAI');
+
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `migrations`
 --
 
+DROP TABLE IF EXISTS `migrations`;
 CREATE TABLE `migrations` (
   `version` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -908,7 +934,7 @@ TRUNCATE TABLE `migrations`;
 -- Dumping data for table `migrations`
 --
 
-INSERT DELAYED INTO `migrations` (`version`) VALUES
+INSERT INTO `migrations` (`version`) VALUES
 (11);
 
 -- --------------------------------------------------------
@@ -917,6 +943,7 @@ INSERT DELAYED INTO `migrations` (`version`) VALUES
 -- Table structure for table `users`
 --
 
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `userId` bigint(11) UNSIGNED NOT NULL,
   `userSecret` varchar(255) NOT NULL,
@@ -946,12 +973,12 @@ TRUNCATE TABLE `users`;
 -- Dumping data for table `users`
 --
 
-INSERT DELAYED INTO `users` (`userId`, `userSecret`, `firstName`, `lastName`, `userEmail`, `userPassword`, `userMobile`, `userDateOfBirth`, `userGender`, `userStatus`, `active`, `userVerification`, `userAddress`, `userProfilePicture`, `userResetToken`, `userType`, `lastModified`) VALUES
+INSERT INTO `users` (`userId`, `userSecret`, `firstName`, `lastName`, `userEmail`, `userPassword`, `userMobile`, `userDateOfBirth`, `userGender`, `userStatus`, `active`, `userVerification`, `userAddress`, `userProfilePicture`, `userResetToken`, `userType`, `lastModified`) VALUES
 (1, 'OpMuUlPy7Z', 'Arbitrage', 'Admininistrator', 'arbitrage@email.com', '$2y$10$VvPprLmMbfplQHCAiMiiluNUVHLk1DoN7deghMoX9cDvbEFaS2zPe', NULL, NULL, NULL, 1, 0, 1, NULL, NULL, NULL, 0, '2019-05-10 7:28:59'),
 (2, 'Ncoi35f9k4', 'Arbitrage', 'Admininistrator', 'admin@email.com', '$2y$10$VsTBWYP0ylgNPcdAwqg4UunoTjF/hqrY2eW/dlKAsEW/T9Kj81fQa', NULL, NULL, NULL, 1, 0, 1, NULL, NULL, NULL, 1, '2019-05-10 10:17:57'),
-(3, 'b17ZyhRR5y', 'Ralph', 'Tolipas', 'ralph@email.com', '$2y$10$0ifKcoGF8uHOyFC/y5rRcewn5Y3zti9eNQmk022E3UV8h/nl2U07G', NULL, NULL, NULL, 1, 0, 1, NULL, NULL, NULL, 1, '2019-05-10 12:32:56'),
+(3, 'b17ZyhRR5y', 'Ralph', 'Tolipas', 'ralph@email.com', '$2y$10$0ifKcoGF8uHOyFC/y5rRcewn5Y3zti9eNQmk022E3UV8h/nl2U07G', NULL, NULL, NULL, 1, 1, 1, NULL, NULL, NULL, 1, '2019-05-10 12:32:56'),
 (4, 'uBNvSBrIXg', 'John', 'Doe', 'john@email.com', '$2y$10$QBnuTZKF5/Ys0m.V7A5T1.JZsxPyeeoYuodPuClFy4ln2Wmjvxjw.', NULL, NULL, NULL, 1, 0, 1, NULL, NULL, NULL, 1, '2019-05-10 13:15:55'),
-(5, 'Zjk3hVyYNy', 'Billy', 'Cruz', 'billy@email.com', '$2y$10$pDUU5MN1ac385VfOO2vPBelfGwJ4wK.o3rn69vFKtsXdTYl7oRfba', NULL, NULL, NULL, 1, 0, 1, NULL, NULL, NULL, 1, '2019-05-10 13:19:30'),
+(5, 'Zjk3hVyYNy', 'Billy', 'Cruz', 'billy@email.com', '$2y$10$pDUU5MN1ac385VfOO2vPBelfGwJ4wK.o3rn69vFKtsXdTYl7oRfba', NULL, NULL, NULL, 1, 1, 1, NULL, NULL, NULL, 1, '2019-05-10 13:19:30'),
 (6, 'HPHJIkyXtt', 'Jane', 'Smith', 'jane@email.com', '$2y$10$c.eBOj/6uPR.dQu58pxGKuV13HtThv0XbuXLMeMDDpfQxi1YO.xaC', NULL, NULL, NULL, 1, 0, 1, NULL, NULL, NULL, 1, '2019-05-13 6:14:59'),
 (7, 'MPxLsw9lkp', 'Sarah', 'Williams', 'sarah@email.com', '$2y$10$5KWITVVMyDk.Pag8qgVdzOTk0v40lILv69hlv3SWxTlNVaYkd90Ra', NULL, NULL, NULL, 1, 0, 1, NULL, NULL, NULL, 1, '2019-05-13 6:15:44'),
 (8, '4aESvTlAOm', 'Tim', 'Ryans', 'tim@email.com', '$2y$10$vg4A8LOomZUbj5cgosDa/uY5tozE6e.YTW.0prYuEelzvv7pZhs42', NULL, NULL, NULL, 1, 0, 1, NULL, NULL, NULL, 1, '2019-05-13 6:16:34'),
@@ -964,6 +991,7 @@ INSERT DELAYED INTO `users` (`userId`, `userSecret`, `firstName`, `lastName`, `u
 -- Table structure for table `users_roles`
 --
 
+DROP TABLE IF EXISTS `users_roles`;
 CREATE TABLE `users_roles` (
   `type` int(2) UNSIGNED NOT NULL,
   `role` varchar(50) NOT NULL
@@ -978,7 +1006,7 @@ TRUNCATE TABLE `users_roles`;
 -- Dumping data for table `users_roles`
 --
 
-INSERT DELAYED INTO `users_roles` (`type`, `role`) VALUES
+INSERT INTO `users_roles` (`type`, `role`) VALUES
 (0, 'ROLE_ADMIN'),
 (1, 'ROLE_USER');
 
@@ -988,6 +1016,7 @@ INSERT DELAYED INTO `users_roles` (`type`, `role`) VALUES
 -- Table structure for table `user_device`
 --
 
+DROP TABLE IF EXISTS `user_device`;
 CREATE TABLE `user_device` (
   `userId` bigint(11) UNSIGNED NOT NULL,
   `deviceId` varchar(200) NOT NULL
