@@ -1211,6 +1211,10 @@
             }
         }
         function printGroupIcon(image,groupId,cb){
+            let z = image;
+            let x = z.search("https://storage");
+            let strippedLink = z.substring(x, (z.length));
+            image = strippedLink;
             let html = '';
             if (parseInt(groupObjects[groupId].groupType) === 1 && groupObjects[groupId].members.length > 0) {
                 if (groupObjects[groupId].members[0].active == 1) {
@@ -1614,10 +1618,15 @@
             }
             let strVar = "";
             for (let i = 0; i < groupFiles.length; i++) {
+                let strdocslink = groupFiles[i].message;
+                
+                if (!strdocslink.includes('https://')){
+                    strdocslink = "../assets/temp/"+ groupFiles[i].message;
+                }
                 strVar += "<li>";
                 strVar += "                        <i class='" + getFileIcon(groupFiles[i].type) + "'><\/i>";
                 strVar += "                        <span>";
-                strVar += "                            <a  target='_blank'style=\"color: #75aef3;\" href='" + groupFiles[i].message + "'>";
+                strVar += "                            <a  target='_blank'style=\"color: #75aef3;\" href='" + strdocslink + "'>";
                 strVar += groupFiles[i].fileName;
                 strVar += "                            <\/a>";
                 strVar += "                        <\/span>";
@@ -1639,9 +1648,14 @@
             }
             let strVar = "";
             for (let i = 0; i < groupImages.length; i++) {
+                let strlink = groupImages[i].message;
+    
+                if (!strlink.includes('https://')){
+                    strlink = "../assets/temp/"+ groupImages[i].message;
+                }
                 strVar += "<div class=\" pad-5\" style='float: left;'>";
-                strVar += "                            <a href='" + groupImages[i].message + "' class=\"hover-5 ol-lightbox\">";
-                strVar += "                                <img src='" + groupImages[i].message + "' alt=\"image hover\">";
+                strVar += "                            <a href='" + strlink + "' class=\"hover-5 ol-lightbox\">";
+                strVar += "                                <img src='" + strlink + "' alt=\"image hover\">";
                 strVar += "                                <div class=\"ol-overlay ov-light-alpha-80\"><\/div>";
                 strVar += "                                <div class=\"icons\"><i class=\"fa fa-camera\"><\/i><\/div>";
                 strVar += "                            <\/a>";
@@ -1940,13 +1954,23 @@
         function getImagePreview(message){
             let defaultImage = "<?php echo base_url('/assets/img/compact_camera1600.png'); ?>";
             let linkData=JSON.parse(message.linkData);
-            let  html = "<div id='message_" + message.m_id + "' class=\"fw-im-attachments fw-im-message-text\"><a style='display: inline-block; max-height: 450px;' href=\"" + message.message + "\" class=\"hover-5 ol-lightbox\"><img onerror='this.style.display=\"none\";' style='max-height: 450px; width: auto;' src=\"" + message.message + "\" alt=\"image hover\">";
+            let z = message.message;
+            let x = z.search("https://storage");
+            let strippedLink = z.substring(x, (z.length));
+            if(x == -1) {
+                var limiter = strippedLink.search("/im/");
+                var dir = strippedLink.substring(0, limiter + 1);
+                var fileName = strippedLink.lastIndexOf("/");
+                strippedLink = dir + "temp" + strippedLink.substring(fileName, strippedLink.length);
+            }
+            let  html = "<div id='message_" + message.m_id + "' class=\"fw-im-attachments fw-im-message-text\"><a style='display: inline-block; max-height: 450px;' href=\"" + strippedLink + "\" class=\"hover-5 ol-lightbox\"><img onerror='this.style.display=\"none\";' style='max-height: 450px; width: auto;' src=\"" + strippedLink + "\" alt=\"image hover\">";
             if(linkData!=null && linkData.hasOwnProperty("playerOrImageUrl") && linkData.playerOrImageUrl.hasOwnProperty("size") && linkData.playerOrImageUrl.size!=null && linkData.playerOrImageUrl.size.hasOwnProperty("height") && linkData.playerOrImageUrl.size.height!=null &&linkData.playerOrImageUrl.size.hasOwnProperty("width") && linkData.playerOrImageUrl.size.width!=null ){
-                html = "<div id='message_" + message.m_id + "' class=\"fw-im-attachments fw-im-message-text\"><a style='display: inline-block; max-height: 450px;' href=\"" + linkData.playerOrImageUrl.url + "\"  class=\"hover-5 ol-lightbox\"><img onerror='this.style.display=\"none\";' style='max-height: 450px; width: auto;' src=\"" + linkData.playerOrImageUrl.url + "\" alt=\"image hover\">";
+                html = "<div id='message_" + message.m_id + "' class=\"fw-im-attachments fw-im-message-text\"><a style='display: inline-block; max-height: 450px;' href=\"" + strippedLink + "\"  class=\"hover-5 ol-lightbox\"><img onerror='this.style.display=\"none\";' style='max-height: 450px; width: auto;' src=\"" + strippedLink + "\" alt=\"image hover\">";
             }
             html += "                            <div class=\"ol-overlay ov-light-alpha-80\"><\/div>";
             html += "                            <div class=\"icons\"><i class=\"fa fa-camera\"><\/i><\/div><\/a>";
             html += "                            <\/div>";
+         
             return html;
         }
         //This function is used to create the preview for a link sheared in message
@@ -2396,6 +2420,10 @@
                 $.ajax(settings).done(function (res) {
                     let json = JSON.parse(res);
                     let group = json.response;
+                    if(json.status.file){
+                        // execute upload
+                        console.log('file uploaded');
+                    }
                     resetNewMessage();
                     if (newmessage) {
                         $("#group_" + group.groupId).remove();
@@ -3351,6 +3379,29 @@
                 });
             }
         });
+        $('#inviteLinkBtn').on('click', function (e) {
+            let settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": "<?php echo base_url('imApi/generateInviteLink'); ?>",
+                "method": "GET",
+                "headers": {
+                    "authorization": "Basic YWRtaW46MTIzNA==",
+                    "Authorizationkeyfortoken": String(responce),
+                    "cache-control": "no-cache",
+                    "postman-token": "2a391657-45a9-1a7b-9a67-9b16b0dda13a"
+                },
+                "error": function (e) {
+                    let err = JSON.parse(e.responseText);
+                    toastr.error(err.response);
+                },
+            };
+            $.ajax(settings).done(function (response) {
+                $('#invitationLink').val(response);
+                $('#generateInviteLinkModal').modal('show');
+                
+            })
+        });
 
         // getmembers creating a new conversation, found at the left side bar
         $('#newMessage').on("click", function (e) {
@@ -4271,8 +4322,16 @@
                         html += "                    <\/div>";
                     }
                     if (message.type === "document") {
+                        let strippedDocLink = message.message;
+                        var limiter = strippedDocLink.search("%2Fim%2F");
+                        if(limiter != -1) {
+                            var dir = strippedDocLink.lastIndexOf("/");
+                            dir = strippedDocLink.substring(0, dir + 1);
+                            var fileName = strippedDocLink.lastIndexOf("%2F");
+                            strippedDocLink = dir + "assets/temp/" + strippedDocLink.substring(fileName + 3, strippedDocLink.lastIndexOf('&fn='));
+                        }
                         //html += "<div id='message_" + message.m_id + "' class=\"fw-im-attachments\" >";
-                        html += "                        <div class=\"fw-im-message-text\"><a target='_blank' id='document_" + message.m_id + "' href=" + message.message + " ><i class=\"fa fa-arrow-circle-down\"></i> " + message.fileName + "<\/a></div>";
+                        html += "                        <div class=\"fw-im-message-text\"><a target='_blank' id='document_" + message.m_id + "' href=" + strippedDocLink + " ><i class=\"fa fa-arrow-circle-down\"></i> " + message.fileName + "<\/a></div>";
                         //html += "                    <\/div>";
                     }
                     html += "                    <div class=\"fw-im-message-author\"  title=\"" + sender.firstName + " " + sender.lastName + "\">";
@@ -4990,6 +5049,8 @@
         socket.on("updateGroupImage",function (data){
             groupObjects[data.g_id].groupImage=data.imageData;
             createGroupImage(data.g_id);
+            $('.imgselecteds img').attr('src', data.imageData[0]);
+            $('#groupImage_'+ activeGroupId +' .img-circle').attr('src', data.imageData[0]);
             if(parseInt(data.g_id)=== parseInt(activeGroupId)){
                 let html = "<img class=\"img-responsive img-circle\" style=\"width: 50px; height: 50px;border-radius: 50%\" src=\"" + groupObjects[data.g_id].groupImage[0] + "\" >";
                 $('.rightGroupImages').html(html);

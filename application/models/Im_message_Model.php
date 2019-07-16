@@ -44,10 +44,10 @@ class Im_message_Model extends CI_Model{
             if($result->type!="text" && $result->type!="document" && $result->type!="update"){
                 $result->message=base_url() . "assets/im/group_".$g_id."/".$result->message;
             }
-            if($result->type=="document"){
-                $fileUrl=urlencode("assets/im/group_".$g_id."/".$result->message)."&fn=".urlencode($result->fileName);
-                $result->message=base_url()."download?f=".$fileUrl;
-            }
+            // if($result->type=="document"){
+            //     $fileUrl=urlencode("assets/im/group_".$g_id."/".$result->message)."&fn=".urlencode($result->fileName);
+            //     $result->message=base_url()."download?f=".$fileUrl;
+            // }
             if($result->type=="video"){
                 $result->poster=base_url("assets/img/poster.jpg");
             }
@@ -64,8 +64,8 @@ class Im_message_Model extends CI_Model{
         $query = $this->db->get("im_message");
         $prepareData=array();
         foreach ($query->result() as $result){
-            $fileUrl=urlencode( "assets/im/group_".$g_id."/".$result->message)."&fn=".urlencode($result->fileName);
-            $result->message=base_url()."download?f=".$fileUrl;
+            // $fileUrl=urlencode( "assets/im/group_".$g_id."/".$result->message)."&fn=".urlencode($result->fileName);
+            $result->fileName;
             if($result->type=="document"){
                 $result->type=pathinfo("/assets/im/group_".$g_id."/".$result->message,PATHINFO_EXTENSION);
             }
@@ -81,7 +81,7 @@ class Im_message_Model extends CI_Model{
         $query = $this->db->get("im_message");
         $prepareData=array();
         foreach ($query->result() as $result){
-            $result->message=base_url("image?u=").urlencode(base_url() . "assets/im/group_".$g_id."/".$result->message);
+            $result->message;
             $prepareData[]=$result;
         }
         return $prepareData;

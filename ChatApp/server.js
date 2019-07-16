@@ -28,6 +28,10 @@ const _ = require('lodash');
 const sMM = require("./sendmessageModel");
 const empty = require('is-empty');
 const probe = require('probe-image-size');
+const fetch = require('node-fetch');
+const FormData = require('form-data');
+const fs = require('fs');
+const path = require('path');
 
 let CONSUMER_SECRET = "D6DMxSiGSarZehUZSADADsdawe"; //need to verify jwt tokens;
 let users = {};
@@ -576,6 +580,20 @@ io.on("connection", function (socket) {
     });
 
     socket.on("updateGroupImage",function (data) {
+        let g_id = data.g_id;
+        // change path to current temp location
+        let tempPath = data.imageData;
+        const form = new FormData();
+        form.append('file', fs.createReadStream(tempPath[0]));
+        fetch('https://dev-api.arbitrage.ph/api/storage/upload', { method: 'POST', body: form })
+        .then(res => res.json())
+        .then(json => {
+            let fileURL = JSON.stringify(json.data.file.url);
+            let updateQuery = "UPDATE `im_group` SET `custom_image` = " + fileURL + " WHERE `im_group`.`g_id` = " + g_id + ";";
+            mysqlCon2.execute(updateQuery);
+            // //delete file after db update
+            fs.unlinkSync(tempPath[0]);
+        });
         try {
             let members = data.memberIds;
             if (members !== null) {
@@ -972,6 +990,9 @@ io.on("connection", function (socket) {
         await sendMessage(responce, socket);
     });
 
+    socket.on("generateInviteLink", async function (responce) {
+        await generateInviteLink(responce, socket);
+    });
     socket.on("announceSeen", announceSeen);
 
     socket.on("fetchOnReconnect", function (response) {
@@ -1094,6 +1115,24 @@ async function sendMessage(response, socket) {
     let message = null;
     if (typeof response === 'object') {
         data = response;
+         //store attachment to cloud
+         if (data.file) {
+            let msg_id = data.message.m_id;
+            // change path to current temp location
+            let tempPath = '../assets/temp/' + data.file;
+            const form = new FormData();
+            form.append('file', fs.createReadStream(tempPath));
+            fetch('https://dev-api.arbitrage.ph/api/storage/upload', { method: 'POST', body: form })
+            .then(res => res.json())
+            .then(json => {
+                let fileURL = JSON.stringify(json.data.file.url);
+                let updateQuery = "UPDATE `im_message` SET `message` = " + fileURL + " WHERE `im_message`.`m_id` = " + msg_id + ";";
+                mysqlCon2.execute(updateQuery);
+                //delete file after db update
+                // wont be able to access uploaded files bc its deleted, consider adding time expiry on when to delete files
+                fs.unlinkSync(tempPath);
+            });
+        }
     } else {
         data = JSON.parse(response);
     }
@@ -1172,6 +1211,10 @@ async function sendMessage(response, socket) {
     //});
 
 }
+async function generateInviteLink(responce, socket) {
+    let updateQuery = "INSERT INTO `im_group_invitations` (`u_id`, `time_stamp`, `token`) VALUES ('" + responce.senderId + "', '" + responce.timestamp + "', '" + responce.token + "');" ;
+    mysqlCon2.execute(updateQuery);
+}		
 
 async function pendingMessage(userId, groupId, senderId, socketId) {
 
