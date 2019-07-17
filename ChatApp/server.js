@@ -689,6 +689,12 @@ io.on("connection", function (socket) {
         mysqlCon2.execute(SQLQuery, [n_id]);
         
     });
+    socket.on('clearNotificationBox', function (r_id){
+        
+        let SQLQuery = "update im_notifications set seen=1, seen_tstamp=now() where r_id=? || seen=0";
+        mysqlCon2.execute(SQLQuery, [r_id]);
+        
+    });
 
     socket.on('joinrequestProccess', function (data){
         

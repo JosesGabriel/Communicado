@@ -671,20 +671,20 @@
             if(!confirm('Are you sure to clear notification box?')){
                 return;
             }
-            let username = jwt_decode(localStorage.getItem("_r")).consumerKey;
-            socket.emit("clearNotificationBox",username);
+            let r_id = jwt_decode(localStorage.getItem("_r")).userId;
+            socket.emit("clearNotificationBox",r_id);
             $("#modalNotifications").modal('hide');
             e.preventDefault();
         });
 
 
         $(document).on('click', '#notificationBox a.list-group-item', function (e) {
-            console.log('clicked');
+            // console.log('clicked');
             let g_id = $(this).attr('data-id');
             let n_type = parseInt($(this).attr('data-notif-type'));
             let n_id = parseInt($(this).attr('data-notif-id'));
-            console.log(n_id);
-            return;
+            // console.log(n_id);
+            // return;
             socket.emit("seenNotification",n_id);
             doAfterNotification(n_type,g_id);
             $("#modalNotifications").modal('hide');
