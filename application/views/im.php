@@ -63,6 +63,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <script language="javascript">
     
         jQuery(window).on('load', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            if(token) {
+                $('#acceptInvite').show();
+            }
             jQuery("#status, #status_txt").fadeOut();
             jQuery("#preloader").delay(300).fadeOut("fast");
         })
@@ -278,6 +283,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <!-- <i class="fas fa-bell m5sit"></i> -->
                     <span class="x1x2-1">Unmute</span></div>
                 </div>
+                <div class="col-md-6 col-xl-6 col-xs-12 col-sm-12 pad-5 optionHubar hdmpls" id="inviteLinkBtn" >
+                    <div class="pad-5 hdmpls righty" id="inviteLink" style="cursor: pointer;color: #fffffe;padding-right: 0;">
+                        <!-- <i class="fas fa-bell m5sit"></i> -->
+                        <span class="x1x2-2">Invitation Link</span>
+                    </div>
+                </div>
             </div>
             <ul class="persons personsList" id="groupMembers" >
                 
@@ -324,6 +335,27 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 
 <!-- Modals -->
+<div id="acceptInvite" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" class="modal fade in" style="display: none;padding-right: 17px;" data-backdrop="static" data-keyboard="false">
+    <div role="document" class="modal-dialog" style="width:500px !important;">
+        <div class="modal-content" >
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="fas fa-times"></i></span></button>
+                <h4 class="modal-title myUpdateModalLabel" style="background-color: #75aef3">  <i class="far fa-check-circle"></i> Accept group invitation?</h4>
+                <div class="modal-body">
+                
+                        <form action="POST" id="acceptGroupInvitation" style="color: black;" class="list-group">
+                            <input type="submit" value="Accept" class="btn btn-small btn-round">
+                            <input type="button" id="declineInvitation" value="Decline" class="btn btn-small btn-round">
+                        </form>
+                        <!-- <div class="list-group">
+                            <h4>Community box is empty.</h4>
+                        </div> -->
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
 <div id="modalCommunities" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" class="modal fade in" style="display: none;padding-right: 17px;" data-backdrop="static" data-keyboard="false">
     <div role="document" class="modal-dialog" style="width:600px !important;">
         <div class="modal-content" >
@@ -412,6 +444,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </div>
 </div>
 
+<div id="generateInviteLinkModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" class="modal fade in" style="display: none;padding-right: 17px;">
+    <div role="document" class="modal-dialog">
+        <div class="modal-content" >
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="fas fa-times"></i></span></button>
+                <h4 class="modal-title myUpdateModalLabel" style="background-color: #75aef3"><i class="fas fa-user-plus"></i> Invite People</h4>
+                <div class="modal-body" >
+                    <p>Send this one-time use URL to invite a new member to a group. (Expires in 24hrs)</p>
+                    <div class="form-group">
+                        <!-- <input type="text" id="invitationLink" multiple class="form-control" readonly> -->
+                        <a id="invitationLink" target="_blank"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div id="changeNameModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" class="modal fade in" style="display: none;padding-right: 17px;">
     <div role="document" class="modal-dialog">

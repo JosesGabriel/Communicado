@@ -3383,6 +3383,84 @@
             }
         });
         $('#inviteLinkBtn').on('click', function (e) {
+            let form=new FormData();
+            form.append("groupId", activeGroupId);
+            let settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": "<?php echo base_url('imApi/generateInviteLink'); ?>",
+                "method": "POST",
+                "headers": {
+                    "authorization": "Basic YWRtaW46MTIzNA==",
+                    "Authorizationkeyfortoken": String(responce),
+                    "cache-control": "no-cache",
+                    "postman-token": "2a391657-45a9-1a7b-9a67-9b16b0dda13a"
+                },
+                "processData": false,
+                "contentType": false,
+                "mimeType": "multipart/form-data",
+                "data": form,
+                "error": function (e) {
+                    let err = JSON.parse(e.responseText);
+                    toastr.error(e);
+                },
+            };
+            $.ajax(settings).done(function (response) {
+                response = JSON.parse(response);
+                let link = response.base_url + 'activate.php?token=' + response.token;
+                $('#invitationLink').attr("href", link);
+                $('#invitationLink').text(link);
+                $('#generateInviteLinkModal').modal('show');
+                
+            })
+        });
+
+        $('#acceptGroupInvitation').on('submit', function(e) {
+            e.preventDefault();
+            let userData = jwt_decode(localStorage.getItem("_r"));
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+
+            let form=new FormData();
+            form.append("userId", userData['userId']);
+            form.append("token", token);
+            let settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": "<?php echo base_url('imApi/inviteActivate'); ?>",
+                "method": "POST",
+                "headers": {
+                    "authorization": "Basic YWRtaW46MTIzNA==",
+                    "Authorizationkeyfortoken": String(responce),
+                    "cache-control": "no-cache",
+                    "postman-token": "2a391657-45a9-1a7b-9a67-9b16b0dda13a"
+                },
+                "processData": false,
+                "contentType": false,
+                "mimeType": "multipart/form-data",
+                "data": form,
+                "error": function (e) {
+                    let err = JSON.parse(e.responseText);
+                    toastr.error(e);
+                },
+            };
+            $.ajax(settings).done(function (response) {
+                $response = JSON.parse(response);
+                if($response.success) {
+                    toastr.success($response.message);
+                    $data = {user_id: $response.user_id, group_id: $response.group_id, admin_id: $response.admin_id.createdBy, generator_id: $response.generator_id};
+                    socket.emit("invitationaccept",$data);
+                    location.href="<?php echo base_url('userview/im'); ?>";
+                }
+                else
+                    toastr.error($response.message);
+            })
+        });
+        $('#declineInvitation').on('click', function(e) {
+            location.href="<?php echo base_url('userview/im'); ?>";
+        });
+        $('#inviteLinkBtn').on('click', function (e) {
             let settings = {
                 "async": true,
                 "crossDomain": true,

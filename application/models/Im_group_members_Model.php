@@ -16,7 +16,7 @@ class Im_group_members_Model extends CI_Model{
     {
 
         if($this->ifExist($g_id,$u_id)){
-            return;
+            return '1'; //changed this line from return; to return NULL. Needed return val if user exist / joses
         }
         $this->g_id=$g_id;
         $this->u_id=$u_id;

@@ -164,7 +164,13 @@ class Im_group_Model extends CI_Model{
         $this->db->where("g_id",$g_id);
         return $this->db->update("im_group",$update);
     }
+    public function getGroupAdminIdbyGroupId($g_id)
+    {
+        
+        $query = $this->db->query("SELECT `createdBy` from im_group where `g_id` = $g_id limit 1");
 
+        return $query->row();
+    }
     public function getGroupAdminInfobyGroupId($g_id)
     {
         

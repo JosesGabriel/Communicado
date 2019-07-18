@@ -764,7 +764,7 @@ div#addMemberInput {
     padding: 0;
     color: #fffffe !important;
     background: none;
-    padd
+    /* padd */
 }
 div#message_twemoji {
 	max-height: 45px !important;
@@ -1832,6 +1832,28 @@ div#muteOptions #unmute i {
 }
 div#muteOptions #unmute:hover {
     background: #9C27B0;
+    color: #fff !important;
+}
+div#inviteLinkBtn #inviteLink {
+    color: #dd87b5 !important;
+    text-align: center;
+    border: 2px solid #dd87b5 !important;
+    background: none;
+    border-radius: 30px;
+    width: auto;
+    margin: 0 auto;
+    padding: 6px 0 !important;
+    border: 2px solid transparent;
+    line-height: 1.2;
+}
+div#inviteLinkBtn #inviteLink i{
+    padding-right: 5px;
+    font-size: 13px;
+    display: inline-block;
+    vertical-align: middle;
+}
+div#inviteLinkBtn #inviteLink:hover {
+    background: #dd87b5;
     color: #fff !important;
 }
 .persons2 {

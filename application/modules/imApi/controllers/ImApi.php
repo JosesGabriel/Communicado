@@ -20,6 +20,8 @@ class ImApi extends REST_Controller
         $this->load->model('Im_mutelist');
         $this->load->model('Im_group_requests_Model');
         $this->load->model('Im_group_moderators_Model');
+        $this->load->model('Im_group_invitations_Model');
+        $this->load->model('Im_group_invitation_usage_Model');
 
         if (!ID_LOGIN) {
             $headers = apache_request_headers();
@@ -2204,6 +2206,89 @@ class ImApi extends REST_Controller
         $this->response($response, REST_Controller::HTTP_OK);
     }
 
+    public function generateInviteLink_post() {
+        //get current user ID
+        if(ID_LOGIN){
+            $senderId=$this->post("userId",true);
+            $this->form_validation->set_rules('userId', 'userId', 'required');
+            if ($this->form_validation->run() == FALSE) {
+                $response = array(
+                    "status" => array(
+                        "code" => REST_Controller::HTTP_NOT_ACCEPTABLE,
+                        "message" => "Validation Error"
+                    ),
+                    "response" => "User Id is missing"
+                );
+                $this->response($response, REST_Controller::HTTP_NOT_ACCEPTABLE);
+                return;
+            }
+        }else{
+            $headers = apache_request_headers();
+            $senderId = $this->User_Model->getTokenToId($headers["Authorizationkeyfortoken"]);
+        }
+        //create token
+        $groupId = intval($this->post('groupId', true));
+        $token = sha1(uniqid($groupId, true));
+        $timestamp = $_SERVER["REQUEST_TIME"];
+        $linkData = array(
+            "token" => $token,
+            "group_id" => $groupId,
+            "sender_id" => $senderId,
+            "timestamp" => $timestamp,
+            "expires_in" => $timestamp + 86400
+        );
+        //run insert query 
+        $res = $this->Im_group_invitations_Model->add($linkData);
+        $response = array(
+            'token' => $token,
+            'base_url' => base_url()
+        );
+        $url = base_url() . "activate.php?token=" . $token;
+        $this->response($response, REST_Controller::HTTP_OK);
+    }
+
+    public function inviteActivate_post() {
+        $u_id = $this->post('userId', true);
+        $token = $this->post('token', true);
+        // if token is valid, returns group_id + user_id. else returns null
+        $resInvitation = $this->Im_group_invitations_Model->checkValidity($token);
+        $g_id = $resInvitation['g_id'];
+        $generator_id = $resInvitation['u_id']; // id of who generated link
+        if($resInvitation) {
+            $resGroupAdd = $this->Im_group_members_Model->insert($g_id, $u_id);
+
+            if(!$resGroupAdd) { //if this returns true, user already exists in group
+                $resUseCounter = $this->Im_group_invitation_usage_Model->useCounter($resInvitation['id']);
+                if($resUseCounter < 3) { //set amount of uses on a single link
+                    $linkData = array(
+                        'token_id' => $resInvitation['id'],
+                        'user_id' => $u_id,
+                        'timestamp' => $_SERVER["REQUEST_TIME"]
+                    );
+                    // $this->Im_group_invitation_usage_Model->add($linkData);
+                    $admin_id = $this->Im_group_Model->getGroupAdminIdbyGroupId($g_id);
+                    $response = array(
+                        'success' => true,
+                        'message' => 'Join Successful',
+                        'user_id' => $u_id,
+                        'generator_id' => $generator_id,
+                        'group_id' => $g_id,
+                        'admin_id' => $admin_id
+                    );
+                    $this->response($response, REST_Controller::HTTP_OK);
+                } else { 
+                    $this->Im_group_invitations_Model->setExpiredFlag($resInvitation['id']);
+                    $this->response('Link max uses reached', REST_Controller::HTTP_OK);
+                }
+                
+            } else {
+                $this->response('User already exists in group.', REST_Controller::HTTP_OK);
+            }
+        } else {
+            $this->response('Invalid Token', REST_Controller::HTTP_OK);
+        }
+    }
+    
     public function getBlockList_post()
     {
         if (ID_LOGIN) {
