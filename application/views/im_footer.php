@@ -3016,7 +3016,7 @@
             // assign moderator
             if (!$('#communityModerator').hasClass('hidden')) $('#communityModerator').addClass('hidden');
             // invitation link
-            //if (!$('#invitationLink').hasClass('hidden')) $('#invitationLink').addClass('hidden');
+            if (!$('#inviteLinkBtn').hasClass('hidden')) $('#inviteLinkBtn').addClass('hidden');
             //console.log(groupType);
             //console.log(userlevel);
 
@@ -3055,10 +3055,10 @@
                             showComponents(['muteOptions']);
                         break;
                         case 1: // Admin
-                            showComponents(['muteOptions','addMember','changeGroupImage','editGroupName','joinRequest','communityModerator']);
+                            showComponents(['muteOptions','addMember','changeGroupImage','editGroupName','joinRequest','communityModerator','inviteLinkBtn']);
                         break;                    
                         case 2: // Moderator
-                            showComponents(['muteOptions','joinRequest']);
+                            showComponents(['muteOptions','joinRequest','inviteLinkBtn']);
                         break; 
                     }
                 break;

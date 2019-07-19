@@ -2265,7 +2265,7 @@ class ImApi extends REST_Controller
                         'user_id' => $u_id,
                         'timestamp' => $_SERVER["REQUEST_TIME"]
                     );
-                    // $this->Im_group_invitation_usage_Model->add($linkData);
+                    $this->Im_group_invitation_usage_Model->add($linkData);
                     $admin_id = $this->Im_group_Model->getGroupAdminIdbyGroupId($g_id);
                     $response = array(
                         'success' => true,
