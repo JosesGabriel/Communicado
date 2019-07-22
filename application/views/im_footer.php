@@ -70,8 +70,8 @@
                 window.Vyndue_fname  = t.firstname;
                 window.Vyndue_picture = pic;
             }
-            $("#userNameTop").html(name);
-            $("#userImageTop").attr("src", pic);
+            // $("#userNameTop").html(name);
+            // $("#userImageTop").attr("src", pic);
 
             // set all mention link 
             let hrefAll = $('.fw-im-message-text').find('a[class="mention"]');
@@ -2342,7 +2342,7 @@
                 "data": form,
                 "error": function (e) {
                     let err = JSON.parse(e.responseText);
-                    toastr.error(err.response);
+                    toastr.error("Unable to upload this image, Image is to large");
                 },
                 "beforeSend": function () {
                    // $('.close').trigger("click");
@@ -3415,8 +3415,7 @@
             })
         });
 
-        $('#acceptGroupInvitation').on('submit', function(e) {
-            e.preventDefault();
+        $('#inviteLinkValidator').on('click', function(){
             let userData = jwt_decode(localStorage.getItem("_r"));
 
             const urlParams = new URLSearchParams(window.location.search);
@@ -3442,7 +3441,7 @@
                 "data": form,
                 "error": function (e) {
                     let err = JSON.parse(e.responseText);
-                    toastr.error(e);
+                    // toastr.error(e);
                 },
             };
             $.ajax(settings).done(function (response) {
@@ -3454,33 +3453,7 @@
                     location.href="<?php echo base_url('userview/im'); ?>";
                 }
                 else
-                    toastr.error($response.message);
-            })
-        });
-        $('#declineInvitation').on('click', function(e) {
-            location.href="<?php echo base_url('userview/im'); ?>";
-        });
-        $('#inviteLinkBtn').on('click', function (e) {
-            let settings = {
-                "async": true,
-                "crossDomain": true,
-                "url": "<?php echo base_url('imApi/generateInviteLink'); ?>",
-                "method": "GET",
-                "headers": {
-                    "authorization": "Basic YWRtaW46MTIzNA==",
-                    "Authorizationkeyfortoken": String(responce),
-                    "cache-control": "no-cache",
-                    "postman-token": "2a391657-45a9-1a7b-9a67-9b16b0dda13a"
-                },
-                "error": function (e) {
-                    let err = JSON.parse(e.responseText);
-                    toastr.error(err.response);
-                },
-            };
-            $.ajax(settings).done(function (response) {
-                $('#invitationLink').val(response);
-                $('#generateInviteLinkModal').modal('show');
-                
+                    toastr.error($response);
             })
         });
 

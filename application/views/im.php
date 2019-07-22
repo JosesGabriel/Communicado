@@ -66,7 +66,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             const urlParams = new URLSearchParams(window.location.search);
             const token = urlParams.get('token');
             if(token) {
-                $('#acceptInvite').show();
+                $('#inviteLinkValidator').click();
             }
             jQuery("#status, #status_txt").fadeOut();
             jQuery("#preloader").delay(300).fadeOut("fast");
@@ -79,6 +79,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </div>
 
 <section class="page-contents">
+        <input type="hidden" id="inviteLinkValidator">
         <!-- START LEFT SECTION -->
         <div class="leftSection col-xl-3 col-md-3 col-sm-12 col-xs-12" style="padding: 0;">
             
@@ -334,28 +335,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </section>
 
 
-<!-- Modals -->
-<div id="acceptInvite" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" class="modal fade in" style="display: none;padding-right: 17px;" data-backdrop="static" data-keyboard="false">
-    <div role="document" class="modal-dialog" style="width:500px !important;">
-        <div class="modal-content" >
-            <div class="modal-header">
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="fas fa-times"></i></span></button>
-                <h4 class="modal-title myUpdateModalLabel" style="background-color: #75aef3">  <i class="far fa-check-circle"></i> Accept group invitation?</h4>
-                <div class="modal-body">
-                
-                        <form action="POST" id="acceptGroupInvitation" style="color: black;" class="list-group">
-                            <input type="submit" value="Accept" class="btn btn-small btn-round">
-                            <input type="button" id="declineInvitation" value="Decline" class="btn btn-small btn-round">
-                        </form>
-                        <!-- <div class="list-group">
-                            <h4>Community box is empty.</h4>
-                        </div> -->
-                </div>
-                
-            </div>
-        </div>
-    </div>
-</div>
 <div id="modalCommunities" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" class="modal fade in" style="display: none;padding-right: 17px;" data-backdrop="static" data-keyboard="false">
     <div role="document" class="modal-dialog" style="width:600px !important;">
         <div class="modal-content" >
