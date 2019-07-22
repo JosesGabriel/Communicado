@@ -2247,6 +2247,7 @@ class ImApi extends REST_Controller
         $this->response($response, REST_Controller::HTTP_OK);
     }
 
+
     public function inviteActivate_post() {
         $u_id = $this->post('userId', true);
         $token = $this->post('token', true);
@@ -2255,34 +2256,38 @@ class ImApi extends REST_Controller
         $g_id = $resInvitation['g_id'];
         $generator_id = $resInvitation['u_id']; // id of who generated link
         if($resInvitation) {
-            $resGroupAdd = $this->Im_group_members_Model->insert($g_id, $u_id);
-
-            if(!$resGroupAdd) { //if this returns true, user already exists in group
-                $resUseCounter = $this->Im_group_invitation_usage_Model->useCounter($resInvitation['id']);
-                if($resUseCounter < 3) { //set amount of uses on a single link
-                    $linkData = array(
-                        'token_id' => $resInvitation['id'],
-                        'user_id' => $u_id,
-                        'timestamp' => $_SERVER["REQUEST_TIME"]
-                    );
-                    $this->Im_group_invitation_usage_Model->add($linkData);
-                    $admin_id = $this->Im_group_Model->getGroupAdminIdbyGroupId($g_id);
-                    $response = array(
-                        'success' => true,
-                        'message' => 'Join Successful',
-                        'user_id' => $u_id,
-                        'generator_id' => $generator_id,
-                        'group_id' => $g_id,
-                        'admin_id' => $admin_id
-                    );
-                    $this->response($response, REST_Controller::HTTP_OK);
-                } else { 
-                    $this->Im_group_invitations_Model->setExpiredFlag($resInvitation['id']);
-                    $this->response('Link max uses reached', REST_Controller::HTTP_OK);
+            $resExpiration = $this->Im_group_invitations_Model->checkExpiration($token);
+            if($resExpiration) {
+                $resGroupAdd = $this->Im_group_members_Model->insert($g_id, $u_id);
+                if(!$resGroupAdd) { //if this returns true, user already exists in group
+                    $resUseCounter = $this->Im_group_invitation_usage_Model->useCounter($resInvitation['id']);
+                    if($resUseCounter < 3) { //set amount of uses on a single link
+                        $linkData = array(
+                            'token_id' => $resInvitation['id'],
+                            'user_id' => $u_id,
+                            'timestamp' => $_SERVER["REQUEST_TIME"]
+                        );
+                        $this->Im_group_invitation_usage_Model->add($linkData);
+                        $admin_id = $this->Im_group_Model->getGroupAdminIdbyGroupId($g_id);
+                        $response = array(
+                            'success' => true,
+                            'message' => 'Join Successful',
+                            'user_id' => $u_id,
+                            'generator_id' => $generator_id,
+                            'group_id' => $g_id,
+                            'admin_id' => $admin_id
+                        );
+                        $this->response($response, REST_Controller::HTTP_OK);
+                    } else { 
+                        $this->Im_group_invitations_Model->setExpiredFlag($resInvitation['id']);
+                        $this->response('Link max uses reached', REST_Controller::HTTP_OK);
+                    }
+                } else {
+                    $this->response('User already exists in group.', REST_Controller::HTTP_OK);
                 }
-                
             } else {
-                $this->response('User already exists in group.', REST_Controller::HTTP_OK);
+                $this->Im_group_invitations_Model->setExpiredFlag($resInvitation['id']);
+                $this->response('This link is expired', REST_Controller::HTTP_OK);
             }
         } else {
             $this->response('Invalid Token', REST_Controller::HTTP_OK);

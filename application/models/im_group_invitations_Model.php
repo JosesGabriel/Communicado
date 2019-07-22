@@ -38,6 +38,19 @@ class Im_group_invitations_Model extends CI_Model
             return(FALSE);
         }
     }
+    public function checkExpiration($token)
+    {
+        $query = $this->db->query("SELECT * FROM `im_group_invitations` WHERE `token` LIKE '" . $token . "'");
+        $res = $query->result();
+        $res = $res[0];
+        $expiry = $res->expires_in;
+
+        if($expiry > $_SERVER["REQUEST_TIME"]) {
+            return(TRUE);
+        } else {
+            return(FALSE);
+        }
+    }
     public function setExpiredFlag($token_id)
     {
         $query = $this->db->query("UPDATE `im_group_invitations` SET `expired` = '1' WHERE `im_group_invitations`.`id` = " . $token_id . ";");
