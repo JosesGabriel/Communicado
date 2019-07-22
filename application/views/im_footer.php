@@ -70,8 +70,8 @@
                 window.Vyndue_fname  = t.firstname;
                 window.Vyndue_picture = pic;
             }
-            $("#userNameTop").html(name);
-            $("#userImageTop").attr("src", pic);
+            // $("#userNameTop").html(name);
+            // $("#userImageTop").attr("src", pic);
 
             // set all mention link 
             let hrefAll = $('.fw-im-message-text').find('a[class="mention"]');
@@ -2342,7 +2342,7 @@
                 "data": form,
                 "error": function (e) {
                     let err = JSON.parse(e.responseText);
-                    toastr.error(err.response);
+                    toastr.error("Unable to upload this image, Image is to large");
                 },
                 "beforeSend": function () {
                    // $('.close').trigger("click");
