@@ -1,0 +1,15 @@
+truncate table friend_list;
+truncate table im_blocklist;
+truncate table im_group;
+truncate table im_group_invitation_usage;
+truncate table im_group_members;
+truncate table im_group_moderators;
+truncate table im_group_requests;
+truncate table im_mention;
+truncate table im_message;
+truncate table im_mutelist;
+truncate table im_notifications;
+truncate table im_receiver;
+truncate table im_usersessions;
+truncate table im_usersocket;
+truncate table users;
