@@ -3052,7 +3052,7 @@
                 case 0: // Private Community
                     switch(userlevel){
                         case 0: // Member
-                            showComponents(['muteOptions']);
+                            showComponents(['muteOptions','leaveGroup']);
                         break;
                         case 1: // Admin
                             showComponents(['muteOptions','addMember','changeGroupImage','editGroupName','joinRequest','communityModerator','inviteLinkBtn']);
