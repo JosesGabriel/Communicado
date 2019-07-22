@@ -1174,3 +1174,103 @@ ALTER TABLE `im_notification_types`
 ALTER TABLE `users`
   MODIFY `userId` bigint(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 COMMIT;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `im_group_invitation_usage`
+--
+
+CREATE TABLE `im_group_invitation_usage` (
+  `use_id` int(11) NOT NULL,
+  `token_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `timestamp` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `im_group_invitation_usage`
+--
+
+INSERT INTO `im_group_invitation_usage` (`use_id`, `token_id`, `user_id`, `timestamp`) VALUES
+(41, 58, 5, 1563335992),
+(42, 58, 5, 1563336074),
+(44, 58, 5, 1563338566),
+(56, 59, 8, 1563433924),
+(59, 60, 8, 1563434947),
+(66, 59, 5, 1563438136);
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `im_group_invitation_usage`
+--
+ALTER TABLE `im_group_invitation_usage`
+  ADD PRIMARY KEY (`use_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `im_group_invitation_usage`
+--
+ALTER TABLE `im_group_invitation_usage`
+  MODIFY `use_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+COMMIT;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `im_group_invitations`
+--
+
+CREATE TABLE `im_group_invitations` (
+  `id` int(11) NOT NULL,
+  `token` char(40) NOT NULL,
+  `group_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `timestamp` int(11) NOT NULL,
+  `expires_in` int(11) NOT NULL,
+  `expired` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `im_group_invitations`
+--
+
+INSERT INTO `im_group_invitations` (`id`, `token`, `group_id`, `user_id`, `timestamp`, `expires_in`, `expired`) VALUES
+(58, '5243dac956a1fb6b534bf4ac326bebdf5f123188', 9, 5, 1563335333, 1563421733, 1),
+(59, '466669f3cdcba6fadc79e0424bfbbc6b0d379c59', 9, 5, 1563425919, 1563512319, 0),
+(60, '0cc188cc4164324320c0506eaf7294e135d098a1', 2, 5, 1563434929, 1563521329, 0),
+(61, '2db417ef1b280d75993dba94af579d7788bb13d6', 9, 5, 1563457162, 1563543562, 0),
+(62, 'cb89c54f2b4df34bb18552acd4be0272fde2f08a', 9, 5, 1563457444, 1563543844, 0),
+(63, 'f16f8a9df7200e34a79aa0a06551b81a474ae93b', 9, 4, 1563457999, 1563544399, 0),
+(64, 'dfacde60b1615178ec1e06e5af918d5f34bfbb37', 9, 4, 1563504421, 1563590821, 0);
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `im_group_invitations`
+--
+ALTER TABLE `im_group_invitations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `im_group_invitations`
+--
+ALTER TABLE `im_group_invitations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
