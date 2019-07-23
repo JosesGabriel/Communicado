@@ -185,7 +185,7 @@ class ImApi extends REST_Controller
                 'mute' => (int) $this->Im_mutelist->ifExist($userId, $g_id),
                 'block' => (int) $this->Im_group_Model->isBlocked($g_id),
                 'creatorEmail' => $creator->userEmail,
-                'moderator' => (int) $this->Im_group_moderators_Model->ifExist($g_id, $userId)
+                'moderator' => (int) $this->Im_group_moderators_Model->ifExist($g_id, $userId),
                 //"creatorId"=>$creator >userId
             ),
         );
@@ -1329,32 +1329,34 @@ class ImApi extends REST_Controller
         $this->response($response, REST_Controller::HTTP_OK);
     }
 
-    public function updateGroupImage_post(){
+    public function updateGroupImage_post()
+    {
         $this->form_validation->set_rules('groupId', 'groupId', 'required');
         $this->form_validation->set_rules('file', 'file', 'required');
-        $groupId =(int)$this->post("groupId", true);
-        $group=$this->Im_group_Model->get($groupId);
-        if(!$group){
+        $groupId = (int) $this->post('groupId', true);
+        $group = $this->Im_group_Model->get($groupId);
+        if (!$group) {
             $response = array(
-                "status" => array(
-                    "code" => REST_Controller::HTTP_NOT_ACCEPTABLE,
-                    "message" => "Validation Error"
+                'status' => array(
+                    'code' => REST_Controller::HTTP_NOT_ACCEPTABLE,
+                    'message' => 'Validation Error',
                 ),
-                "response" => "Invalid groupId"
+                'response' => 'Invalid groupId',
             );
             $this->response($response, REST_Controller::HTTP_NOT_ACCEPTABLE);
+
             return;
         }
         $image = null;
         $fileType = null;
-        $actualFolderName = "./assets/im/temp";
-        $actualFileName=null;
+        $actualFolderName = './assets/im/temp';
+        $actualFileName = null;
         if (!is_dir($actualFolderName)) {
             mkdir($actualFolderName, 0777, true);
         }
         $config['upload_path'] = $actualFolderName;
         $config['allowed_types'] = 'jpg|png';
-        $config['file_name'] = date("mjYGis") . "im" . $this->User_Model->generateRandomString(5) . $groupId;
+        $config['file_name'] = date('mjYGis').'im'.$this->User_Model->generateRandomString(5).$groupId;
         $config['max_size'] = '20480';
 
         $file = false;
@@ -1363,82 +1365,78 @@ class ImApi extends REST_Controller
             $file = true;
             if (!$this->upload->do_upload('file')) {
                 $response = array(
-                    "status" => array(
-                        "code" => REST_Controller::HTTP_BAD_REQUEST,
-                        "message" => "File upload Error"
+                    'status' => array(
+                        'code' => REST_Controller::HTTP_BAD_REQUEST,
+                        'message' => 'File upload Error',
                     ),
-                    "response" => $this->upload->display_errors()
+                    'response' => $this->upload->display_errors(),
                 );
                 $this->response($response, REST_Controller::HTTP_BAD_REQUEST);
-
             } else {
-
                 //here $file_data receives an array that has all the info
                 //pertaining to the upload, including 'file_name'
                 $file_data = $this->upload->data();
 
                 $config['image_library'] = 'gd2';
                 $config['source_image'] = $file_data['full_path']; //get original image
-                $config['maintain_ratio'] = TRUE;
+                $config['maintain_ratio'] = true;
                 $config['width'] = 700;
                 $config['height'] = 700;
                 $this->load->library('image_lib', $config);
                 if (!$this->image_lib->resize()) {
                     $response = array(
-                        "status" => array(
-                            "code" => REST_Controller::HTTP_BAD_REQUEST,
-                            "message" => "File upload Error"
+                        'status' => array(
+                            'code' => REST_Controller::HTTP_BAD_REQUEST,
+                            'message' => 'File upload Error',
                         ),
-                        "response" => $this->image_lib->display_errors()
+                        'response' => $this->image_lib->display_errors(),
                     );
                     $this->response($response, REST_Controller::HTTP_BAD_REQUEST);
                 }
                 $image = $file_data['file_name'];
 
-                $this->Im_group_Model->updateImage($groupId,$image);
+                $this->Im_group_Model->updateImage($groupId, $image);
 
                 $memberIds = $this->Im_group_members_Model->getMembers($groupId);
-                $imageUrl=  "../assets/im/temp/".$image;
+                $imageUrl = '../assets/im/temp/'.$image;
                 $socketData = array(
-                    "g_id" => $groupId,
-                    "memberIds" => $memberIds,
-                    "imageData" => [$imageUrl],
+                    'g_id' => $groupId,
+                    'memberIds' => $memberIds,
+                    'imageData' => [$imageUrl],
                 );
                 $headers = apache_request_headers();
                 $registerData = array(
-                    "_r" => $headers["Authorizationkeyfortoken"],
-                    "url" => base_url()
+                    '_r' => $headers['Authorizationkeyfortoken'],
+                    'url' => base_url(),
                 );
 
-            $client = new Client(new Version2X($this->config->item('socket_url'),$this->config->item("socket_local_conf_ssl")));
-            $client->initialize();
-            $client->emit("register", $registerData);
-            $client->emit('updateGroupImage', $socketData);
-            //$client->emit("updateMember",$response);
-            $client->close();
-            $response = array(
-                "status" => array(
-                    "code" => REST_Controller::HTTP_OK,
-                    "message" => "Success"
+                $client = new Client(new Version2X($this->config->item('socket_url'), $this->config->item('socket_local_conf_ssl')));
+                $client->initialize();
+                $client->emit('register', $registerData);
+                $client->emit('updateGroupImage', $socketData);
+                //$client->emit("updateMember",$response);
+                $client->close();
+                $response = array(
+                'status' => array(
+                    'code' => REST_Controller::HTTP_OK,
+                    'message' => 'Success',
                 ),
-                "response" =>'ok'
-
+                'response' => 'ok',
             );
-            $this->response($response, REST_Controller::HTTP_OK);
+                $this->response($response, REST_Controller::HTTP_OK);
             }
-        }else{
+        } else {
             $response = array(
-                "status" => array(
-                    "code" => REST_Controller::HTTP_NOT_ACCEPTABLE,
-                    "message" => "Validation Error"
+                'status' => array(
+                    'code' => REST_Controller::HTTP_NOT_ACCEPTABLE,
+                    'message' => 'Validation Error',
                 ),
-                "response" => "Empty file"
+                'response' => 'Empty file',
             );
             $this->response($response, REST_Controller::HTTP_NOT_ACCEPTABLE);
+
             return;
         }
-
-
     }
 
     public function sendMessage_post()
@@ -1608,16 +1606,16 @@ class ImApi extends REST_Controller
         $message = null;
         $image = null;
         $fileType = null;
-        $actualFolderName = "./assets/temp";
+        $actualFolderName = './assets/temp';
         // $actualFolderName = "./assets/im/group_$receiverId";
-        $actualFileName=null;
-        $imageFileName=null;
+        $actualFileName = null;
+        $imageFileName = null;
         if (!is_dir($actualFolderName)) {
             mkdir($actualFolderName, 0777, true);
         }
         $config['upload_path'] = $actualFolderName;
         $config['allowed_types'] = 'jpg|png|mp3|mp4|3gp|pdf|doc|docx|xlsx|xls|zip|txt|wma|text|rar|ppt|pptx|csv';
-        $config['file_name'] = date("mjYGis") . "im" . $this->User_Model->generateRandomString(5) . $receiverId;
+        $config['file_name'] = date('mjYGis').'im'.$this->User_Model->generateRandomString(5).$receiverId;
         $config['max_size'] = '30000';
         $this->load->library('upload', $config);
 
@@ -1626,127 +1624,120 @@ class ImApi extends REST_Controller
             $file = true;
             if (!$this->upload->do_upload('file')) {
                 $response = array(
-                    "status" => array(
-                        "code" => REST_Controller::HTTP_BAD_REQUEST,
-                        "message" => "File upload Error"
+                    'status' => array(
+                        'code' => REST_Controller::HTTP_BAD_REQUEST,
+                        'message' => 'File upload Error',
                     ),
-                    "response" => $this->upload->display_errors()
+                    'response' => $this->upload->display_errors(),
                 );
                 $this->response($response, REST_Controller::HTTP_BAD_REQUEST);
-
             } else {
-                $actualFileName=$_FILES['file']['name']; //real file name
+                $actualFileName = $_FILES['file']['name']; //real file name
                 //here $file_data receives an array that has all the info
                 //pertaining to the upload, including 'file_name'
                 $file_data = $this->upload->data();
-                if ($_FILES['file']["type"]=="audio/mp3" || $file_data["file_type"] == "audio/mp3" || $file_data["file_type"] == "audio/mpeg3" || $file_data["file_type"] == "audio/mpg" || $file_data["file_type"] == "audio/mpeg") {
+                if ($_FILES['file']['type'] == 'audio/mp3' || $file_data['file_type'] == 'audio/mp3' || $file_data['file_type'] == 'audio/mpeg3' || $file_data['file_type'] == 'audio/mpg' || $file_data['file_type'] == 'audio/mpeg') {
                     $image = $file_data['file_name'];
-                    $fileType = "audio";
-                } else if ($file_data["file_type"] == "video/mp4" || $file_data["file_type"] == "video/3gp" || $file_data["file_type"] == "video/3gpp" || $file_data["file_type"] == "video/*") {
-                    if($file_data["file_type"]== "video/mp4"){
+                    $fileType = 'audio';
+                } elseif ($file_data['file_type'] == 'video/mp4' || $file_data['file_type'] == 'video/3gp' || $file_data['file_type'] == 'video/3gpp' || $file_data['file_type'] == 'video/*') {
+                    if ($file_data['file_type'] == 'video/mp4') {
                         $image = $file_data['file_name'];
-                    }else{
-                        exec("ffmpeg -i " . $file_data['full_path'] . " " . $file_data['file_path'] . $file_data['raw_name'] . ".mp4");
-                        $image = $file_data['raw_name'] . '.' . 'mp4';
+                    } else {
+                        exec('ffmpeg -i '.$file_data['full_path'].' '.$file_data['file_path'].$file_data['raw_name'].'.mp4');
+                        $image = $file_data['raw_name'].'.'.'mp4';
                     }
-                    $fileType = "video";
-                } else if($file_data["file_type"] == "image/png" || $file_data["file_type"] == "image/x-png" || $file_data["file_type"] == "image/jpeg"||$file_data["file_type"] == "image/pjpeg") {
+                    $fileType = 'video';
+                } elseif ($file_data['file_type'] == 'image/png' || $file_data['file_type'] == 'image/x-png' || $file_data['file_type'] == 'image/jpeg' || $file_data['file_type'] == 'image/pjpeg') {
                     $config['image_library'] = 'gd2';
                     $config['source_image'] = $file_data['full_path']; //get original image
-                    $config['maintain_ratio'] = TRUE;
+                    $config['maintain_ratio'] = true;
                     $config['width'] = 700;
                     $config['height'] = 700;
                     $this->load->library('image_lib', $config);
                     if (!$this->image_lib->resize()) {
                         $response = array(
-                            "status" => array(
-                                "code" => REST_Controller::HTTP_BAD_REQUEST,
-                                "message" => "File upload Error"
+                            'status' => array(
+                                'code' => REST_Controller::HTTP_BAD_REQUEST,
+                                'message' => 'File upload Error',
                             ),
-                            "response" => $this->image_lib->display_errors()
+                            'response' => $this->image_lib->display_errors(),
                         );
                         $this->response($response, REST_Controller::HTTP_BAD_REQUEST);
                     }
                     $image = $file_data['file_name'];
-                    $fileType = "image";
-                }else{
+                    $fileType = 'image';
+                } else {
                     $image = $file_data['file_name'];
-                    $fileType = "document";
+                    $fileType = 'document';
                 }
-
             }
-            
+
             $message = $image;
             $imageFileName = $image;
         } else {
-            $fileType = "text";
-            $message = $this->post("message", true);
+            $fileType = 'text';
+            $message = $this->post('message', true);
             $message = $client->asciiToUnicode($message);
-
         }
-        $receiverType = "personal";
+        $receiverType = 'personal';
         $totalReceiver = $this->Im_group_members_Model->getTotalGroupMember($receiverId);
         if ($totalReceiver > 2) {
-            $receiverType = "group";
+            $receiverType = 'group';
         }
 
-        $oldMessage=$this->Im_message_Model->getRecentMessage($receiverId);
-        if($oldMessage!=null){
+        $oldMessage = $this->Im_message_Model->getRecentMessage($receiverId);
+        if ($oldMessage != null) {
             $this->Im_receiver_Model->deleteByGroupId($receiverId);
         }
         $memberIds = $this->Im_group_members_Model->getMembers($receiverId);
-        $m_id = $this->Im_message_Model->insert($senderId, $receiverId, $message, $fileType,$actualFileName, $receiverType, $date, $time, $date_time);
+        $m_id = $this->Im_message_Model->insert($senderId, $receiverId, $message, $fileType, $actualFileName, $receiverType, $date, $time, $date_time);
         $fullMessage = $this->Im_message_Model->getRecentMessageWithUpdate($receiverId);
         $senderInfo = $this->User_Model->get_user($senderId, null, null);
         $this->Im_group_Model->updateLastActiveDate($receiverId, $date_time);
 
-
         $ios_date_time = $fullMessage->date_time;
 
         $fullMessage->ios_date_time = $ios_date_time;
-        if(ID_LOGIN){
+        if (ID_LOGIN) {
             $socketData = array(
-                "_r" =>$this->User_Model->getTokenRAWDataById($senderId),
-                "to" => $receiverId,
-                "receiversId" => $memberIds,
-                "message" => $fullMessage,
-                "sender" => $senderInfo,
-
+                '_r' => $this->User_Model->getTokenRAWDataById($senderId),
+                'to' => $receiverId,
+                'receiversId' => $memberIds,
+                'message' => $fullMessage,
+                'sender' => $senderInfo,
             );
             $registerData = array(
-                "_r" =>$this->User_Model->getTokenRAWDataById($senderId),
-                "url" => base_url()
+                '_r' => $this->User_Model->getTokenRAWDataById($senderId),
+                'url' => base_url(),
             );
-        }else{
+        } else {
             $socketData = array(
-                "_r" => $headers["Authorizationkeyfortoken"],
-                "to" => $receiverId,
-                "receiversId" => $memberIds,
-                "message" => $fullMessage,
-                "sender" => $senderInfo,
-                "file" => $imageFileName
-
+                '_r' => $headers['Authorizationkeyfortoken'],
+                'to' => $receiverId,
+                'receiversId' => $memberIds,
+                'message' => $fullMessage,
+                'sender' => $senderInfo,
+                'file' => $imageFileName,
             );
             $registerData = array(
-                "_r" => $headers["Authorizationkeyfortoken"],
-                "url" => base_url()
+                '_r' => $headers['Authorizationkeyfortoken'],
+                'url' => base_url(),
             );
         }
 
-        $client = new Client(new Version2X($this->config->item('socket_url'),$this->config->item("socket_local_conf_ssl")));
+        $client = new Client(new Version2X($this->config->item('socket_url'), $this->config->item('socket_local_conf_ssl')));
         $client->initialize();
-        $client->emit("register", $registerData);
+        $client->emit('register', $registerData);
         $client->emit('sendMessage', $socketData);
         //$client->emit("updateMember",$response);
         $client->close();
         $response = array(
-            "status" => array(
-                "code" => REST_Controller::HTTP_OK,
-                "message" => "Success",
-                "file" => $file
+            'status' => array(
+                'code' => REST_Controller::HTTP_OK,
+                'message' => 'Success',
+                'file' => $file,
             ),
-             "response" =>$this->getGroupInfo($receiverId,$senderId)
-
+             'response' => $this->getGroupInfo($receiverId, $senderId),
         );
         $this->response($response, REST_Controller::HTTP_OK);
     }
@@ -2206,66 +2197,70 @@ class ImApi extends REST_Controller
         $this->response($response, REST_Controller::HTTP_OK);
     }
 
-    public function generateInviteLink_post() {
+    public function generateInviteLink_post()
+    {
         //get current user ID
-        if(ID_LOGIN){
-            $senderId=$this->post("userId",true);
+        if (ID_LOGIN) {
+            $senderId = $this->post('userId', true);
             $this->form_validation->set_rules('userId', 'userId', 'required');
-            if ($this->form_validation->run() == FALSE) {
+            if ($this->form_validation->run() == false) {
                 $response = array(
-                    "status" => array(
-                        "code" => REST_Controller::HTTP_NOT_ACCEPTABLE,
-                        "message" => "Validation Error"
+                    'status' => array(
+                        'code' => REST_Controller::HTTP_NOT_ACCEPTABLE,
+                        'message' => 'Validation Error',
                     ),
-                    "response" => "User Id is missing"
+                    'response' => 'User Id is missing',
                 );
                 $this->response($response, REST_Controller::HTTP_NOT_ACCEPTABLE);
+
                 return;
             }
-        }else{
+        } else {
             $headers = apache_request_headers();
-            $senderId = $this->User_Model->getTokenToId($headers["Authorizationkeyfortoken"]);
+            $senderId = $this->User_Model->getTokenToId($headers['Authorizationkeyfortoken']);
         }
         //create token
         $groupId = intval($this->post('groupId', true));
         $token = sha1(uniqid($groupId, true));
-        $timestamp = $_SERVER["REQUEST_TIME"];
+        $timestamp = $_SERVER['REQUEST_TIME'];
         $linkData = array(
-            "token" => $token,
-            "group_id" => $groupId,
-            "sender_id" => $senderId,
-            "timestamp" => $timestamp,
-            "expires_in" => $timestamp + 86400
+            'token' => $token,
+            'group_id' => $groupId,
+            'sender_id' => $senderId,
+            'timestamp' => $timestamp,
+            'expires_in' => $timestamp + 86400,
         );
-        //run insert query 
+        //run insert query
         $res = $this->Im_group_invitations_Model->add($linkData);
         $response = array(
             'token' => $token,
-            'base_url' => base_url()
+            'base_url' => base_url(),
         );
-        $url = base_url() . "activate.php?token=" . $token;
+        $url = base_url().'activate.php?token='.$token;
         $this->response($response, REST_Controller::HTTP_OK);
     }
 
-
-    public function inviteActivate_post() {
+    public function inviteActivate_post()
+    {
         $u_id = $this->post('userId', true);
         $token = $this->post('token', true);
         // if token is valid, returns group_id + user_id. else returns null
         $resInvitation = $this->Im_group_invitations_Model->checkValidity($token);
         $g_id = $resInvitation['g_id'];
         $generator_id = $resInvitation['u_id']; // id of who generated link
-        if($resInvitation) {
-            $resExpiration = $this->Im_group_invitations_Model->checkExpiration($token);
-            if($resExpiration) {
+        if ($resInvitation) {
+            //$resExpiration = $this->Im_group_invitations_Model->checkExpiration($token);
+            $resExpiration = true;
+            if ($resExpiration) {
                 $resGroupAdd = $this->Im_group_members_Model->insert($g_id, $u_id);
-                if(!$resGroupAdd) { //if this returns true, user already exists in group
-                    $resUseCounter = $this->Im_group_invitation_usage_Model->useCounter($resInvitation['id']);
-                    if($resUseCounter < 3) { //set amount of uses on a single link
+                if (!$resGroupAdd) { //if this returns true, user already exists in group
+                    // $resUseCounter = $this->Im_group_invitation_usage_Model->useCounter($resInvitation['id']);
+                    $resUseCounter = true;
+                    if ($resUseCounter) { //set amount of uses on a single link
                         $linkData = array(
                             'token_id' => $resInvitation['id'],
                             'user_id' => $u_id,
-                            'timestamp' => $_SERVER["REQUEST_TIME"]
+                            'timestamp' => $_SERVER['REQUEST_TIME'],
                         );
                         $this->Im_group_invitation_usage_Model->add($linkData);
                         $admin_id = $this->Im_group_Model->getGroupAdminIdbyGroupId($g_id);
@@ -2275,10 +2270,10 @@ class ImApi extends REST_Controller
                             'user_id' => $u_id,
                             'generator_id' => $generator_id,
                             'group_id' => $g_id,
-                            'admin_id' => $admin_id
+                            'admin_id' => $admin_id,
                         );
                         $this->response($response, REST_Controller::HTTP_OK);
-                    } else { 
+                    } else {
                         $this->Im_group_invitations_Model->setExpiredFlag($resInvitation['id']);
                         $this->response('Link max uses reached', REST_Controller::HTTP_OK);
                     }
@@ -2293,7 +2288,7 @@ class ImApi extends REST_Controller
             $this->response('Invalid Token', REST_Controller::HTTP_OK);
         }
     }
-    
+
     public function getBlockList_post()
     {
         if (ID_LOGIN) {
