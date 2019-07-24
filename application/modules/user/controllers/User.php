@@ -147,6 +147,32 @@ class User extends REST_Controller
         $this->response($response, REST_Controller::HTTP_OK);
     }
 
+    public function filterFriendList_v2_get()
+    {
+        // user can search user who is not yet a member of community but mingled with the user
+        if (!ID_LOGIN) {
+            $headers = apache_request_headers();
+            $userId = (int) $this->User_Model->getTokenToId($headers['Authorizationkeyfortoken']);
+        } else {
+            $userId = $this->get('userId');
+        }
+
+        $key = $this->get('key', true);
+        $groupId = $this->get('groupId', true);
+
+        $friendsIds = $this->FriendList_Model->getFriendsIdAsArray_v2($userId, $groupId); //only for friend LIST
+        $friends = $this->User_Model->filterUser($friendsIds, $key);
+
+        $response = array(
+            'status' => array(
+                'code' => REST_Controller::HTTP_OK,
+                'message' => true,
+            ),
+            'response' => $friends,
+        );
+        $this->response($response, REST_Controller::HTTP_OK);
+    }
+
     public function filterFriendList_get()
     {
         if (!ID_LOGIN) {
@@ -600,10 +626,10 @@ class User extends REST_Controller
 
         $g_id = $this->get('groupId', true);
 
-        /* Auth Function */ 
+        /* Auth Function */
         $admin = $this->Im_group_Model->ifThisUserCreator($g_id, $userId);
-        $moderator = $this->Im_group_moderators_Model->ifExist($g_id, $userId); 
-        if(!$admin && !$moderator){
+        $moderator = $this->Im_group_moderators_Model->ifExist($g_id, $userId);
+        if (!$admin && !$moderator) {
             $response = array(
                 'status' => array(
                     'code' => REST_Controller::HTTP_UNAUTHORIZED,
@@ -612,7 +638,7 @@ class User extends REST_Controller
                 'response' => null,
             );
             $this->response($response, REST_Controller::HTTP_UNAUTHORIZED);
-        };
+        }
         /* ----- */
 
         $data = $this->Im_group_requests_Model->joinrequestList($g_id);

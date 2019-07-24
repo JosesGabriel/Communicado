@@ -78,4 +78,18 @@ class FriendList_Model extends CI_Model
             return $d;
         }
     }
+
+    public function getFriendsIdAsArray_v2($userId, $groupId)
+    {
+        $query = $this->db->query('SELECT f.uid as friendId
+                FROM (select friendId as uid from friend_list where userId='.intval($userId).') as f
+                LEFT JOIN (select u_id as uid from im_group_members where g_id='.intval($groupId).') as m
+                ON f.uid = m.uid WHERE isnull(m.uid)');
+        $array = array();
+        foreach ($query->result() as $id) {
+            array_push($array, $id->friendId);
+        }
+
+        return $array;
+    }
 }

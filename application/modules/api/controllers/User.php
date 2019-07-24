@@ -1,20 +1,23 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-require(APPPATH . '/modules/api/controllers/Api.php');
+
+defined('BASEPATH') or exit('No direct script access allowed');
+require APPPATH.'/modules/api/controllers/Api.php';
 
 class User extends Api
 {
-    public function __construct(){
+    public function __construct()
+    {
         parent::__construct();
-        $this->load->model("User_Model");
+        $this->load->model('User_Model');
         $this->load->model('FriendList_Model');
         $this->load->model('Im_group_Model');
         $this->load->model('Im_group_members_Model');
     }
 
     //region Route methods
+
     /**
-     * Add friends
+     * Add friends.
      */
     public function add_friend_post()
     {
@@ -35,7 +38,7 @@ class User extends Api
                 'status' => 500,
                 'message' => 'Missing argumennts.',
             ]);
-        } 
+        }
         //endregion Data validation
 
         //region User fetching
@@ -48,7 +51,7 @@ class User extends Api
 
         if (!$this->isResponseSuccess($responder['status'])) {
             $this->respond($responder);
-        } 
+        }
         //endregion User fetching
 
         //region Add friend relation
@@ -75,19 +78,17 @@ class User extends Api
     }
 
     /**
-     * Create a user
-     * 
-     * @return Void
+     * Create a user.
      */
     public function create_post()
     {
         $data = $this->post();
-        
+
         $this->respond($this->storeUser($data));
     }
 
     /**
-     * TODO Delete a user based on the user's id
+     * TODO Delete a user based on the user's id.
      */
     public function delete_post()
     {
@@ -106,7 +107,7 @@ class User extends Api
     }
 
     /**
-     * Fetch a user by email
+     * Fetch a user by email.
      */
     public function fetch_get()
     {
@@ -125,7 +126,7 @@ class User extends Api
     }
 
     /**
-     * Remove friend link
+     * Remove friend link.
      */
     public function remove_friend_post()
     {
@@ -146,7 +147,7 @@ class User extends Api
                 'status' => 500,
                 'message' => 'Missing argumennts.',
             ]);
-        } 
+        }
         //endregion Data validation
 
         //region User fetching
@@ -159,7 +160,7 @@ class User extends Api
 
         if (!$this->isResponseSuccess($responder['status'])) {
             $this->respond($responder);
-        } 
+        }
         //endregion User fetching
 
         //region Add friend relation
@@ -177,7 +178,7 @@ class User extends Api
     }
 
     /**
-     * TODO Update a user based on the user's email
+     * TODO Update a user based on the user's email.
      */
     public function update_post()
     {
@@ -230,7 +231,7 @@ class User extends Api
 
         //region Data update
         $update = $this->User_Model->updateAvatar($user['userId'], $data['avatar_url']);
-        
+
         if ($update === false) {
             $this->respond([
                 'status' => 500,
@@ -247,14 +248,17 @@ class User extends Api
             ],
         ]);
     }
+
     //endregion Route methods
 
     //region Repositories
+
     /**
-     * Store a user data
-     * 
-     * @param Array $data
-     * @return Array
+     * Store a user data.
+     *
+     * @param array $data
+     *
+     * @return array
      */
     private function storeUser($data = [])
     {
@@ -272,31 +276,31 @@ class User extends Api
                 trim($data['email']) == '') {
                 return [
                     'status' => 500,
-                    'message' => 'Email is invalid or not set.'
+                    'message' => 'Email is invalid or not set.',
                 ];
             }
-    
+
             if (!isset($data['password']) ||
                 trim($data['password']) == '') {
                 return [
                     'status' => 500,
-                    'message' => 'Password is invalid or not set.'
+                    'message' => 'Password is invalid or not set.',
                 ];
             }
-    
+
             if (!isset($data['first_name']) ||
                 trim($data['first_name']) == '') {
                 return [
                     'status' => 500,
-                    'message' => 'First name is invalid or not set.'
+                    'message' => 'First name is invalid or not set.',
                 ];
             }
-    
+
             if (!isset($data['last_name']) ||
                 trim($data['last_name']) == '') {
                 return [
                     'status' => 500,
-                    'message' => 'Last name is invalid or not set.'
+                    'message' => 'Last name is invalid or not set.',
                 ];
             }
         }
@@ -318,18 +322,18 @@ class User extends Api
             if (!isset($data['email_id'])) {
                 //region Create new user]
                 $this->User_Model->insert_entry(
-                    $data['user_secret'], 
-                    $data['first_name'], 
-                    $data['last_name'], 
+                    $data['user_secret'],
+                    $data['first_name'],
+                    $data['last_name'],
                     $data['email'],
-                    $data['password'], 
+                    $data['password'],
                     ($data['address'] ?? ''),
                     ($data['mobile'] ?? ''),
                     1, 1
                 );
-                
-                $this->User_Model->insertInPublicGroup($this->post('userEmail',true));
-                //endregion Create new user
+
+                $this->User_Model->insertInPublicGroup($this->post('userEmail', true));
+            //endregion Create new user
             } else {
                 //region Update user
                 $map_keys = [
@@ -344,8 +348,8 @@ class User extends Api
                 $update = [];
 
                 foreach ($data as $field => $value) {
-                    if (isset($map_keys[ $field ])) {
-                        $table_col = $map_keys[ $field ];
+                    if (isset($map_keys[$field])) {
+                        $table_col = $map_keys[$field];
 
                         if ($field == 'password') {
                             $value = password_hash($value, PASSWORD_BCRYPT);
@@ -354,7 +358,7 @@ class User extends Api
                         $update[$table_col] = $value;
                     }
                 }
-                
+
                 $this->User_Model->db->update('users', $update, ['userEmail' => $data['email_id']]);
                 //endregion Update user
             }
@@ -382,15 +386,14 @@ class User extends Api
     }
 
     /**
-     * TODO Delete a user data
+     * TODO Delete a user data.
      */
     private function deleteUser($data = [])
     {
-
     }
 
     /**
-     * Fetch a user data by email
+     * Fetch a user data by email.
      */
     private function fetchUser($email = '')
     {
@@ -425,10 +428,11 @@ class User extends Api
     }
 
     /**
-     * Fetch a user by userSecret
-     * 
-     * @param String $secret
-     * @return Array
+     * Fetch a user by userSecret.
+     *
+     * @param string $secret
+     *
+     * @return array
      */
     private function fetchUserBySecret($secret = '')
     {
@@ -461,25 +465,28 @@ class User extends Api
         ];
         //endregion Data query
     }
+
     //endregion Repositories
 
     //region Helpers
-    private function getISODateTimeWithMilliSeconds(){
+    private function getISODateTimeWithMilliSeconds()
+    {
         $time = microtime(true);
         // Determining the microsecond fraction
-        $microSeconds = sprintf("%06d", ($time - floor($time)) * 1000000);
+        $microSeconds = sprintf('%06d', ($time - floor($time)) * 1000000);
         // Creating our DT object
-        $tz = new DateTimeZone("Etc/UTC"); // NOT using a TZ yields the same result, and is actually quite a bit faster. This serves just as an example.
-        $dt = new DateTime(date('Y-m-d H:i:s.'. $microSeconds, $time), $tz);
+        $tz = new DateTimeZone('Etc/UTC'); // NOT using a TZ yields the same result, and is actually quite a bit faster. This serves just as an example.
+        $dt = new DateTime(date('Y-m-d H:i:s.'.$microSeconds, $time), $tz);
         // Compiling the date. Limiting to milliseconds, without rounding
         $iso8601Date = sprintf(
-            "%s%03d%s",
+            '%s%03d%s',
             $dt->format("Y-m-d\TH:i:s."),
-            floor($dt->format("u")/1000),
-            $dt->format("O")
+            floor($dt->format('u') / 1000),
+            $dt->format('O')
         );
         // Formatting according to ISO 8601-extended
         return $iso8601Date;
     }
+
     //endregion Helpers
 }

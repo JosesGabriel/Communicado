@@ -386,7 +386,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </div>
 </div>
 
-
 <div id="modalJoinRequest" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" class="modal fade in" style="display: none;padding-right: 17px;" data-backdrop="static" data-keyboard="false">
     <div role="document" class="modal-dialog" style="width:500px !important;">
         <div class="modal-content" >
@@ -430,7 +429,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="fas fa-times"></i></span></button>
                 <h4 class="modal-title myUpdateModalLabel" style="background-color: #75aef3"><i class="fas fa-user-plus"></i> Invite People</h4>
                 <div class="modal-body" >
-                    <p>Send this one-time use URL to invite a new member to a group. (Expires in 24hrs)</p>
+                    <p>Copy the link below to invite a new member to your private community.</p>
                     <div class="form-group">
                         <!-- <input type="text" id="invitationLink" multiple class="form-control" readonly> -->
                         <a id="invitationLink" target="_blank"></a>

@@ -1874,6 +1874,37 @@
                callback(res);
             });
         }
+
+        //This function is used to get friend list of user per community who are not part of community
+        function getNonMembersPerGroup(value, callback) {   // get friends list
+            let groupId = activeGroupId;
+            let key = (value!=null) ? value : '';
+           // console.log(key);
+            let url = "<?php echo base_url('user/filterFriendList_v2?key='); ?>" + key + "&groupId=" + groupId;
+            if (ID_BASED) {
+                url = "<?php echo base_url('user/filterFriendList_v2?key='); ?>" + key + "&groupId=" + groupId + "&userId=" + userId;
+            }
+            let settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": url,
+                "method": "GET",
+                "headers": {
+                    "authorization": "Basic YWRtaW46MTIzNA==",
+                    "Authorizationkeyfortoken": String(responce),
+                    "cache-control": "no-cache",
+                    "postman-token": "eb27c011-391a-0b70-37c5-609bcd1d7b6d"
+                },
+                "dataType": 'json'
+            };
+            $.ajax(settings).done(function (response) {
+               // console.log(response);
+                //let data = response.response.friends;
+                //totalFriend = response.response.total;
+                callback(response);
+            });
+        }
+
         //This function is used to  get friend list of user
         function getMembers(callback) {   // get friends list
             resetFriendStart();
@@ -2559,22 +2590,8 @@
         });
         $(newMemberInput).on('keyup', function (e, m, v) {
             let value = this.getRawValue().replace(/<script[^>]*>/gi, "&lt;script&gt;").replace(/<\/script[^>]*>/gi, "&lt;/script&gt;").replace(/(<([^>]+)>)/ig, "").replace(/&nbsp;/gi, " ").replace(/&nbsp;/gi, " ").trim();
-            let settings = {
-                "async": true,
-                "crossDomain": true,
-                "url": "<?php echo base_url('user/filterFriendList?key='); ?>" + value,
-                "method": "GET",
-                "headers": {
-                    "authorization": "Basic YWRtaW46MTIzNA==",
-                    "Authorizationkeyfortoken": String(responce),
-                    "cache-control": "no-cache",
-                    "postman-token": "eb27c011-391a-0b70-37c5-609bcd1d7b6d"
-                },
-                "dataType": 'json'
-            };
-            $.ajax(settings).done(function (response) {
-                request = true;
-                let res = response.response;
+            getNonMembersPerGroup(value,function(cb){
+                let res = cb.response;
                 let oldData = [];
                 for (let i = 0; i < res.length; i++) {
                     if (res[i].userStatus !== 0) {
@@ -2585,31 +2602,15 @@
                             email: res[i].userEmail
                         };
                         oldData.push(md);
-                        //expendDropdown.append(getMagicData(md));
                     }
                 }
-                //addmember.setData(oldData);
                 newMemberInput.setData(oldData);
             });
         });
         $(addmember).on('keyup', function (e, m, v) {
             let value = this.getRawValue().replace(/<script[^>]*>/gi, "&lt;script&gt;").replace(/<\/script[^>]*>/gi, "&lt;/script&gt;").replace(/(<([^>]+)>)/ig, "").replace(/&nbsp;/gi, " ").replace(/&nbsp;/gi, " ").trim();
-            let settings = {
-                "async": true,
-                "crossDomain": true,
-                "url": "<?php echo base_url('user/filterFriendList?key='); ?>" + value,
-                "method": "GET",
-                "headers": {
-                    "authorization": "Basic YWRtaW46MTIzNA==",
-                    "Authorizationkeyfortoken": String(responce),
-                    "cache-control": "no-cache",
-                    "postman-token": "eb27c011-391a-0b70-37c5-609bcd1d7b6d"
-                },
-                "dataType": 'json'
-            };
-            $.ajax(settings).done(function (response) {
-                request = true;
-                let res = response.response;
+            getNonMembersPerGroup(value,function(cb){
+                let res = cb.response;
                 let oldData = [];
                 for (let i = 0; i < res.length; i++) {
                     if (res[i].userStatus !== 0) {
@@ -2620,11 +2621,9 @@
                             email: res[i].userEmail
                         };
                         oldData.push(md);
-                        //expendDropdown.append(getMagicData(md));
                     }
                 }
                 addmember.setData(oldData);
-                //newMemberInput.setData(oldData);
             });
         });
         function initaddexpendDropdown() {
@@ -2688,6 +2687,8 @@
                         "dataType": 'json'
                     };
                     $.ajax(settings).done(function (response) {
+                        console.log('test');
+                        console.log(response);
                         request = true;
                         let res = response.response.friends;
                         let oldData = newMemberInput.getData();
@@ -3318,15 +3319,16 @@
 
         // add member at the right side bar
         $('#addMember').on("click", function (e) {
-            getMembers(function (res) {
+            getNonMembersPerGroup(null,function (res) {
+                let result = res.response;
                 let q = [];
-                for (i = 0; i < res.length; i++) {
-                    if (res[i].userStatus != 0) {
+                for (i = 0; i < result.length; i++) {
+                    if (result[i].userStatus != 0) {
                         let md = {
-                            id: parseInt(res[i].userId),
-                            name: res[i].firstName + " " + res[i].lastName,
-                            picture: res[i].profilePictureUrl,
-                            email: res[i].userEmail
+                            id: parseInt(result[i].userId),
+                            name: result[i].firstName + " " + result[i].lastName,
+                            picture: result[i].profilePictureUrl,
+                            email: result[i].userEmail
                         };
                         q.push(md);
                     }
