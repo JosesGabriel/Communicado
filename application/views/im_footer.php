@@ -266,11 +266,12 @@
             },
             // data: q,
             renderer: function (data) {
+                //console.log(data);
                 return '<div style="padding: 5px; overflow:hidden;">' +
                     '<div style="float: left;" class="m20"><img style="width: 25px;height: 25px" src="' + data.picture + '" /></div>' +
                     '<div style="float: left; margin-left: 5px" class="m21">' +
                     '<div style="font-weight: bold; color: #333; font-size: 12px; line-height: 11px" class="vvs">' + data.name + '</div>' +
-                    '<div style="color: #999; font-size: 9px" class="m">' + data.email + '</div>' +
+                    //'<div style="color: #999; font-size: 9px" class="m">' + data.email + '</div>' +
                     '</div>' +
                     '</div><div style="clear:both;"></div>'; // make sure we have closed our dom stuff
             }
@@ -2687,8 +2688,6 @@
                         "dataType": 'json'
                     };
                     $.ajax(settings).done(function (response) {
-                        console.log('test');
-                        console.log(response);
                         request = true;
                         let res = response.response.friends;
                         let oldData = newMemberInput.getData();
