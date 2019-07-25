@@ -839,7 +839,7 @@ class ImApi extends REST_Controller
                 }
             } else {
                 if ($groupInfo->custom_image != null) {
-                    $groupImage[] = base_url().'assets/im/group_'.$g_id->g_id.'/'.$groupInfo->custom_image;
+                    $groupImage[] = $groupInfo->custom_image;
                 } else {
                     for ($i = 0; $i < count($membersInfo); ++$i) {
                         if ($i == 3) {
@@ -1355,7 +1355,7 @@ class ImApi extends REST_Controller
             mkdir($actualFolderName, 0777, true);
         }
         $config['upload_path'] = $actualFolderName;
-        $config['allowed_types'] = 'jpg|png';
+        $config['allowed_types'] = 'jpg|png|jpeg';
         $config['file_name'] = date('mjYGis').'im'.$this->User_Model->generateRandomString(5).$groupId;
         $config['max_size'] = '20480';
 

@@ -70,8 +70,8 @@
                 window.Vyndue_fname  = t.firstname;
                 window.Vyndue_picture = pic;
             }
-            // $("#userNameTop").html(name);
-            // $("#userImageTop").attr("src", pic);
+            $("#userNameTop").html(name);
+            $("#userImageTop").attr("src", pic);
 
             // set all mention link 
             let hrefAll = $('.fw-im-message-text').find('a[class="mention"]');
@@ -266,12 +266,11 @@
             },
             // data: q,
             renderer: function (data) {
-                //console.log(data);
                 return '<div style="padding: 5px; overflow:hidden;">' +
                     '<div style="float: left;" class="m20"><img style="width: 25px;height: 25px" src="' + data.picture + '" /></div>' +
                     '<div style="float: left; margin-left: 5px" class="m21">' +
                     '<div style="font-weight: bold; color: #333; font-size: 12px; line-height: 11px" class="vvs">' + data.name + '</div>' +
-                    //'<div style="color: #999; font-size: 9px" class="m">' + data.email + '</div>' +
+                    '<div style="color: #999; font-size: 9px" class="m">' + data.email + '</div>' +
                     '</div>' +
                     '</div><div style="clear:both;"></div>'; // make sure we have closed our dom stuff
             }
@@ -1391,17 +1390,23 @@
                 }
                 groupImages[groups[i].groupId] = groups[i].groupImage;
                 html += '<span id="groupImage_' + groups[i].groupId + '">';
-                /*for (let j = 0; j < groups[i].groupImage.length; j++) {
-                    if (parseInt(groups[i].groupType) == 1 && groups[i].members.length > 0) {
-                        if (  groups[i].members[0].active == 1) {
-                            html += "                        <img  class='img-responsive img-circle memberActive group_member_" + groups[i].members[0].userId + "' style=\"width: 40px; height: 40px;border-radius: 49%\" src=\"" + groups[i].groupImage[j] + "\" >";
-                        } else {
-                            html += "                        <img  class='img-responsive img-circle group_member_" + groups[i].members[0].userId + "' style=\"width: 40px; height: 40px;border-radius: 49%\" src=\"" + groups[i].groupImage[j] + "\" >";
-                        }
-                    } else {
-                        html += "                        <img class=\"img-responsive img-circle\" style=\"width: 40px; height: 40px;border-radius: 49%\" src=\"" + groups[i].groupImage[j] + "\" >";
-                    }
-                }*/
+                // html += '<span id="groupImghandler">';
+                // for (let j = 0; j < groups[i].groupImage.length; j++) {
+                //     if (parseInt(groups[i].groupType) == 1 && groups[i].members.length > 0) {
+                //         if (  groups[i].members[0].active == 1) {
+                //             html += "<img  class='img-responsive img-circle memberActive group_member_" + groups[i].members[0].userId + "' style=\"width: 40px; height: 40px;border-radius: 49%\" src=\"" + groups[i].groupImage[j] + "\" >";
+                //         console.log(groups[i]);
+                //         } else {
+                //             html += "<img  class='img-responsive img-circle group_member_" + groups[i].members[0].userId + "' style=\"width: 40px; height: 40px;border-radius: 49%\" src=\"" + groups[i].groupImage[j] + "\" >";
+                //         console.log(groups[i]);
+                //         }
+                //     } else {
+                //         // console.log(groups[i].groupImage[j]);
+                //         html += "<img class=\"img-responsive img-circle\" style=\"width: 40px; height: 40px;border-radius: 49%\" src=\"" + groups[i].groupImage[j] + "\" >";
+                //         // html += "<img class=\"img-responsive img-circle\" style=\"width: 40px; height: 40px;border-radius: 49%\" src=\"" + groups[i].groupImage[j] + "\" >";
+                //     }
+                // }
+                // html += '</span>';
                 html += '</span>';
                 
                 html += "                        <span class=\"name\" id='groupName_" + groups[i].groupId + "' style=\"overflow: hidden\"><div>" + groups[i].groupName + "</div><\/span>";
@@ -1875,37 +1880,6 @@
                callback(res);
             });
         }
-
-        //This function is used to get friend list of user per community who are not part of community
-        function getNonMembersPerGroup(value, callback) {   // get friends list
-            let groupId = activeGroupId;
-            let key = (value!=null) ? value : '';
-           // console.log(key);
-            let url = "<?php echo base_url('user/filterFriendList_v2?key='); ?>" + key + "&groupId=" + groupId;
-            if (ID_BASED) {
-                url = "<?php echo base_url('user/filterFriendList_v2?key='); ?>" + key + "&groupId=" + groupId + "&userId=" + userId;
-            }
-            let settings = {
-                "async": true,
-                "crossDomain": true,
-                "url": url,
-                "method": "GET",
-                "headers": {
-                    "authorization": "Basic YWRtaW46MTIzNA==",
-                    "Authorizationkeyfortoken": String(responce),
-                    "cache-control": "no-cache",
-                    "postman-token": "eb27c011-391a-0b70-37c5-609bcd1d7b6d"
-                },
-                "dataType": 'json'
-            };
-            $.ajax(settings).done(function (response) {
-               // console.log(response);
-                //let data = response.response.friends;
-                //totalFriend = response.response.total;
-                callback(response);
-            });
-        }
-
         //This function is used to  get friend list of user
         function getMembers(callback) {   // get friends list
             resetFriendStart();
@@ -2374,7 +2348,7 @@
                 "data": form,
                 "error": function (e) {
                     let err = JSON.parse(e.responseText);
-                    toastr.error("Unable to upload this image, Image is to large");
+                    toastr.error(err.response);
                 },
                 "beforeSend": function () {
                    // $('.close').trigger("click");
@@ -2591,8 +2565,22 @@
         });
         $(newMemberInput).on('keyup', function (e, m, v) {
             let value = this.getRawValue().replace(/<script[^>]*>/gi, "&lt;script&gt;").replace(/<\/script[^>]*>/gi, "&lt;/script&gt;").replace(/(<([^>]+)>)/ig, "").replace(/&nbsp;/gi, " ").replace(/&nbsp;/gi, " ").trim();
-            getNonMembersPerGroup(value,function(cb){
-                let res = cb.response;
+            let settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": "<?php echo base_url('user/filterFriendList?key='); ?>" + value,
+                "method": "GET",
+                "headers": {
+                    "authorization": "Basic YWRtaW46MTIzNA==",
+                    "Authorizationkeyfortoken": String(responce),
+                    "cache-control": "no-cache",
+                    "postman-token": "eb27c011-391a-0b70-37c5-609bcd1d7b6d"
+                },
+                "dataType": 'json'
+            };
+            $.ajax(settings).done(function (response) {
+                request = true;
+                let res = response.response;
                 let oldData = [];
                 for (let i = 0; i < res.length; i++) {
                     if (res[i].userStatus !== 0) {
@@ -2603,15 +2591,31 @@
                             email: res[i].userEmail
                         };
                         oldData.push(md);
+                        //expendDropdown.append(getMagicData(md));
                     }
                 }
+                //addmember.setData(oldData);
                 newMemberInput.setData(oldData);
             });
         });
         $(addmember).on('keyup', function (e, m, v) {
             let value = this.getRawValue().replace(/<script[^>]*>/gi, "&lt;script&gt;").replace(/<\/script[^>]*>/gi, "&lt;/script&gt;").replace(/(<([^>]+)>)/ig, "").replace(/&nbsp;/gi, " ").replace(/&nbsp;/gi, " ").trim();
-            getNonMembersPerGroup(value,function(cb){
-                let res = cb.response;
+            let settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": "<?php echo base_url('user/filterFriendList?key='); ?>" + value,
+                "method": "GET",
+                "headers": {
+                    "authorization": "Basic YWRtaW46MTIzNA==",
+                    "Authorizationkeyfortoken": String(responce),
+                    "cache-control": "no-cache",
+                    "postman-token": "eb27c011-391a-0b70-37c5-609bcd1d7b6d"
+                },
+                "dataType": 'json'
+            };
+            $.ajax(settings).done(function (response) {
+                request = true;
+                let res = response.response;
                 let oldData = [];
                 for (let i = 0; i < res.length; i++) {
                     if (res[i].userStatus !== 0) {
@@ -2622,9 +2626,11 @@
                             email: res[i].userEmail
                         };
                         oldData.push(md);
+                        //expendDropdown.append(getMagicData(md));
                     }
                 }
                 addmember.setData(oldData);
+                //newMemberInput.setData(oldData);
             });
         });
         function initaddexpendDropdown() {
@@ -3052,7 +3058,7 @@
                 case 0: // Private Community
                     switch(userlevel){
                         case 0: // Member
-                            showComponents(['muteOptions','leaveGroup']);
+                            showComponents(['muteOptions']);
                         break;
                         case 1: // Admin
                             showComponents(['muteOptions','addMember','changeGroupImage','editGroupName','joinRequest','communityModerator','inviteLinkBtn']);
@@ -3318,16 +3324,15 @@
 
         // add member at the right side bar
         $('#addMember').on("click", function (e) {
-            getNonMembersPerGroup(null,function (res) {
-                let result = res.response;
+            getMembers(function (res) {
                 let q = [];
-                for (i = 0; i < result.length; i++) {
-                    if (result[i].userStatus != 0) {
+                for (i = 0; i < res.length; i++) {
+                    if (res[i].userStatus != 0) {
                         let md = {
-                            id: parseInt(result[i].userId),
-                            name: result[i].firstName + " " + result[i].lastName,
-                            picture: result[i].profilePictureUrl,
-                            email: result[i].userEmail
+                            id: parseInt(res[i].userId),
+                            name: res[i].firstName + " " + res[i].lastName,
+                            picture: res[i].profilePictureUrl,
+                            email: res[i].userEmail
                         };
                         q.push(md);
                     }
@@ -3409,13 +3414,55 @@
             $.ajax(settings).done(function (response) {
                 response = JSON.parse(response);
                 let link = response.base_url + 'activate.php?token=' + response.token;
-                $('#invitationLink').attr("href", link);
-                $('#invitationLink').text(link);
+                $('#generateInviteLinkModal #invitationLinkModalVal').attr("href", link);
+                $('#generateInviteLinkModal #invitationLinkModalVal').text(link);
                 $('#generateInviteLinkModal').modal('show');
                 
             })
         });
 
+        $('#acceptGroupInvitation').on('submit', function(e) {
+            e.preventDefault();
+            let userData = jwt_decode(localStorage.getItem("_r"));
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+
+            let form=new FormData();
+            form.append("userId", userData['userId']);
+            form.append("token", token);
+            let settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": "<?php echo base_url('imApi/inviteActivate'); ?>",
+                "method": "POST",
+                "headers": {
+                    "authorization": "Basic YWRtaW46MTIzNA==",
+                    "Authorizationkeyfortoken": String(responce),
+                    "cache-control": "no-cache",
+                    "postman-token": "2a391657-45a9-1a7b-9a67-9b16b0dda13a"
+                },
+                "processData": false,
+                "contentType": false,
+                "mimeType": "multipart/form-data",
+                "data": form,
+                "error": function (e) {
+                    let err = JSON.parse(e.responseText);
+                    toastr.error(e);
+                },
+            };
+            $.ajax(settings).done(function (response) {
+                $response = JSON.parse(response);
+                if($response.success) {
+                    toastr.success($response.message);
+                    $data = {user_id: $response.user_id, group_id: $response.group_id, admin_id: $response.admin_id.createdBy, generator_id: $response.generator_id};
+                    socket.emit("invitationaccept",$data);
+                    location.href="<?php echo base_url('userview/im'); ?>";
+                }
+                else
+                    toastr.error($response.message);
+            })
+        });
         $('#inviteLinkValidator').on('click', function(){
             let userData = jwt_decode(localStorage.getItem("_r"));
 
@@ -3451,13 +3498,13 @@
                     toastr.success($response.message);
                     $data = {user_id: $response.user_id, group_id: $response.group_id, admin_id: $response.admin_id.createdBy, generator_id: $response.generator_id};
                     socket.emit("invitationaccept",$data);
-                    location.href="<?php echo base_url('userview/im'); ?>";
+                    location.href="<?php echo base_url('userview/im'); ?>"; //IF LOCAL TESTING
+                    // location.href="https://arbitrage.ph/vyndue/";    //LIVE TESTING
                 }
                 else
                     toastr.error($response);
             })
         });
-
         // getmembers creating a new conversation, found at the left side bar
         $('#newMessage').on("click", function (e) {
             resetNewMessage();
@@ -3603,6 +3650,9 @@
             let message = $('#newMessageText').text();
             let modmessage = message.replace(/(<([^>]+)>)/ig, "").replace(/&nbsp;/gi, " ").replace(/&nbsp;/gi, " ").trim();
             let file = $("#newMessageFile").val();
+            setTimeout(function() {
+                $('.twemoji-wrap .twemoji-wrap').remove();
+            }, 3500);
             if ((modmessage == null || modmessage == "") && (file == null || file == "")) {
                 // resetNewMessage();
                 return;
