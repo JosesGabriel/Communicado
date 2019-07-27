@@ -1155,7 +1155,9 @@ async function sendMessage(response, socket) {
                 mysqlCon2.execute(updateQuery);
                 //delete file after db update
                 // wont be able to access uploaded files bc its deleted, consider adding time expiry on when to delete files
-                fs.unlinkSync(tempPath);
+                setTimeout(function() {
+                    fs.unlinkSync(tempPath);
+                }, 5000);
             });
         }
     } else {
