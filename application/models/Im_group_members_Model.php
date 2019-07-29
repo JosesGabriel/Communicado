@@ -187,7 +187,7 @@ class Im_group_members_Model extends CI_Model
 
         foreach ($query->result() as $user) {
             if ($user->picture != null) {
-                $picture = base_url().'assets/userImage/'.$user->picture;
+                $picture = $user->picture;
             } else {
                 $picture = base_url().'assets/img/download.png';
             }
