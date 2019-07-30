@@ -194,7 +194,7 @@ socketApi.on('connection', function (socket) {
 
 })
 
-socketApi.on('arbitrage:logout', async function (data) {
+socketApi.on('arbitrage:logout', async function (userSecret) {
 
     let socketId = await sMM.Im_user_Model.getUserSocketIdByUserSecret(userSecret);
     users[socketId].emit("executeLogout");            
@@ -212,8 +212,6 @@ io.on("connection", function (socket) {
 
     socket.on("disconnect", function (reason) {
 
-        console.log('na ddc--------');
-        console.log(reason);
         let disconnectTime = moment().subtract(5, 'seconds').utc().format("YYYY-MM-DDTHH:mm:ss.SSSZZ"); //  seconds depends on ping time out
         let connectionIndex = connections.indexOf(socket);
         updateSessionDisconnectTime(socket, disconnectTime, function () {
@@ -567,18 +565,7 @@ io.on("connection", function (socket) {
         });
     });
 
-    socket.on("testtest", function(userSecret){
-        
-        console.log(userSecret);
-        let result = sMM.Im_user_Model.getUserSocketIdByUserSecret(userSecret);
-        result.then(function(socketId){
-            console.log(socketId);    
-            console.log(users[socketId]);
-            users[socketId].emit("testLogout",socketId);            
-            //DeleteSocket(socketId);    
-        });
-    });
-
+   
     socket.on("updateGroupImage",function (data) {
         let g_id = data.g_id;
         // change path to current temp location
@@ -808,6 +795,7 @@ io.on("connection", function (socket) {
 
         isValidToken(data._r, async function (ret) {
             if (ret) {
+
                 try {
                     let senderId = null;
                     let date = moment().utc().format("YYYY-MM-DD");
@@ -987,18 +975,18 @@ io.on("connection", function (socket) {
                     await sendMessage(sendMessageData, socket);
                     //if (newGroup) {
                     let groupInfo = await group.get_group(receiverId, senderId);
-                    let findSocketIdQ = "select socketId from im_usersocket where userId=" + senderId;
+                    let findSocketIdQ = "select socketId from im_usersocket where userId=" + senderId;                    
                     let result = await mysqlCon2.execute(findSocketIdQ);
                     for (let i = 0; i < result.length; i++) {
                         users[result[i].socketId].emit("addNewGroup", groupInfo);
                     }
                     //}
 
-                    socketApi.emit('vyndue:new_message', {
+                   /* socketApi.emit('vyndue:new_message', {
                         receivers: memberIds,
                         message: fullMessage,
                         sender: senderInfo,
-                    })
+                    }) */
 
                 } catch (err) {
                     console.log("[ " + moment().format('MMMM Do YYYY, hh:mm:ss') + " ] " + err);
@@ -1136,6 +1124,7 @@ io.on("connection", function (socket) {
 });
 
 async function sendMessage(response, socket) {
+
     let data = null;
     let message = null;
     if (typeof response === 'object') {
@@ -1165,76 +1154,76 @@ async function sendMessage(response, socket) {
     }
 
 
-    //isValidToken(data._r, async function (ret) {
-    //if (ret) {
-    try {
-        let res = data.receiversId;
-        let receiversRoomId = data.to;
-        let availableUsers = [];
-        let messageSender = data.sender.userId;
-        if (data.message.type !== "update") {
-            for (let i = 0; i < res.length; i++) {
-                let uid = res[i].u_id;
-                let findSocketIdQ = "select socketId from im_usersocket where userId=? and socketId<>?";
-                let [result, f1] = await mysqlCon2.execute(findSocketIdQ, [uid, socket.id]);
+            //isValidToken(data._r, async function (ret) {
+            //if (ret) {
+            try {
+                let res = data.receiversId;
+                let receiversRoomId = data.to;
+                let availableUsers = [];
+                let messageSender = data.sender.userId;
+                    if (data.message.type !== "update") {
+                    for (let i = 0; i < res.length; i++) {
+                        let uid = res[i].u_id;
+                        let findSocketIdQ = "select socketId from im_usersocket where userId=? and socketId<>?";
+                        let [result, f1] = await mysqlCon2.execute(findSocketIdQ, [uid, socket.id]);
 
-                if (result.length > 0) {
-                    for (let i = 0; i < result.length; i++) {
-                        try {
-                            if (!io.sockets.adapter.sids[result[i].socketId]["room-" + receiversRoomId]) {
-                                if (!await checkReceiveRecord(data.message.m_id, uid, data.to)) {
-                                    let receiverQuery = "INSERT INTO `im_receiver` (`g_id`, `m_id`, `r_id`, `received`, `announced`,`time`) VALUES ('" + data.to + "', '" + data.message.m_id + "', '" + uid + "', '0','0', '" + data.message.ios_date_time + "');";
-                                    await mysqlCon2.execute(receiverQuery);
-                                    console.log("[ " + moment().format('MMMM Do YYYY, hh:mm:ss') + " ] " + "message saved to receiver DB");
+                                if (result.length > 0) {
+                                    for (let i = 0; i < result.length; i++) {
+                                        try {
+                                            if (!io.sockets.adapter.sids[result[i].socketId]["room-" + receiversRoomId]) {
+                                                if (!await checkReceiveRecord(data.message.m_id, uid, data.to)) {
+                                                    let receiverQuery = "INSERT INTO `im_receiver` (`g_id`, `m_id`, `r_id`, `received`, `announced`,`time`) VALUES ('" + data.to + "', '" + data.message.m_id + "', '" + uid + "', '0','0', '" + data.message.ios_date_time + "');";
+                                                    await mysqlCon2.execute(receiverQuery);
+                                                    console.log("[ " + moment().format('MMMM Do YYYY, hh:mm:ss') + " ] " + "message saved to receiver DB");
 
-                                }
-                                await pendingMessage(uid, data.to, data.sender.userId, result[i].socketId);
-                            }
-                            else {
-                                if (parseInt(messageSender) !== parseInt(uid)) {
-                                    if (!await checkReceiveRecord(data.message.m_id, uid, data.to)) {
-                                        let receiverQuery = "INSERT INTO `im_receiver` (`g_id`, `m_id`, `r_id`, `received`, `announced`,`time`) VALUES ('" + data.to + "', '" + data.message.m_id + "', '" + uid + "','1' ,'1', '" + data.message.ios_date_time + "');";
+                                                }
+                                                await pendingMessage(uid, data.to, data.sender.userId, result[i].socketId);
+                                            }
+                                            else {
+                                                if (parseInt(messageSender) !== parseInt(uid)) {
+                                                    if (!await checkReceiveRecord(data.message.m_id, uid, data.to)) {
+                                                        let receiverQuery = "INSERT INTO `im_receiver` (`g_id`, `m_id`, `r_id`, `received`, `announced`,`time`) VALUES ('" + data.to + "', '" + data.message.m_id + "', '" + uid + "','1' ,'1', '" + data.message.ios_date_time + "');";
+                                                        await mysqlCon2.execute(receiverQuery);
+
+                                                        availableUsers.push(uid);
+                                                    }
+                                                }
+
+                                            }
+                                        } catch (app) {
+                                            console.log("[ " + moment().format('MMMM Do YYYY, hh:mm:ss') + " ] " + app);
+                                        }
+                                    }
+                                } else {         //user has no active session
+                                    if (!await checkReceiveRecord(data.message.m_id, uid, data.to) && parseInt(messageSender) !== parseInt(uid)) {
+                                        let receiverQuery = "INSERT INTO `im_receiver` (`g_id`, `m_id`, `r_id`, `received`,`announced` ,`time`) VALUES ('" + data.to + "', '" + data.message.m_id + "', '" + uid + "', '0','0', '" + data.message.ios_date_time + "');";
                                         await mysqlCon2.execute(receiverQuery);
 
-                                        availableUsers.push(uid);
+                                        console.log("[ " + moment().format('MMMM Do YYYY, hh:mm:ss') + " ] " + "message saved to receiver DB");
                                     }
                                 }
 
-                            }
-                        } catch (app) {
-                            console.log("[ " + moment().format('MMMM Do YYYY, hh:mm:ss') + " ] " + app);
-                        }
-                    }
-                } else {         //user has no active session
-                    if (!await checkReceiveRecord(data.message.m_id, uid, data.to) && parseInt(messageSender) !== parseInt(uid)) {
-                        let receiverQuery = "INSERT INTO `im_receiver` (`g_id`, `m_id`, `r_id`, `received`,`announced` ,`time`) VALUES ('" + data.to + "', '" + data.message.m_id + "', '" + uid + "', '0','0', '" + data.message.ios_date_time + "');";
-                        await mysqlCon2.execute(receiverQuery);
-
-                        console.log("[ " + moment().format('MMMM Do YYYY, hh:mm:ss') + " ] " + "message saved to receiver DB");
                     }
                 }
-
+                messageConstructLinkConvert(data, async function (data) {
+                    message = data;
+                    message.seen = await group.processSeen(message.message.ios_date_time, receiversRoomId, availableUsers);
+                    message.message.onlyemoji = emojiExists(message.message.message) ? 1 : 0;
+                    if (message.message.onlyemoji) {
+                        let updateQuery = "UPDATE `im_message` SET `onlyemoji` = '" + message.message.onlyemoji + "' WHERE `im_message`.`m_id` = " + message.message.m_id + ";";
+                        await mysqlCon2.execute(updateQuery);
+                    }
+                    io.sockets.in("room-" + receiversRoomId).emit('newMessage', message);
+                });
+            } catch (app) {
+                console.log("[ " + moment().format('MMMM Do YYYY, hh:mm:ss') + " ] " + app);
             }
-        }
-        messageConstructLinkConvert(data, async function (data) {
-            message = data;
-            message.seen = await group.processSeen(message.message.ios_date_time, receiversRoomId, availableUsers);
-            message.message.onlyemoji = emojiExists(message.message.message) ? 1 : 0;
-            if (message.message.onlyemoji) {
-                let updateQuery = "UPDATE `im_message` SET `onlyemoji` = '" + message.message.onlyemoji + "' WHERE `im_message`.`m_id` = " + message.message.m_id + ";";
-                await mysqlCon2.execute(updateQuery);
-            }
-            io.sockets.in("room-" + receiversRoomId).emit('newMessage', message);
-        });
-    } catch (app) {
-        console.log("[ " + moment().format('MMMM Do YYYY, hh:mm:ss') + " ] " + app);
-    }
 
-    /*} else {
-        socket.disconnect();
-        console.log("[ " + moment().format('MMMM Do YYYY, hh:mm:ss') + " ] " + "invalid user");
-    }*/
-
+        // } else {
+        //         socket.disconnect();
+        //         console.log("[ " + moment().format('MMMM Do YYYY, hh:mm:ss') + " ] " + "invalid user");
+        // }
+    
     //});
 
 }

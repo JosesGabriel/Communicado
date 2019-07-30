@@ -2439,6 +2439,8 @@
                         $('.person').removeClass('active');
                         addNewGroup(group);
                         $('#groups li').first().trigger("click", [{update: true}]);
+                    }else{
+                        placeGroupOnTop(activeGroupId);
                     }
                 });
             }
@@ -2448,8 +2450,19 @@
                 socketData._r = String(responce);
                 socket.emit("sendText", socketData);
                 messageTyping=false;
+                placeGroupOnTop(activeGroupId);
             }
         }
+
+        function placeGroupOnTop(groupId) {
+            if(!parseInt(groupId)) return;
+            let elementData = $("#group_" + groupId).clone();
+            $("#group_" + groupId).remove();
+            $("#groups").prepend(elementData);
+            $("#groups").scrollTop(0);
+            $("li#group_"+groupId).first().trigger("click", [{update: true}]);
+        }
+
         // unused function. have a plan used in the future
         function captureImage(file) {
             let canvas = document.createElement("canvas");
