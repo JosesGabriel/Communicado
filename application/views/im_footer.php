@@ -1390,23 +1390,23 @@
                 }
                 groupImages[groups[i].groupId] = groups[i].groupImage;
                 html += '<span id="groupImage_' + groups[i].groupId + '">';
-                // html += '<span id="groupImghandler">';
-                // for (let j = 0; j < groups[i].groupImage.length; j++) {
-                //     if (parseInt(groups[i].groupType) == 1 && groups[i].members.length > 0) {
-                //         if (  groups[i].members[0].active == 1) {
-                //             html += "<img  class='img-responsive img-circle memberActive group_member_" + groups[i].members[0].userId + "' style=\"width: 40px; height: 40px;border-radius: 49%\" src=\"" + groups[i].groupImage[j] + "\" >";
-                //         console.log(groups[i]);
-                //         } else {
-                //             html += "<img  class='img-responsive img-circle group_member_" + groups[i].members[0].userId + "' style=\"width: 40px; height: 40px;border-radius: 49%\" src=\"" + groups[i].groupImage[j] + "\" >";
-                //         console.log(groups[i]);
-                //         }
-                //     } else {
-                //         // console.log(groups[i].groupImage[j]);
-                //         html += "<img class=\"img-responsive img-circle\" style=\"width: 40px; height: 40px;border-radius: 49%\" src=\"" + groups[i].groupImage[j] + "\" >";
-                //         // html += "<img class=\"img-responsive img-circle\" style=\"width: 40px; height: 40px;border-radius: 49%\" src=\"" + groups[i].groupImage[j] + "\" >";
-                //     }
-                // }
-                // html += '</span>';
+                html += '<span id="groupImghandler">';
+                for (let j = 0; j < groups[i].groupImage.length; j++) {
+                    if (parseInt(groups[i].groupType) == 1 && groups[i].members.length > 0) {
+                        if (  groups[i].members[0].active == 1) {
+                            html += "<img  class='img-responsive img-circle memberActive group_member_" + groups[i].members[0].userId + "' style=\"width: 40px; height: 40px;border-radius: 49%\" src=\"" + groups[i].groupImage[j] + "\" >";
+                        console.log(groups[i]);
+                        } else {
+                            html += "<img  class='img-responsive img-circle group_member_" + groups[i].members[0].userId + "' style=\"width: 40px; height: 40px;border-radius: 49%\" src=\"" + groups[i].groupImage[j] + "\" >";
+                        console.log(groups[i]);
+                        }
+                    } else {
+                        // console.log(groups[i].groupImage[j]);
+                        html += "<img class=\"img-responsive img-circle\" style=\"width: 40px; height: 40px;border-radius: 49%\" src=\"" + groups[i].groupImage[j] + "\" >";
+                        // html += "<img class=\"img-responsive img-circle\" style=\"width: 40px; height: 40px;border-radius: 49%\" src=\"" + groups[i].groupImage[j] + "\" >";
+                    }
+                }
+                html += '</span>';
                 html += '</span>';
                 
                 html += "                        <span class=\"name\" id='groupName_" + groups[i].groupId + "' style=\"overflow: hidden\"><div>" + groups[i].groupName + "</div><\/span>";

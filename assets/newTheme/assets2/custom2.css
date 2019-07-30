@@ -414,7 +414,7 @@ body {
     position: absolute;
     left: -15px;
     z-index: 1;
-    margin-top: -7px;
+    margin-top: -2px;
 }
 .personsList span.time {
     top: 3px !important;
@@ -2385,4 +2385,48 @@ div#addNewMemberInput {
 }
 .persons .person.person-hover .mute-pad .fa-bell-slash {
     background: #102a40;
+}
+/* .persons .person img:nth-child(2) {
+    margin-left: -25px;
+}
+.persons .person img:nth-child(3) {
+    margin-left: -25px;
+} */
+.m21 .m {
+    line-height: 15px;
+    font-size: 11px !important;
+    color: gray !important;
+}
+.m21 {
+    padding: 5px 0;
+}
+#groupImghandler {
+    width: 35px !important;
+    height: 35px !important;
+    display: block;
+    position: relative;
+    border-radius: 50px !important;
+    overflow: hidden;
+    float: left;
+}
+#groupImghandler .img-circle {
+    border-radius: 0 !important;
+}
+#groupImghandler .img-circle:nth-child(1) {
+    width: 35px !important;
+    height: 35px !important;
+    margin-left: -18px;
+}
+#groupImghandler .img-circle:nth-child(2) {
+    width: auto !important;
+    height: 18px !important;
+    display: inline-block;
+    position: absolute;
+}
+#groupImghandler .img-circle:nth-child(3) {
+    width: auto !important;
+    height: 18px !important;
+    display: inline-block;
+    position: absolute;
+    bottom: 0;
 }
