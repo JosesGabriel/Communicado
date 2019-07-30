@@ -37,7 +37,7 @@ class User_Model extends CI_Model
             // base url if this project is in a sub folder of main project
             //$baseurl=preg_replace('~/[^/]*/([^/]*)$~', '/\1', base_url());
             if ($query->row('userProfilePicture') != null) {
-                $url = base_url().'assets/userImage/'.$query->row()->userProfilePicture;
+                $url = $query->row()->userProfilePicture;
             } else {
                 $url = base_url().'assets/img/download.png';
             }
@@ -75,7 +75,7 @@ class User_Model extends CI_Model
             $query = $this->db->get('users');
 
             if ($query->row('userProfilePicture') != null) {
-                $url = base_url().'assets/userImage/'.$query->row()->userProfilePicture;
+                $url = $query->row()->userProfilePicture;
             } else {
                 $url = base_url().'assets/img/download.png';
             }
@@ -113,7 +113,7 @@ class User_Model extends CI_Model
         //$baseurl=preg_replace('~/[^/]*/([^/]*)$~', '/\1', base_url());
         foreach ($query->result() as $user) {
             if ($user->userProfilePicture != null) {
-                $url = base_url().'assets/userImage/'.$user->userProfilePicture;
+                $url = $user->userProfilePicture;
             } else {
                 $url = base_url().'assets/img/download.png';
             }
@@ -154,7 +154,7 @@ class User_Model extends CI_Model
         $query = $this->db->get('users');
         foreach ($query->result() as $user) {
             if ($user->userProfilePicture != null) {
-                $url = base_url().'assets/userImage/'.$user->userProfilePicture;
+                $url = $user->userProfilePicture;
             } else {
                 $url = base_url().'assets/img/download.png';
             }
@@ -195,7 +195,7 @@ class User_Model extends CI_Model
         $query = $this->db->get('users');
         foreach ($query->result() as $user) {
             if ($user->userProfilePicture != null) {
-                $url = base_url().'assets/userImage/'.$user->userProfilePicture;
+                $url = $user->userProfilePicture;
             } else {
                 $url = base_url().'assets/img/download.png';
             }
@@ -229,7 +229,7 @@ class User_Model extends CI_Model
         $query = $this->db->get('users', $limit, $start);
         foreach ($query->result() as $user) {
             if ($user->userProfilePicture != null) {
-                $url = base_url().'assets/userImage/'.$user->userProfilePicture;
+                $url = $user->userProfilePicture;
             } else {
                 $url = base_url().'assets/img/download.png';
             }
@@ -340,7 +340,7 @@ class User_Model extends CI_Model
 
         $this->db->where('userId', $id);
         $query = $this->db->get('users');
-        $url = base_url().'assets/userImage/'.$query->row()->userProfilePicture;
+        $url = $query->row()->userProfilePicture;
 
         return $url;
     }
@@ -755,7 +755,7 @@ class User_Model extends CI_Model
 
                 case 1: // Personal
                     if ($user->picture != null) {
-                        $picture = base_url().'assets/userImage/'.$user->picture;
+                        $picture = $user->picture;
                     } else {
                         $picture = base_url().'assets/img/download.png';
                     }
@@ -799,7 +799,7 @@ class User_Model extends CI_Model
         $query = $this->db->get();
 
         if ($query->row('userProfilePicture') != null) {
-            $url = base_url().'assets/userImage/'.$query->row()->userProfilePicture;
+            $url = $query->row()->userProfilePicture;
         } else {
             $url = base_url().'assets/img/download.png';
         }

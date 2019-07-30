@@ -96,7 +96,7 @@ class Admin_Model extends CI_Model{
         $profiles=array();
         foreach ($users as $user){
             if($user->userProfilePicture!=null){
-                $url = base_url()."assets/userImage/".$user->userProfilePicture;
+                $url = $user->userProfilePicture;
             }
             else{
                 $url = base_url()."assets/img/download.png";
@@ -129,7 +129,7 @@ class Admin_Model extends CI_Model{
             if($user!=null) {
 
                 if ($user->userProfilePicture != null) {
-                    $url = base_url() . "assets/userImage/" . $user->userProfilePicture;
+                    $url = $user->userProfilePicture;
                 } else {
                     $url = base_url() . "assets/img/download.png";
                 }
@@ -169,7 +169,7 @@ class Admin_Model extends CI_Model{
         if($users!=null) {
             foreach ($users as $user) {
                 if ($user->userProfilePicture != null) {
-                    $url = base_url() . "assets/userImage/" . $user->userProfilePicture;
+                    $url = $user->userProfilePicture;
                 } else {
                     $url = base_url() . "assets/img/download.png";
                 }
