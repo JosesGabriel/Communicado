@@ -3401,6 +3401,12 @@
                 });
             }
         });
+        $('#invitationLinkCopyBtn').on('click', function() {
+            var copyText = document.getElementById("invitationLink");
+            copyText.select();
+            document.execCommand("copy");
+            toastr.success('Link copied!')
+        });
         $('#inviteLinkBtn').on('click', function (e) {
             let form=new FormData();
             form.append("groupId", activeGroupId);
@@ -3427,8 +3433,7 @@
             $.ajax(settings).done(function (response) {
                 response = JSON.parse(response);
                 let link = response.base_url + 'activate.php?token=' + response.token;
-                $('#generateInviteLinkModal #invitationLinkModalVal').attr("href", link);
-                $('#generateInviteLinkModal #invitationLinkModalVal').text(link);
+                $('#invitationLink').val(link);
                 $('#generateInviteLinkModal').modal('show');
                 
             })
