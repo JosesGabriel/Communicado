@@ -338,7 +338,7 @@
             pickerHeight: '150px',
             pickerWidth: '100%'
         };
-
+        
         // console.log(userId);
         
         //----------start point-------------------
@@ -1221,12 +1221,13 @@
             let html = '';
             if (parseInt(groupObjects[groupId].groupType) === 1 && groupObjects[groupId].members.length > 0) {
                 if (groupObjects[groupId].members[0].active == 1) {
-                    html += "                        <img  class='img-responsive img-circle memberActive group_member_" + groupObjects[groupId].members[0].userId + "' style=\"width: 50px; height: 50px;border-radius: 49%\" src=\"" + image + "\" >";
+                    html += "<img  class='img-responsive img-circle memberActive group_member_" + groupObjects[groupId].members[0].userId + "' style=\"width: 50px; height: 50px;border-radius: 49%\" src=\"" + image + "\" >";
                 } else {
-                    html += "                        <img  class='img-responsive img-circle group_member_" + groupObjects[groupId].members[0].userId + "' style=\"width: 50px; height: 50px;border-radius: 49%\" src=\"" + image + "\" >";
+                    html += "<img  class='img-responsive img-circle group_member_" + groupObjects[groupId].members[0].userId + "' style=\"width: 50px; height: 50px;border-radius: 49%\" src=\"" + image + "\" >";
                 }
             } else {
-                html += "                        <img class=\"img-responsive img-circle\" style=\"width: 50px; height: 50px;border-radius: 49%\" src=\"" + image + "\" >";
+                html += "<img class=\"img-responsive img-circle\" style=\"width: 50px; height: 50px;border-radius: 49%\" src=\"" + image + "\" >";
+                // console.log(image)
             }
             $("#groupImage_" + groupId).html(html);
             groupObjects[groupId].groupImageData = image;
@@ -1292,7 +1293,7 @@
             }
             html += "                    <\/li>";
             $("#groups").prepend(html);
-            createGroupImage( group.groupId);
+            createGroupImage(group.groupId);
         }
         // this function prints group list on the left side
         function printGroupListAppend(groups) {
@@ -1371,7 +1372,7 @@
             $("#groups").append(scrollXClone);
             $("#groups").append(scrollYClone);
         }
-        function printGroupList(groups) {
+        function printGroupList(groups, image) {
             let html = "";
             groupIds = [];
             time = {};
@@ -1393,22 +1394,22 @@
                 html += '<span id="groupImghandler">';
                 for (let j = 0; j < groups[i].groupImage.length; j++) {
                     if (parseInt(groups[i].groupType) == 1 && groups[i].members.length > 0) {
-                        if (  groups[i].members[0].active == 1) {
+                        if (groups[i].members[0].active == 1) {
                             html += "<img  class='img-responsive img-circle memberActive group_member_" + groups[i].members[0].userId + "' style=\"width: 40px; height: 40px;border-radius: 49%\" src=\"" + groups[i].groupImage[j] + "\" >";
-                        console.log(groups[i]);
                         } else {
                             html += "<img  class='img-responsive img-circle group_member_" + groups[i].members[0].userId + "' style=\"width: 40px; height: 40px;border-radius: 49%\" src=\"" + groups[i].groupImage[j] + "\" >";
-                        console.log(groups[i]);
                         }
                     } else {
-                        // console.log(groups[i].groupImage[j]);
-                        html += "<img class=\"img-responsive img-circle\" style=\"width: 40px; height: 40px;border-radius: 49%\" src=\"" + groups[i].groupImage[j] + "\" >";
-                        // html += "<img class=\"img-responsive img-circle\" style=\"width: 40px; height: 40px;border-radius: 49%\" src=\"" + groups[i].groupImage[j] + "\" >";
+                        if(groups[i].groupImage.length == 2){
+                            // console.log(groups[i].groupImage)
+                            html += "<img class=\"img-responsive img-circle ms2\" style=\"width: 40px; height: 40px;border-radius: 49%\" src=\"" + groups[i].groupImage[j] + "\" >";
+                        } else if (groups[i].groupImage.length == 3){
+                            html += "<img class=\"img-responsive img-circle ms3\" style=\"width: 40px; height: 40px;border-radius: 49%\" src=\"" + groups[i].groupImage[j] + "\" >";
+                        }
                     }
                 }
                 html += '</span>';
                 html += '</span>';
-                
                 html += "                        <span class=\"name\" id='groupName_" + groups[i].groupId + "' style=\"overflow: hidden\"><div>" + groups[i].groupName + "</div><\/span>";
                 let date = moment(groups[i].lastActive, moment.ISO_8601).fromNow();
                 html += "                        <span id='time_" + groups[i].groupId + "' class=\"time\">" + date + "<\/span>";
@@ -1454,8 +1455,9 @@
             }
             $("#groups").html(html);
             for (let i = 0; i < groups.length; i++) {
-                createGroupImage( groups[i].groupId);
+                createGroupImage(groups[i].groupId);
             }
+            
         }
         //This function is used to get the group list
         function getGroupList(callback) {
@@ -3153,17 +3155,30 @@
             }else if(groupObjects[groupId].groupType == 1){
                 $('.numbermember').html('');
             }
-            // console.log(groupObjects[groupId]);
 
-            let imgselected = groupObjects[groupId].groupImageData;
-            $('.imgselecteds img').attr('src', imgselected);
-            // console.log(groupObjects[groupId].groupImageData);
-
-            let personName = groupObjects[groupId].groupName;
+            let appendhtmlimg = groupObjects[groupId].groupImage;
+            let appendhtmlimgs = '';
+            $('.imgselecteds').empty();
+            for (i = 0; i < groupObjects[groupId].groupImage.length; i++){
+                let appendhtmlimgs = '<img src="'+ groupObjects[groupId].groupImage[i] +'" class="imgst" draggable="false">';
+                $('.imgselecteds').append(appendhtmlimgs);
+            }
             if ($("#group_" + groupId).hasClass("font-bold-black")) {
                 $("#group_" + groupId).removeClass("font-bold-black");
             }
-            $('.UserNames').html(personName);
+            let personName = groupObjects[groupId].groupName;
+            let namesls = personName;
+            if (groupObjects[groupId].groupType == 2) {
+                $('.UserNames').html(namesls);
+            }else if (groupObjects[groupId].groupType == 0){
+                let namesMem = groupObjects[groupId].groupName;
+                let nameArr = namesMem.split(',');
+                if (nameArr.length == 1){
+                    $('.UserNames').html(namesls);
+                } else if (nameArr.length >= 2){
+                    $('.UserNames').html(namesls).append(", You");
+                }
+            }
             // console.log(groupObjects[groupId]);
             $('.person').removeClass('active');
             $(this).addClass('active');
@@ -3401,6 +3416,12 @@
                 });
             }
         });
+        $('#invitationLinkCopyBtn').on('click', function() {
+            var copyText = document.getElementById("invitationLink");
+            copyText.select();
+            document.execCommand("copy");
+            toastr.success('Link copied!')
+        });
         $('#inviteLinkBtn').on('click', function (e) {
             let form=new FormData();
             form.append("groupId", activeGroupId);
@@ -3427,55 +3448,12 @@
             $.ajax(settings).done(function (response) {
                 response = JSON.parse(response);
                 let link = response.base_url + 'activate.php?token=' + response.token;
-                $('#generateInviteLinkModal #invitationLinkModalVal').attr("href", link);
-                $('#generateInviteLinkModal #invitationLinkModalVal').text(link);
+                $('#invitationLink').val(link);
                 $('#generateInviteLinkModal').modal('show');
                 
             })
         });
 
-        $('#acceptGroupInvitation').on('submit', function(e) {
-            e.preventDefault();
-            let userData = jwt_decode(localStorage.getItem("_r"));
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const token = urlParams.get('token');
-
-            let form=new FormData();
-            form.append("userId", userData['userId']);
-            form.append("token", token);
-            let settings = {
-                "async": true,
-                "crossDomain": true,
-                "url": "<?php echo base_url('imApi/inviteActivate'); ?>",
-                "method": "POST",
-                "headers": {
-                    "authorization": "Basic YWRtaW46MTIzNA==",
-                    "Authorizationkeyfortoken": String(responce),
-                    "cache-control": "no-cache",
-                    "postman-token": "2a391657-45a9-1a7b-9a67-9b16b0dda13a"
-                },
-                "processData": false,
-                "contentType": false,
-                "mimeType": "multipart/form-data",
-                "data": form,
-                "error": function (e) {
-                    let err = JSON.parse(e.responseText);
-                    toastr.error(e);
-                },
-            };
-            $.ajax(settings).done(function (response) {
-                $response = JSON.parse(response);
-                if($response.success) {
-                    toastr.success($response.message);
-                    $data = {user_id: $response.user_id, group_id: $response.group_id, admin_id: $response.admin_id.createdBy, generator_id: $response.generator_id};
-                    socket.emit("invitationaccept",$data);
-                    location.href="<?php echo base_url('userview/im'); ?>";
-                }
-                else
-                    toastr.error($response.message);
-            })
-        });
         $('#inviteLinkValidator').on('click', function(){
             let userData = jwt_decode(localStorage.getItem("_r"));
 
@@ -3511,11 +3489,13 @@
                     toastr.success($response.message);
                     $data = {user_id: $response.user_id, group_id: $response.group_id, admin_id: $response.admin_id.createdBy, generator_id: $response.generator_id};
                     socket.emit("invitationaccept",$data);
-                    location.href="<?php echo base_url('userview/im'); ?>"; //IF LOCAL TESTING
-                    // location.href="https://arbitrage.ph/vyndue/";    //LIVE TESTING
+                    // location.href="<?php echo base_url('userview/im'); ?>"; //IF LOCAL TESTING
+                    location.href="https://arbitrage.ph/vyndue/";    //LIVE TESTING
                 }
-                else
+                else{
                     toastr.error($response);
+                    location.href="https://arbitrage.ph/vyndue/";
+                }
             })
         });
         // getmembers creating a new conversation, found at the left side bar
@@ -5167,7 +5147,8 @@
         socket.on("updateGroupImage",function (data){
             groupObjects[data.g_id].groupImage=data.imageData;
             createGroupImage(data.g_id);
-            $('.imgselecteds img').attr('src', data.imageData[0]);
+            $('.imgselecteds img').remove();
+            $('.imgselecteds').append('<img src="'+  data.imageData[0] +'" class="imgst" draggable="false">');
             $('#groupImage_'+ activeGroupId +' .img-circle').attr('src', data.imageData[0]);
             if(parseInt(data.g_id)=== parseInt(activeGroupId)){
                 let html = "<img class=\"img-responsive img-circle\" style=\"width: 50px; height: 50px;border-radius: 50%\" src=\"" + groupObjects[data.g_id].groupImage[0] + "\" >";
