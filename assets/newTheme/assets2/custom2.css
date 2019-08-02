@@ -2473,3 +2473,18 @@ img.imgst.toleftmargin:nth-child(3) {
     margin-left: -24px;
     background: #0a1a2b;
 }
+.invitationLinkBox {
+    background-color: rgba(0, 0, 0, 0.50) !important;
+    border-color: #00B7FF;
+    border-radius: 5px;
+    color: white;
+}
+.invitationLinkCopyBtn {
+    background-color: #00B7FF;
+    border-radius: 5px;
+    border: 0px;
+    position: absolute;
+    right: 0px;
+    height: 33px;
+    top: 39px;
+}

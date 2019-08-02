@@ -71,7 +71,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
             jQuery("#status, #status_txt").fadeOut();
             jQuery("#preloader").delay(300).fadeOut("fast");
         })
-        
     </script>
     <div id="preloader">
         <div id="status">&nbsp;</div>
@@ -430,9 +429,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <h4 class="modal-title myUpdateModalLabel" style="background-color: #75aef3"><i class="fas fa-user-plus"></i> Invite People</h4>
                 <div class="modal-body" >
                     <p>Copy the link below to invite a new member to your private community.</p>
-                    <div class="form-group">
-                        <!-- <input type="text" id="invitationLink" multiple class="form-control" readonly> -->
-                        <a id="invitationLink" target="_blank"></a>
+                    <div class="flex">
+                        <input type="text" id="invitationLink" multiple class="invitationLinkBox form-control" readonly>
+                        <input type="button" value="Copy Link" class="invitationLinkCopyBtn" id="invitationLinkCopyBtn">
                     </div>
                 </div>
             </div>

@@ -22,6 +22,7 @@ class ImApi extends REST_Controller
         $this->load->model('Im_group_moderators_Model');
         $this->load->model('Im_group_invitations_Model');
         $this->load->model('Im_group_invitation_usage_Model');
+        $this->load->helper('string');
 
         if (!ID_LOGIN) {
             $headers = apache_request_headers();
@@ -2221,7 +2222,8 @@ class ImApi extends REST_Controller
         }
         //create token
         $groupId = intval($this->post('groupId', true));
-        $token = sha1(uniqid($groupId, true));
+        // $token = sha1(uniqid($groupId, true));
+        $token = random_string('alnum', 10);
         $timestamp = $_SERVER['REQUEST_TIME'];
         $linkData = array(
             'token' => $token,
