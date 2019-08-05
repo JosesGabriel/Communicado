@@ -2440,8 +2440,10 @@ div#addNewMemberInput {
     background-color: #00B7FF;
     border-radius: 5px;
     border: 0px;
-    position: absolute;
-    right: 0px;
-    height: 33px;
-    top: 39px;
+    background: blue;
+    color: white;
+    -webkit-appearance: none;
+}
+.flex {
+    display: flex;
 }
