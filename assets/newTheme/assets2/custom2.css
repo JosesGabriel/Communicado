@@ -722,6 +722,7 @@ div#addMemberInput {
     display: block;
     border: none !important;
     z-index: 0;
+    /* transition-duration: 2s; */
 }
  .persons2 .person2 img{
     float:left;
@@ -1574,12 +1575,19 @@ span.numbermember {
     margin: 0;
 }
 img.imgst {
-    width: 45px;
+    width: 45px;    
 	height: 45px;
     border-radius: 62px;
     border: 3px solid #0d2539;
     padding: 2px;
     background: none;
+    transition-duration: 2s;
+}
+img.imgst:nth-child(2),
+img.imgst:nth-child(3),
+img.imgst:nth-child(4) {
+    margin-left: -25px;
+    background: #0a1a2b;
 }
 .sel-left {
     display: inline-block;
@@ -2409,26 +2417,61 @@ div#addNewMemberInput {
     overflow: hidden;
     float: left;
 }
-#groupImghandler .img-circle {
+#groupImghandler .img-circle.ms2 {
     border-radius: 0 !important;
 }
-#groupImghandler .img-circle:nth-child(1) {
+#groupImghandler .img-circle.ms2:nth-child(1) {
     width: 35px !important;
     height: 35px !important;
     margin-left: -18px;
 }
-#groupImghandler .img-circle:nth-child(2) {
+#groupImghandler .img-circle.ms2:nth-child(2) {
+    width: auto !important;
+    height: 35px !important;
+    display: inline-block;
+    position: absolute;
+}
+#groupImghandler {
+    width: 35px !important;
+    height: 35px !important;
+    display: block;
+    position: relative;
+    border-radius: 50px !important;
+    overflow: hidden;
+    float: left;
+}
+#groupImghandler .img-circle.ms3 {
+    border-radius: 0 !important;
+}
+#groupImghandler .img-circle.ms3:nth-child(1) {
+    width: 35px !important;
+    height: 35px !important;
+    margin-left: -18px;
+}
+#groupImghandler .img-circle.ms3:nth-child(2) {
     width: auto !important;
     height: 18px !important;
     display: inline-block;
     position: absolute;
 }
-#groupImghandler .img-circle:nth-child(3) {
+#groupImghandler .img-circle.ms3:nth-child(3) {
     width: auto !important;
     height: 18px !important;
     display: inline-block;
     position: absolute;
     bottom: 0;
+}
+/* img.imgst.toleftmargin {
+    margin-left: -24px;
+    background: #0a1a2b;
+} */
+img.imgst.toleftmargin:nth-child(2) {
+    margin-left: -24px;
+    background: #0a1a2b;
+}
+img.imgst.toleftmargin:nth-child(3) {
+    margin-left: -24px;
+    background: #0a1a2b;
 }
 .invitationLinkBox {
     background-color: rgba(0, 0, 0, 0.50) !important;

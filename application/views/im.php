@@ -160,7 +160,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                <div class="col-md-11">
                     <div class="sel-left">
                         <div class="imgselecteds ">
-                            <img src="" class="imgst">
+                            
                         </div>
                     </div>
                     <div class="sel-right">
