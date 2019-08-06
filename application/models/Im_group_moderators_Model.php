@@ -73,7 +73,8 @@ class Im_group_moderators_Model extends CI_Model
         $records = [];
         foreach ($query->result() as $user) {
             if ($user->picture != null) {
-                $picture = base_url().'assets/userImage/'.$user->picture;
+               // $picture = base_url().'assets/userImage/'.$user->picture;
+               $picture = $user->picture;
             } else {
                 $picture = base_url().'assets/img/download.png';
             }

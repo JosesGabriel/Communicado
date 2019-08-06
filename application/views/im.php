@@ -84,7 +84,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             
             <!-- profile section-->
             <div class="col-md-12 profile_container">
-                <span class="prof_image_container"><img src="" alt="" class="prof_image"></span>
+                <span class="prof_image_container"><img src="" alt="" class="prof_image" /></span>
                 <span class="prof_name"></span>
             </div>
             <!-- chat header start -->

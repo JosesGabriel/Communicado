@@ -84,8 +84,10 @@
 
         // console.log(jwt_decode(localStorage.getItem("_r")));
         // console.log(jwt_decode(localStorage.getItem("_r")));
+        //console.log('profile picture');
         var profpic = jwt_decode(localStorage.getItem("_r")).profilePicture;
         var profnam = jwt_decode(localStorage.getItem("_r")).userName;
+        //console.log(profpic);
         $(".prof_image").attr("src", profpic);
         $(".prof_name").text(profnam);
 
@@ -1163,6 +1165,10 @@
             friendStart += friendLimit;
         }
         function createGroupImage(groupId,cb) {
+           // console.log('createGroupImage');
+           // console.log(groupId);
+           //  console.log(cb);
+
             let c = document.createElement("canvas");
             let ctx = c.getContext("2d");
             ctx.canvas.width = 500;
@@ -5145,6 +5151,10 @@
             $('#group_' + group.groupId).addClass('active');
         });
         socket.on("updateGroupImage",function (data){
+
+            console.log('update image');
+            console.log(data);
+
             groupObjects[data.g_id].groupImage=data.imageData;
             createGroupImage(data.g_id);
             $('.imgselecteds img').remove();

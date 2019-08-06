@@ -353,7 +353,8 @@ class User_Model extends CI_Model
         if ($image == null) {
             return;
         }
-        $path = 'assets/userImage/'.$image;
+        // $path = 'assets/userImage/'.$image;
+        $path = $image;
         if (file_exists($path)) {
             unlink($path);
         }
@@ -392,7 +393,8 @@ class User_Model extends CI_Model
         $query = $this->db->get('users');
 
         if ($query->row('userProfilePicture') != null) {
-            $url = base_url().'assets/userImage/'.$query->row()->userProfilePicture;
+            //$url = base_url().'assets/userImage/'.$query->row()->userProfilePicture;
+            $url = $query->row()->userProfilePicture;
         } else {
             $url = base_url().'assets/img/download.png';
         }
@@ -514,7 +516,8 @@ class User_Model extends CI_Model
         $this->db->where('userEmail', $email);
         $query = $this->db->get('users');
         if ($query->row('userProfilePicture') != null) {
-            $url = base_url().'assets/userImage/'.$query->row()->userProfilePicture;
+            //$url = base_url().'assets/userImage/'.$query->row()->userProfilePicture;
+            $url = $query->row()->userProfilePicture;
         } else {
             $url = base_url().'assets/img/download.png';
         }
@@ -537,7 +540,8 @@ class User_Model extends CI_Model
         $this->db->where('userId', $userId);
         $query = $this->db->get('users');
         if ($query->row('userProfilePicture') != null) {
-            $url = base_url().'assets/userImage/'.$query->row()->userProfilePicture;
+            //$url = base_url().'assets/userImage/'.$query->row()->userProfilePicture;
+            $url = $query->row()->userProfilePicture;
         } else {
             $url = base_url().'assets/img/download.png';
         }
@@ -560,7 +564,8 @@ class User_Model extends CI_Model
         $this->db->where('userEmail', $email);
         $query = $this->db->get('users');
         if ($query->row('userProfilePicture') != null) {
-            $url = base_url().'assets/userImage/'.$query->row()->userProfilePicture;
+            //$url = base_url().'assets/userImage/'.$query->row()->userProfilePicture;
+            $url = $query->row()->userProfilePicture;
         } else {
             $url = base_url().'assets/img/download.png';
         }
@@ -694,7 +699,6 @@ class User_Model extends CI_Model
         return $this->jwt->encode($data, $this->config->item('CONSUMER_SECRET'));
     }
 
-    // Ralph 2019-05-10
     public function insertInPublicGroup($email)
     {
         $privateGroupID = 1;
@@ -747,7 +751,8 @@ class User_Model extends CI_Model
                 case 2: // Group
                 case 0:
                     if ($user->picture != null) {
-                        $picture = base_url().'assets/im/group_'.$user->id.'/'.$user->picture;
+                        // $picture = base_url().'assets/im/group_'.$user->id.'/'.$user->picture;
+                        $picture = $user->picture;
                     } else {
                         $picture = base_url().'assets/img/group.png';
                     }

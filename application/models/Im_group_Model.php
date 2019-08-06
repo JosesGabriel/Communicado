@@ -197,7 +197,8 @@ class Im_group_Model extends CI_Model{
         foreach ($query->result() as $community){
 
             if($community->picture!=null){
-                $picture = base_url()."assets/im/group_".$community->id."/".$community->picture;
+                // $picture = base_url()."assets/im/group_".$community->id."/".$community->picture;
+                $picture = $community->picture;
             }
             else{
                 $picture = base_url()."assets/img/group.png";
