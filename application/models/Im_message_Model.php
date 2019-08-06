@@ -124,8 +124,8 @@ class Im_message_Model extends CI_Model{
                 $prepareData->message=base_url() . "assets/im/group_" .$g_id."/". $prepareData->message;
             }
             if($prepareData->type=="document"){
-                $fileUrl=urlencode( "assets/im/group_".$g_id."/".$prepareData->message)."&fn=".urlencode($prepareData->fileName);
-                $prepareData->message=base_url()."download?f=".$fileUrl;
+                $fileUrl="assets/temp/".$prepareData->message;
+                $prepareData->message=base_url() . $fileUrl;
             }
             if($prepareData->type=="video"){
                 $prepareData->poster=base_url("assets/img/poster.jpg");
