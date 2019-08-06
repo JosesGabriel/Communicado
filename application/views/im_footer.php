@@ -3174,16 +3174,16 @@
             }
             let personName = groupObjects[groupId].groupName;
             let namesls = personName;
-            if (groupObjects[groupId].groupType == 2) {
-                $('.UserNames').html(namesls);
-            }else if (groupObjects[groupId].groupType == 0){
+            if (groupObjects[groupId].groupType != 1){
                 let namesMem = groupObjects[groupId].groupName;
                 let nameArr = namesMem.split(',');
                 if (nameArr.length == 1){
-                    $('.UserNames').html(namesls);
+                    $('.UserNames').text(namesls);
                 } else if (nameArr.length >= 2){
-                    $('.UserNames').html(namesls).append(", You");
+                    $('.UserNames').text(namesls).append(", You");
                 }
+            }else{
+                $('.UserNames').text(namesls);
             }
             // console.log(groupObjects[groupId]);
             $('.person').removeClass('active');
@@ -5152,8 +5152,8 @@
         });
         socket.on("updateGroupImage",function (data){
 
-            console.log('update image');
-            console.log(data);
+//            console.log('update image');
+ //           console.log(data);
 
             groupObjects[data.g_id].groupImage=data.imageData;
             createGroupImage(data.g_id);
