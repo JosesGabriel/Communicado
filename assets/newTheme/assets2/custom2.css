@@ -812,10 +812,10 @@ div#message_twemoji {
     width: 70%;
 }
  .persons .person.active{
-    background-color: #122d44;
+    background-color: #2b405b3d;
 }
  .persons .person.person-hover{
-    background-color: #102a40;
+    background-color: #2b405b3d;
 }
 .persons .person.person-hover .memberOffline {
     border-color: #102a40 !important;
@@ -998,27 +998,15 @@ div#attachment {
 }
 .mida:hover {
     color: #9bb1c5;
+    zoom: 1;
 }
 .mida img {
 	height: 20px;
 	/*box-shadow: 0px 0px 5px -1px rgba(0, 0, 0, 0.50);*/
 }
-
-
-
-
-
-
 .col-md-10 .twemoji-wrap .twemoji-icon-picker img.emoji.emoji_header {
     /*display: none;*/
 }
-
-
-
-
-
-
-
  .linkPreview-wrapper-link{
     display: inline-block;
 }
@@ -2485,18 +2473,25 @@ img.imgst.toleftmargin:nth-child(3) {
 }
 .invitationLinkBox {
     background-color: rgba(0, 0, 0, 0.50) !important;
-    border-color: #00B7FF;
-    border-radius: 5px;
-    color: white;
+    border: none;
+    border-radius: 5px 0px 0px 5px;
+    color: #929292;
 }
 .invitationLinkCopyBtn {
-    background-color: #00B7FF;
-    border-radius: 5px;
+    border-radius: 0px 5px 5px 0px;
     border: 0px;
-    background: blue;
+    background: #2481bc;
     color: white;
+    display: flex;
+    padding-right: 6px;
     -webkit-appearance: none;
 }
 .flex {
     display: flex;
+    border-radius: 25px;
+    overflow: hidden;
+}
+i.far.fa-clipboard {
+    margin: 10px 0px 10px 9px;
+    z-index: 999;
 }

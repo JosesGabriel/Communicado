@@ -233,7 +233,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
         </div>
         <div class="rightSection col-xl-3 col-md-3 col-sm-12 col-xs-12 persons2 " style="padding: 0;border-left: none;border-top: 1px solid rgba(0, 0, 0, .10); text-overflow: ellipsis;overflow-x: hidden;overflow-y: hidden;z-index: 99;" id="rightSection">
-            <div class="card card-handler">
+            <div class="card card-handler card-handler-padding-btm">
                 <div class="card-handler-in model-box-padding-all">
                     <div class="groupInfoContent">
 
@@ -443,10 +443,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="fas fa-times"></i></span></button>
                 <h4 class="modal-title myUpdateModalLabel" style="background-color: #75aef3"><i class="fas fa-user-plus"></i> Invite People</h4>
                 <div class="modal-body" >
-                    <p>Copy the link below to invite a new member to your private community.</p>
+                    <p class="modal-content-label">Copy the link below to invite a new member to your private community.</p>
                     <div class="flex">
                         <input type="text" id="invitationLink" multiple class="invitationLinkBox form-control" readonly>
-                        <input type="button" value="Copy Link" class="invitationLinkCopyBtn" id="invitationLinkCopyBtn">
+                        <div class="invitationLinkCopyBtn">
+                            <i class="far fa-clipboard"></i>
+                            <input type="button" value="Copy link" class="invitationLinkCopyBtn" id="invitationLinkCopyBtn">
+                        </div>
                     </div>
                 </div>
             </div>

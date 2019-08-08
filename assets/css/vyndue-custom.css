@@ -559,7 +559,33 @@ label.communitymoderatorlist_label:hover{
 .notif-cont {
     padding: 0 5px;
 }
-/* @media only screen and (max-height: 667px) {
+.card.card-handler.card-handler-padding-btm {
+    padding-bottom: 3px;
+}
+button.btn-xs.btn-warning.pull-right.communitylist_btn {
+    border: #D35628 solid 2px;
+    background: none !important;
+    border-radius: 25px;
+    margin-top: -2px;
+    width: 122px;
+    color: #D35628;
+    padding: 5px;
+}
+#clearAllNotif {
+    border: #9C27B0 solid 2px;
+    border-radius: 20px;
+    color: #9C27B0;
+}
+#clearAllNotif:hover {
+    background: #9C27B0;
+    color: #fff;
+    transition-duration: 300ms;
+}
+.modal-content-label {
+    margin: 3px 12px;
+    color: #d8d8d8;
+}
+@media only screen and (max-height: 667px) {
     .modelbox-bottom-left {
         max-height: 63vh;
     }
@@ -598,4 +624,4 @@ label.communitymoderatorlist_label:hover{
     .modelbox-bottom-left {
         max-height: 18vh;
     }
-} */
+}
