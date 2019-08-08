@@ -5226,7 +5226,7 @@
         $('.searchGroupInput').prepend('<i class="fas fa-search"></i>');
     });
     $(document).ready(function(){
-        $('.rightSection').hide();
+        // $('.rightSection').hide();
         $('#nav-icon1').click(function(){
             $(this).toggleClass('open');
             var rhidesection = $('.rightSection').hasClass('hideshowme');

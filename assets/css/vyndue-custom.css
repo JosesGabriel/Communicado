@@ -20,9 +20,9 @@
 }
 .kosaks {
     margin: auto;
-    margin-bottom: 25px !important;
-    background: #0d2539;
-    border: 1px solid #1e3554 !important;
+    margin-bottom: 10px !important;
+    background: #0f111d;
+    border: 1.4px solid #1e3554 !important;
     border-radius: 29px;
     height: auto;
     width: 86%;
@@ -81,13 +81,13 @@ div#dropZone {
 #searchGroupInput .ms-res-ctn {
     width: 100%;
     display: block;
-    height: 360px !important;
+    height: auto !important;
     overflow-y: auto;
     color: #fffffe !important;
     background: #0d1f33 !important;
     box-shadow: rgba(7, 13, 19, 0.52) 0px 2px 4px 1px !important;
     top: 37px;
-    padding-bottom: 22px;
+    padding-bottom: 5px;
     z-index: 1;
     position: absolute;
 }
@@ -195,6 +195,17 @@ div#vyndue-floatBtn-container_4 {
 }
 .hasNotifications > i > .badgenotification {
     background: #f44336;
+    border: 2px solid #142c46;
+    width: 12px;
+    height: 12px;
+    display: block;
+    position: absolute;
+    border-radius: 20px;
+    margin-left: 35px;
+    margin-top: -20px;
+}
+/* .hasNotifications > i > .badgenotification {
+    background: #f44336;
     border: 2px solid #0d2539;
     width: 12px;
     height: 12px;
@@ -203,7 +214,7 @@ div#vyndue-floatBtn-container_4 {
     border-radius: 20px;
     top: -3px;
     margin-left: 36px;
-}
+} */
 
 /* Mention Form */
 div#divMentionDiv
@@ -270,7 +281,7 @@ div#communityBox{
     padding-bottom: 16px;
 }
 #newMessageModal .modal-header {
-    height: 249px;
+    height: auto;
 }
 #communityBox p {
     margin: 0;
@@ -368,7 +379,7 @@ label.joinrequestlist_label:hover{
 hr.style14.style11 {
     border: 0;
     height: 1px;
-    width: 100%;
+    width: 93%;
     background: #102a40;
     margin-top: 0.5rem !important;
     margin-bottom: 1.5px !important;
@@ -377,8 +388,8 @@ hr.style14.style11 {
 hr.style12 {
     border: 0;
     height: 1px;
-    width: 89%;
-    background: #102a40;
+    width: 100%;
+    background: #1e3554;
     margin-top: 0 !important;
     margin-bottom: 8.5px !important;
     display: flex;
@@ -494,3 +505,97 @@ label.communitymoderatorlist_label:hover{
 .communitymoderatorlist_btn{
     width:45px;
 }
+.card.card-handler {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    padding: 8px;
+    background: #0d1f33;
+}
+.card-handler-in {
+    display: inline-block;
+    width: 100%;
+    border-radius: 5px;
+    background: #142c46;
+}
+.card-handler-middle {
+    overflow: hidden;
+    border: 2px solid #142c46
+}
+.card-handler-left {
+    overflow: hidden;
+}
+.middle-color {
+    background-color: #0b1b2b;
+}
+.ms-ctn .ms-sel-ctn input {
+    width: 100% !important;
+}
+.position-to-top {
+    top: -10;
+    position: relative;
+}
+.model-box-padding-all {
+    padding: 5px 0;
+}
+.modelbox-padding-left-right {
+    padding: 0 8px;
+}
+.modelbox-top-left-padding {
+    padding: 0 0 2px 0;
+}
+.modelbox-bottom-left {
+    padding: 9px 0 0 0;
+}
+.modelbox-bottom-left:hover {
+    overflow-y: auto;
+}
+.card.card-handler.card-handler-bottom-left {
+
+}
+.card.card-handler.card-handler-middle-center {
+
+}
+.notif-cont {
+    padding: 0 5px;
+}
+/* @media only screen and (max-height: 667px) {
+    .modelbox-bottom-left {
+        max-height: 63vh;
+    }
+}
+@media only screen and (max-height: 600px) {
+    .modelbox-bottom-left {
+        max-height: 59vh;
+    }
+}
+@media only screen and (max-height: 567px) {
+    .modelbox-bottom-left {
+        max-height: 56.7vh;
+    }
+}
+@media only screen and (max-height: 500px) {
+    .modelbox-bottom-left {
+        max-height: 50.9vh;
+    }
+}
+@media only screen and (max-height: 467px) {
+    .modelbox-bottom-left {
+        max-height: 47.4vh;
+    }
+}
+@media only screen and (max-height: 400px) {
+    .modelbox-bottom-left {
+        max-height: 38.5vh;
+    }
+}
+@media only screen and (max-height: 367px) {
+    .modelbox-bottom-left {
+        max-height: 43vh;
+    }
+}
+@media only screen and (max-height: 300px) {
+    .modelbox-bottom-left {
+        max-height: 18vh;
+    }
+} */

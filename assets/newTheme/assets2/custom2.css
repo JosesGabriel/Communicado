@@ -1,5 +1,5 @@
 html {
-    background-color: #0d2539;
+    /* background-color: #0d2539; */
 }
 body {
     color: #fffffe;
@@ -34,7 +34,7 @@ body {
 .centerblock {
     width: auto;
     display: inline;
-    background: #0f111d;
+    background: #0b1b2b;
     padding: 0 8px;
 	font-family: 'Roboto', sans-serif;
 }
@@ -66,7 +66,7 @@ body {
 }
 .memberActive {
     display: block;
-    border: 1.5px solid #0f111d !important;
+    border: 1.5px solid #0b1b2b  !important;
     width: 12px;
     height: 12px;
     background: #25ae5f;
@@ -78,7 +78,7 @@ body {
 }
 .memberOffline {
     display: block;
-    border: 1.5px solid #0f111d !important;
+    border: 1.5px solid #0b1b2b  !important;
     width: 12px;
     height: 12px;
     background: #d04234;
@@ -89,13 +89,13 @@ body {
     border-radius: 30px;
 }
 .person span.memberStatus.memberActive {
-    border: 1.5px solid #0d2539 !important;
+    border: 1.5px solid #142c46 !important;
     background: #25ae5f;
     left: 38px;
     margin-top: 24px;
 }
 .person span.memberStatus.memberOffline {
-    border: 1.5px solid #0d2539 !important;
+    border: 1.5px solid #142c46 !important;
     background: #d04234;
     left: 38px;
     margin-top: 24px;
@@ -693,7 +693,7 @@ div#addMemberInput {
     list-style:none;
     overflow:scroll;
     overflow-x:hidden;
-    background: #142c46;
+    /* background: #142c46; */
 }
  .persons2 .person2{
     position:relative;
@@ -1446,7 +1446,7 @@ div#attachment {
 	background: #0d2539 !important;
 }
 .persons {
-    background: #0d2539;
+    /* background: #0d2539; */
     position: relative;
     /* margin-left: -1px; */
     /* border-right: 1px solid #e6e6e6; */
@@ -1517,7 +1517,7 @@ ul#groups {
     margin: 0 !important;
     max-height: none !important;
     border-bottom: none;
-    background: #0d2539;
+    /* background: #0d2539; */
 }
 div#ImageAttachmentList {
 	background-color: #0d1f33;
@@ -1528,7 +1528,7 @@ div#ImageAttachmentList {
 	padding: 6px;
 }
 .groupInfoContent .optionHubar {
-    background: #0d2539;
+    /* background: #0d2539; */
 }
 div#imageAttachment {
 	padding: 15px;
@@ -1552,7 +1552,7 @@ div#imageAttachment {
 	border: none;
 }
 .pad10bgradius {
-	background-color: rgb(13, 31, 51);
+	background-color: #0b1b2b;
 	border-radius: 5px;
 	padding:10px;
 }
@@ -1571,15 +1571,16 @@ span.numbermember {
 }
 #messageForm .form-group.col-md-12.col-xl-10.col-sm-10.col-xs-8 {
     padding: 5px;
-    padding-bottom: 11px;
+    padding-bottom: 10px;
     margin: 0;
+    margin-top: -28px;
 }
 img.imgst {
-    width: 45px;    
-	height: 45px;
+    width: 45px;
+    height: 45px;
     border-radius: 62px;
-    border: 3px solid #0d2539;
-    padding: 2px;
+    border: 3px solid #1e3554;
+    padding: 3px;
     background: none;
     transition-duration: 2s;
 }
@@ -1606,36 +1607,51 @@ img.imgst:nth-child(4) {
     display: block;
 }
 .chat-search.col-md-12.groupNameDiv {
-    background-color: #0a1a2b;
+    background-color: #142c46;
     padding: 8px 10px !important;
     z-index: 9;
-    -webkit-box-shadow: 0px 4px 5px 1px rgba(0,0,0,0.75);
+    /* -webkit-box-shadow: 0px 4px 5px 1px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 4px 5px 1px rgba(0,0,0,0.75);
-    box-shadow: 0px -1px 4px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px -1px 4px 0px rgba(0,0,0,0.75); */
 }
 .l23-container {
 	max-height: 225px;
     overflow-y: hidden;
-    margin-right: 15px;
+    margin: 0 5px;
 }
 .l23-container:hover {
     overflow-y: scroll;
 }
 .l23-container::-webkit-scrollbar-track{
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
 	border-radius: 11px;
-	background-color: #0f121d;
+    background-color: #0b1b2b;
+    opacity: 0.2;
 }
 
 .l23-container::-webkit-scrollbar{
-	width: 8px;
-	border-radius: 10px;
+	width: 6px;
+	border-radius: 20px;
 	background-color: none;
 }
 
 .l23-container::-webkit-scrollbar-thumb{
 	border-radius: 10px;
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #34495e;
+}
+.modelbox-bottom-left::-webkit-scrollbar-track{
+	border-radius: 11px;
+    background-color: #0b1b2b;
+    opacity: 0.2;
+}
+
+.modelbox-bottom-left::-webkit-scrollbar{
+	width: 6px;
+	border-radius: 20px;
+	background-color: none;
+}
+
+.modelbox-bottom-left::-webkit-scrollbar-thumb{
+	border-radius: 10px;
 	background-color: #34495e;
 }
 a.mention {
@@ -1872,7 +1888,7 @@ div#inviteLinkBtn #inviteLink:hover {
 	float: left;
 }
 #chatBox {
-    background-color: #0f111d;
+    background-color: #0b1b2b;
     padding-bottom: 50px;
     margin-top: 0;
     padding-top: 10px;
@@ -2274,7 +2290,7 @@ span.prof_name {
     margin-left: 4px;
 }
 .profile_container {
-    padding-top: 9px;
+    padding: 10px 12px 10px 12px;
 }
 .l23-container .person:hover .btn-danger{
     visibility: visible !important;
@@ -2394,12 +2410,6 @@ div#addNewMemberInput {
 .persons .person.person-hover .mute-pad .fa-bell-slash {
     background: #102a40;
 }
-/* .persons .person img:nth-child(2) {
-    margin-left: -25px;
-}
-.persons .person img:nth-child(3) {
-    margin-left: -25px;
-} */
 .m21 .m {
     line-height: 15px;
     font-size: 11px !important;
