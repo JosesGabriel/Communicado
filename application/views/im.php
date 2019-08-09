@@ -446,8 +446,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <p class="modal-content-label">Copy the link below to invite a new member to your private community.</p>
                     <div class="flex">
                         <input type="text" id="invitationLink" multiple class="invitationLinkBox form-control" readonly>
-                        <div class="invitationLinkCopyBtn">
-                            <i class="far fa-clipboard"></i>
+                        <div class="invitationLinkCopyBtn_btn">
+                            <!-- <i class="far fa-clipboard"></i> -->
                             <input type="button" value="Copy link" class="invitationLinkCopyBtn" id="invitationLinkCopyBtn">
                         </div>
                     </div>
