@@ -498,13 +498,13 @@ body {
     margin: 1px 5px 1px 0;
     line-height: 30px;
 }
-#newSendMessage:hover, #newSendMessage:hover .fa.fa-send {
+/* #newSendMessage:hover, #newSendMessage:hover .fa.fa-send {
     background: #718ca1;
     color: #fff !important;
 }
 #newSendMessage .fa-send {
     color: #718ca1 !important;
-}
+} */
 .fas.fa-times {
     color: #718ca1 !important;
     border: none;
@@ -2329,7 +2329,7 @@ span.vyndue_email {
     font-size: 13px;
     font-weight: 500;
 }
-#newMemberAddBtn {
+/* #newMemberAddBtn {
     border-color: #718ca1;
     color: #718ca1 !important;
     background: none;
@@ -2340,8 +2340,8 @@ span.vyndue_email {
 #newMemberAddBtn:hover {
     background: #718ca1;
     color: #fff !important;
-}
-#changeNameBtn {
+} */
+/* #changeNameBtn {
     border-color: #718ca1;
     color: #718ca1 !important;
     background: none;
@@ -2356,7 +2356,7 @@ span.vyndue_email {
 }
 #changeNameBtn:hover i {
     color: #fff !important;
-}
+} */
 #newMemberAddBtn i {
     color: #718ca1 !important;
     left: 0;
@@ -2514,4 +2514,54 @@ i.far.fa-clipboard {
     padding: 7px 0px 7px 9px;
     z-index: 999;
     cursor: pointer;
+}
+.arbitrage-button {
+	font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+    color: #ffffff;
+    background: none;
+    border: 2px #fff solid;
+    height: auto;
+    border-radius: 25px;
+    padding: 3px 9px;
+}
+.arbitrage-button--primary {
+	border: 2px #2481bc solid;
+}
+.arbitrage-button--primary:hover {
+	background-color: #2481bc;
+}
+.arbitrage-button--secondary {
+	border: 2px #9E9E9E solid;
+}
+.arbitrage-button--secondary:hover {
+	background-color: #9E9E9E;
+}
+.arbitrage-button--success {
+	border: 2px #49ba6f solid;
+}
+.arbitrage-button--success:hover {
+	background-color: #49ba6f;
+}
+.arbitrage-button--warning {
+	border: 2px #e77e24 solid;
+}
+.arbitrage-button--warning:hover {
+	background-color: #e77e24;
+}
+.arbitrage-button--danger {
+	border: 2px #e84c3c solid;
+}
+.arbitrage-button--danger:hover {
+	background-color: #e84c3c;
+}
+.arbitrage-button--info {
+	border: 2px #874a9a solid;
+}
+.arbitrage-button--info:hover {
+	background-color: #874a9a;
+}
+.sendMessage__button, .addMember__button, .changeCommunityName__button {
+    float: right;
+    font-size: 16px;
 }

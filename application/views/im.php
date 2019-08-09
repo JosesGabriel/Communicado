@@ -428,7 +428,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <input type="text" id="addNewMemberInput" multiple class="form-control" >
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-small btn-round btn-skin-green"  data-toggle="modal" id="newMemberAddBtn"><i class="fas fa-plus"></i>Add</button>
+                        <!-- <button type="button" class="arbitrage-button arbitrage-button--primary"  data-toggle="modal" id="newMemberAddBtn"><i class="fas fa-plus"></i>Add</button> -->
+                        <button type="button" class="arbitrage-button arbitrage-button--primary addMember__button"  data-toggle="modal" id="newMemberAddBtn"><i class="fas fa-plus"></i>Add</button>
                     </div>
                 </div>
             </div>
@@ -469,7 +470,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <input type="text" id="groupName" class="form-control" placeholder="Community Name" required="required">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-small btn-round btn-skin-green"  data-toggle="modal" id="changeNameBtn"><i class="fas fa-save"></i>Save</button>
+                        <!-- <button type="button" class="btn btn-small btn-round btn-skin-green"  data-toggle="modal" id="changeNameBtn"><i class="fas fa-save"></i>Save</button> -->
+                        <button class="arbitrage-button arbitrage-button--primary changeCommunityName__button" data-toggle="modal" id="changeNameBtn"><i class="fas fa-save"></i>Save</button>
                     </div>
                 </div>
             </div>
@@ -502,8 +504,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <input type="file" class="hidden" id="newMessageFile" name="file" accept="video/3gpp,video/mp4,video/3gp,image/x-png,image/jpeg">
                         </div>-->
                         <div class="form-group notomrginbtm col-md-offset-3 col-md-9">
-                            <a href="#" class="btn-primary btn-small btn-rounded btn-skin-green" id="newSendMessage"><i class="fa fa-send"></i>  Send</a>
-                        </div>
+                            <button href="#" class="arbitrage-button arbitrage-button--primary sendMessage__button" id="newSendMessage"><i class="fa fa-send"></i>  Send</button>
+                        </div>  
+
                     </form>
                 </div>
             </div>
