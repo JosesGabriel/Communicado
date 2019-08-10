@@ -14,6 +14,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#142c46">
+
+    <meta property="og:title" content="Arbitrage | Vyndue Private Community - Invitation Link">
+    <meta property="og:site_name" content="Arbitrage.PH">
+    <meta property="og:url" content="https://vyndue.com/userview/im_invite">
+    <meta property="og:description" content="Vyndue private community invitation link from Arbitrage">
+    <meta property="og:image" content="https://vyndue.com/assets/img/arby.png">
+
+
     <link href="<?php echo base_url('assets/newTheme/assets2/reset.css'); ?>" rel="stylesheet" type="text/css">
     <link href="<?php echo base_url('assets/newTheme/assets/css/vendors/vendors.css'); ?>" rel="stylesheet" type="text/css">
     <!-- Load extra page specific css-->

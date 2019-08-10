@@ -676,11 +676,16 @@ io.on("connection", function (socket) {
         mysqlCon2.execute(SQLQuery, [n_id]);
         
     });
+
     socket.on('clearNotificationBox', function (r_id){
-        
-        let SQLQuery = "update im_notifications set seen=1, seen_tstamp=now() where r_id=? and seen=0";
-        mysqlCon2.execute(SQLQuery, [r_id]);
-        
+
+        let SQLQuery1 = "update im_notifications set seen=1, seen_tstamp=now() where r_id=? and seen=0";
+        let SQLQuery2 = "UPDATE im_receiver SET received=1 WHERE r_id = ?";
+        let SQLQuery3 = "UPDATE im_mention SET seen=1, seen_tstamp=now() where r_id=? and seen=0";
+        mysqlCon2.execute(SQLQuery1, [r_id]);
+        mysqlCon2.execute(SQLQuery2, [r_id]);
+        mysqlCon2.execute(SQLQuery3, [r_id]);
+
     });
 
     socket.on('joinrequestProccess', function (data){
@@ -719,17 +724,17 @@ io.on("connection", function (socket) {
     socket.on('invitationaccept', function(data){
         let result = InvitationAcceptNotification(data);
         result.then(response => {
-            if(parseInt(response.active)){
+          //  if(parseInt(response.active)){
                 users[response.socketId].emit("notifyUser", response);
-            } 
+          //  } 
         });
     });
     async function InvitationAcceptNotification(data) {
         // await sMM.Im_notifications_Model.insert(u_id,r_id,g_id,t_id);
-        console.log('admin_id');
-        console.log(data.admin_id);
-        console.log('mod_id');
-        console.log(data.generator_id);
+        //console.log('admin_id');
+        //console.log(data.admin_id);
+        //console.log('mod_id');
+        //console.log(data.generator_id);
         await sMM.Im_notifications_Model.insert(data.user_id,data.admin_id,data.group_id,'9');
         if(data.admin_id != data.generator_id)
             await sMM.Im_notifications_Model.insert(data.user_id,data.generator_id,data.group_id,'9');

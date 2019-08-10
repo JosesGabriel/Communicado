@@ -39,7 +39,7 @@
         $(window).on('message', function (e) {
             var data = e.originalEvent.data;
             //console.log(window);
-           // window.promptChat(data.data);
+            window.promptChat(data.data);
         });
 
         let t = null;

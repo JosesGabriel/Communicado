@@ -95,6 +95,13 @@ class Userview extends CI_Controller
         }
     }
 
+    public function im_invite()
+    {
+        $this->load->view('layout/header_invitation_token');
+        $this->load->view('mobile/desktop_please_navbar');
+        $this->load->view('layout/im_footer_invitation_link');
+    }
+
     public function im()
     {
         $data['date'] = date('Y-m-d');
