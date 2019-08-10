@@ -506,6 +506,11 @@ body {
 #newSendMessage .fa-send {
     color: #718ca1 !important;
 } */
+#newSendMessage{
+    margin-top: -27px;
+    position: absolute;
+    right: 0;
+}
 .fas.fa-times {
     color: #718ca1 !important;
     border: none;
@@ -2485,7 +2490,8 @@ img.imgst.toleftmargin:nth-child(3) {
     border-radius: 25px;
     border: 2px solid #2481bc;
     background: none;
-    color: #2481bc;
+    /*color: #2481bc;*/
+    font-size: 13px;
     font-weight: 400;
     display: flex;
     -webkit-appearance: none;
@@ -2515,13 +2521,14 @@ i.far.fa-clipboard {
 }
 .arbitrage-button {
 	font-family: 'Roboto', sans-serif;
-    font-size: 12px;
+    font-size: 13px;
     color: #ffffff;
     background: none;
     border: 2px #fff solid;
     height: auto;
-    border-radius: 25px;
-    padding: 3px 9px;
+    border-radius: 26px;
+    padding: 5px 14px;
+    cursor: pointer;
 }
 .arbitrage-button--primary {
 	border: 2px #2481bc solid;
@@ -2561,5 +2568,5 @@ i.far.fa-clipboard {
 }
 .sendMessage__button, .addMember__button, .changeCommunityName__button {
     float: right;
-    font-size: 16px;
+    font-size: 13px;
 }

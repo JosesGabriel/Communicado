@@ -646,7 +646,7 @@
                 let html = '';
                 // pages
                 html += `<span class="list-group-item list-group-item-info row">
-                            <ul class="grplist col-md-6"><span class="btn-danger btn-extra-small" id="clearAllNotif"><i class="fa fa-trash fa-fw"></i> Clear All</span></ul>
+                            <ul class="grplist col-md-6"><span class="arbitrage-button arbitrage-button--info" id="clearAllNotif"><i class="fa fa-trash fa-fw"></i> Clear All</span></ul>
                             <ul class="pager col-md-6" style="margin:0;">
                                 <li ${ (!prev) ? 'class="disabled"' : ''  }><a href="#" data-page="${prev_page}" data-prev="${ (prev) ? 1 : 0  }" id="notifPrev"><i class="fas fa-chevron-circle-left"></i></a></a></li>
                                 <li ${ (!next) ? 'class="disabled"' : ''  }><a href="#" data-page="${next_page}" data-next="${ (next) ? 1 : 0  }" id="notifNext"><i class="fas fa-chevron-circle-right"></i></a></a></li>
@@ -783,24 +783,24 @@
                     switch(parseInt(data[i].userlevel)){
                         case 1: // admin 
                             html += `<button title="Administrator" type="button" disabled
-                                        class="btn-xs btn-warning pull-right communitymoderatorlist_btn" style="margin-right:5px;">
-                                        <i class="fa fa-star fa-fw" aria-hidden="true"></i>  
+                                        class="arbitrage-button arbitrage-button--warning pull-right communitymoderatorlist_btn">
+                                        <i class="fa fa-star" aria-hidden="true"></i>  
                                     </button>`;
                         break;
                         case 2: // moderator
                             html += `<button title="Moderator" type="button" 
                                         data-group-id="${data[i].group_id}" data-username="${data[i].username}"
                                         data-id="${data[i].id}" data-name="${data[i].name}" data-userlevel="${data[i].userlevel}"
-                                        class="btn-xs btn-success pull-right communitymoderatorlist_btn" style="margin-right:5px;">
-                                        <i class="fa fa-balance-scale fa-fw" aria-hidden="true"></i> 
+                                        class="arbitrage-button arbitrage-button--success pull-right communitymoderatorlist_btn">
+                                        <i class="fa fa-balance-scale" aria-hidden="true"></i> 
                                     </button>`;
                         break;
                         case 0: // member
                             html += `<button title="Member" type="button" 
                                         data-group-id="${data[i].group_id}" data-username="${data[i].username}"
                                         data-id="${data[i].id}" data-name="${data[i].name}" data-userlevel="${data[i].userlevel}"
-                                        class="btn-xs btn-default pull-right communitymoderatorlist_btn" style="margin-right:5px;">
-                                        <i class="fa fa-user fa-fw" aria-hidden="true"></i> 
+                                        class="arbitrage-button arbitrage-button--secondary pull-right communitymoderatorlist_btn">
+                                        <i class="fa fa-user" aria-hidden="true"></i> 
                                     </button>`;
                         break;
                     }
@@ -903,13 +903,13 @@
                         <button title="Disapprove" type="button" 
                             data-group-id="${data[i].group_id}" data-username="${data[i].username}" 
                             data-id="${data[i].id}" data-name="${data[i].name}"
-                            class="btn-xs btn-warning pull-right joinrequestlist_btn joinrequest-disapprove">
+                            class="arbitrage-button arbitrage-button--warning pull-right joinrequestlist_btn joinrequest-disapprove">
                             <i class="fa fa-thumbs-down fa-fw" aria-hidden="true"></i>
                         </button>
                         <button title="Approve" type="button" 
                             data-group-id="${data[i].group_id}" data-username="${data[i].username}" 
                             data-id="${data[i].id}" data-name="${data[i].name}"
-                            class="btn-xs btn-primary pull-right joinrequestlist_btn joinrequest-approve" style="margin-right:5px;">
+                            class="arbitrage-button arbitrage-button--primary pull-right joinrequestlist_btn joinrequest-approve" style="margin-right:5px;">
                             <i class="fa fa-thumbs-up fa-fw" aria-hidden="true"></i> 
                         </button>
                         </a>`;
@@ -1594,14 +1594,14 @@
                 switch (userlevel) {
                     case 1: // admin
                         html += `<span class="time" style='padding-top: 5px'>
-                                    <div class="btn-warning btn-extra-small disabled" style="cursor: default;">
+                                    <div class="arbitrage-button arbitrage-button--warning disabled" style="cursor: default;">
                                         <i class="fa fa-star fa-fw" title="Community Administrator"></i>
                                     </div>
                                 </span>`; 
                     break;
                     case 2: // moderator
                         html += `<span class="time" style='padding-top: 5px'>
-                                    <div class="btn-success btn-extra-small disabled" style="cursor: default;">
+                                    <div class="arbitrage-button arbitrage-button--success disabled" style="cursor: default;">
                                         <i class="fa fa-balance-scale" title="Community Moderator"></i>
                                     </div>
                                 </span>`;
@@ -3654,11 +3654,13 @@
             }, 3500);
             if ((modmessage == null || modmessage == "") && (file == null || file == "")) {
                 // resetNewMessage();
+                event.preventDefault();
                 return;
             }
             if (modmessage != null || modmessage != "") {
                 $('#newMessageText').val(modmessage);
             }
+            // console.log(modmessage)
             let date = moment().format("YYYY-MM-DD");
             let time = moment().format("HH:mm:ss");
             let userIds = addmember.getValue();
@@ -3671,7 +3673,7 @@
             for (i = 0; i < userIds.length; i++) {
                 form.append("memberId[]", userIds[i]);
             }
-            //form.append("date",date);
+            // form.append("date",date);
             // form.append("time",time);
             sendMessage(form, false, true, socketData);
             $('#groups').scrollTop(0);
@@ -3682,6 +3684,8 @@
                 //     toastr.success(`Hello ${window.Vyndue_fname}, welcome to your new private community.`);
                 // }, 1000);
             });  
+            event.preventDefault();
+            return;
         });
         $('#editGroupName').on("click", function (event) {
             $("#groupName").css("border", "1px solid #ccc");

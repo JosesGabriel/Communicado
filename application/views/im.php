@@ -471,7 +471,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                     <div class="modal-footer">
                         <!-- <button type="button" class="btn btn-small btn-round btn-skin-green"  data-toggle="modal" id="changeNameBtn"><i class="fas fa-save"></i>Save</button> -->
-                        <button class="arbitrage-button arbitrage-button--primary changeCommunityName__button" data-toggle="modal" id="changeNameBtn"><i class="fas fa-save"></i>Save</button>
+                        <button class="arbitrage-button arbitrage-button--primary" data-toggle="modal" id="changeNameBtn"><i class="fas fa-save"></i> Save</button>
                     </div>
                 </div>
             </div>
@@ -491,22 +491,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <i class="fas fa-envelope" aria-hidden="true"></i> New Message
                 </h4>
                 <div class="modal-body " id="newMModalBody" style="">
-                    <form id="newMessageForm" role="form">
+                    <form id="newMessageForm" role="form" method="post" action="#">
                         <div class="form-group m-bottom-20">
                             <input type="text" id="addMemberInput" class="form-control" />
                             <i class="fas fa-search"></i>
                         </div>
-                        <div class="form-group m-bottom-20" style="height: 90px" >
-                            <textarea style="max-height: 100px; height: 90px border: 0"  id="newMessageText" type="text" name="message" class="form-control" placeholder="Your message....."></textarea>
+                        <div class="form-group m-bottom-20" >
+                            <textarea style="height:90px; border:0;"  id="newMessageText" type="text" name="message" class="form-control" placeholder="Your message....."></textarea>
+                            <button href="#" class="arbitrage-button arbitrage-button--primary pull-right" id="newSendMessage" style="margin-top: -28px;"><i class="fa fa-send"></i> Send</button>
                         </div>
                         <!--<div class="form-group col-md-2 col-xl-2 col-sm-2 col-xs-2 pad-1 m-bottom-20 " style="margin-top: 10px;">
                             <img src="<?php /*echo base_url('assets/img/i-camera.png')*/?>" id="newMessagefileIV"  style="float:left;cursor: pointer; width: 50px;height: 50px">
                             <input type="file" class="hidden" id="newMessageFile" name="file" accept="video/3gpp,video/mp4,video/3gp,image/x-png,image/jpeg">
                         </div>-->
-                        <div class="form-group notomrginbtm col-md-offset-3 col-md-9">
-                            <button href="#" class="arbitrage-button arbitrage-button--primary sendMessage__button" id="newSendMessage"><i class="fa fa-send"></i>  Send</button>
-                        </div>  
-
                     </form>
                 </div>
             </div>
