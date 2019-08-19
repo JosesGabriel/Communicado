@@ -2521,7 +2521,7 @@ i.far.fa-clipboard {
 }
 .arbitrage-button {
 	font-family: 'Roboto', sans-serif;
-    font-size: 13px;
+    font-size: 13px !important;
     color: #ffffff;
     background: none;
     border: 2px #fff solid;
