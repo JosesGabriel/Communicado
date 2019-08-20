@@ -3646,6 +3646,7 @@
         });
         $('#newSendMessage').on("click", function (event) {
             //$('.close').trigger("click");
+//            let notice = 0;
             let message = $('#newMessageText').text();
             let modmessage = message.replace(/(<([^>]+)>)/ig, "").replace(/&nbsp;/gi, " ").replace(/&nbsp;/gi, " ").trim();
             let file = $("#newMessageFile").val();
@@ -3654,6 +3655,7 @@
             }, 3500);
             if ((modmessage == null || modmessage == "") && (file == null || file == "")) {
                 // resetNewMessage();
+                // alert('Notice: Your message is required!')
                 event.preventDefault();
                 return;
             }
@@ -3665,6 +3667,7 @@
             let time = moment().format("HH:mm:ss");
             let userIds = addmember.getValue();
             if (userIds.length == 0) {
+                event.preventDefault();
                 return;
             }
             let form = new FormData($('#newMessageForm')[0]);
