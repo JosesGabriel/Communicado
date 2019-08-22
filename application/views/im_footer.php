@@ -1465,6 +1465,61 @@
             }
             
         }
+
+        //This function is used to get the group list
+        function getGroupList_v2(callback) {
+            let url = "<?php echo base_url('imApi/getGroups?limit='); ?>" + groupLimit + "&start=0";
+            if (ID_BASED) {
+                url = "<?php echo base_url('imApi/getGroups?limit='); ?>" + groupLimit + "&start=0&userId=" + userId;
+            }
+            let settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": url,
+                "method": "GET",
+                "headers": {
+                    "authorization": "Basic YWRtaW46MTIzNA==",
+                    "Authorizationkeyfortoken": String(responce),
+                    "cache-control": "no-cache",
+                    "postman-token": "eb27c011-391a-0b70-37c5-609bcd1d7b6d"
+                },
+                "processData": false,
+                "contentType": false,
+                "statusCode": {
+                    401: function (error) {
+                        location.href = "<?php echo base_url('userview/logout'); ?>";
+                    }
+                },
+                "beforeSend": function () {
+                },
+                "complete": function () {
+                }
+            };
+            $.ajax(settings).done(function (response) {
+                let groups = response.response;
+                totalGroup = parseInt(response.status.total);
+                if (totalGroup == 0) {
+                    $('#addMember').attr('data-group', null);
+                    $('#addMember').addClass("hidden");
+                    chatBox.html('');
+                    chatBox.addClass("text-center");
+                    $(".groupInfoContent").addClass("hidden");
+                } else {
+                    $(".groupInfoContent").removeClass("hidden");
+                    printGroupList(groups);
+                    if (callback != null || callback != "") {
+                        callback(groups);
+                        setTimeout(() => {
+                            $("#groups li").first().trigger("click", [{update: true}]);                           
+                        }, 500);
+                    } else {
+                        $("#groups li").first().trigger("click", [{update: true}]);
+                    }
+                }
+            });
+        }
+
+
         //This function is used to get the group list
         function getGroupList(callback) {
             let url = "<?php echo base_url('imApi/getGroups?limit='); ?>" + groupLimit + "&start=0";
@@ -3646,27 +3701,23 @@
         });
         $('#newSendMessage').on("click", function (event) {
             //$('.close').trigger("click");
-//            let notice = 0;
             let message = $('#newMessageText').text();
             let modmessage = message.replace(/(<([^>]+)>)/ig, "").replace(/&nbsp;/gi, " ").replace(/&nbsp;/gi, " ").trim();
             let file = $("#newMessageFile").val();
-            setTimeout(function() {
-                $('.twemoji-wrap .twemoji-wrap').remove();
-            }, 3500);
             if ((modmessage == null || modmessage == "") && (file == null || file == "")) {
-                // resetNewMessage();
-                // alert('Notice: Your message is required!')
+                //resetNewMessage();
+                $('#newMessageText_twemoji').focus();
                 event.preventDefault();
                 return;
             }
             if (modmessage != null || modmessage != "") {
                 $('#newMessageText').val(modmessage);
             }
-            // console.log(modmessage)
             let date = moment().format("YYYY-MM-DD");
             let time = moment().format("HH:mm:ss");
             let userIds = addmember.getValue();
             if (userIds.length == 0) {
+                $('#addMemberInput :input[type=text]')[0].focus();
                 event.preventDefault();
                 return;
             }
@@ -3676,20 +3727,15 @@
             for (i = 0; i < userIds.length; i++) {
                 form.append("memberId[]", userIds[i]);
             }
-            // form.append("date",date);
-            // form.append("time",time);
             sendMessage(form, false, true, socketData);
             $('#groups').scrollTop(0);
-            //updateGroupList();
-            getGroupList(function(data){
-                // setTimeout(() => {
-                //     $("li#group_"+g_id).first().trigger("click", [{update: true}]);
-                //     toastr.success(`Hello ${window.Vyndue_fname}, welcome to your new private community.`);
-                // }, 1000);
-            });  
+            getGroupList_v2(function(resp){
+                // console.log(resp);
+            })
             event.preventDefault();
-            return;
         });
+
+       
         $('#editGroupName').on("click", function (event) {
             $("#groupName").css("border", "1px solid #ccc");
             $("#changeNameModal").modal("show");
