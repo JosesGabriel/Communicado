@@ -19,7 +19,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <meta property="og:site_name" content="Arbitrage.PH">
     <meta property="og:url" content="https://vyndue.com/userview/im_invite">
     <meta property="og:description" content="Vyndue private community invitation link from Arbitrage">
-    <meta property="og:image" content="https://vyndue.com/assets/img/arby.png">
+    <meta property="og:image" content="https://vyndue.com/assets/img/arby_il.png">
 
 
     <link href="<?php echo base_url('assets/newTheme/assets2/reset.css'); ?>" rel="stylesheet" type="text/css">
