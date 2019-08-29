@@ -8,6 +8,7 @@
 <script src="<?php echo base_url('assets/newTheme/assets/js/perfect-scrollbar.jquery.min.js'); ?>"></script>
 <!--<script type="text/javascript" src="<?php /*echo base_url("assets/newTheme/twemoji/2/twemoji.min.js")."?".rand(5,50000) */ ?>"></script>-->
 <script src="<?php echo base_url('assets/newTheme/assets/js/twemoji/2/twemoji.min.js'); ?>"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 <!-- <script src="<?php /*echo base_url("assets/js/scripts/jwt-decode.min.js") */ ?>"></script> -->
 
@@ -39,7 +40,7 @@
         $(window).on('message', function (e) {
             var data = e.originalEvent.data;
             //console.log(window);
-            window.promptChat(data.data);
+           // window.promptChat(data.data);
         });
 
         let t = null;
@@ -487,9 +488,9 @@
                 show_divMentionDiv(); 
             } 
 
-            else if(char=='$' && parseInt(groupType)!=1){
+            else if(char=='$'){
                 //alert('dollar signed');
-                //show_divMentionDiv(); 
+                show_divStockDiv(); 
             } 
         }
 
@@ -578,6 +579,119 @@
 
         hide_divMentionDiv();
         // End of Mention Form
+
+        // Start Stock Data
+        let inputStockSearch = $('#inputStockSearch').magicSuggest({
+            placeholder: 'Type Stock Symbol...',
+            allowFreeEntries: false,
+            maxSelection: 1,
+            hideTrigger:true,
+            useTabKey:true,
+            strictSuggest: true,
+            expandOnFocus: true,
+            sortOrder:"description",
+            displayField: "symbol",
+            maxDropHeight: 60, // max height of screen,
+            renderer: function (data) {
+                let html = '';
+                return `<div style="padding: 5px; overflow:hidden;">
+                    <div style="float: left;"  class="m22"></div> 
+                    <div style="float: left; margin-left: 5px"  class="m23">
+                    <div class="c1">
+                    <div style="font-weight: bold; color: #333; font-size: 12px; line-height: 11px"> ${data.description} </div> 
+                    <div style="color: #999; font-size: 9px" class="v"> ${ data.display_name } </div> 
+                    </div>
+                    </div> 
+                    </div><div style="clear:both;"></div>`;
+            }
+        });
+
+        $(inputStockSearch).on('focus', function(e){
+            let _s = localStorage.getItem("_s");
+            if (_s == null || _s == "" || _s=='null') {
+                getStock(function (response) {
+                    localStorage.setItem("_s",JSON.stringify(response));
+                    let q = [];
+                    for(i in response){
+                        let md = {
+                            id: parseInt(response[i].id),
+                            symbol: response[i].symbol,
+                            description: response[i].description,
+                            display_name: response[i].display_name
+                        };
+                        q.push(md);
+                    }
+                    inputStockSearch.setData(q);
+                    inputStockSearch.clear();
+                });    
+            }else{
+                let data = localStorage.getItem('_s');
+                const response = JSON.parse(data);
+                let q = [];
+                for(i in response){
+                    let md = {
+                        id: parseInt(response[i].id),
+                        symbol: response[i].symbol,
+                        description: response[i].description,
+                        display_name: response[i].display_name
+                    };
+                    q.push(md);
+                }
+                inputStockSearch.setData(q);
+                inputStockSearch.clear();
+            }
+        });
+
+        $(inputStockSearch).on('selectionchange', function(){
+            let data = this.getSelection()[0];
+            let input = $('#message_twemoji')[0];
+            if(data===undefined) return;
+            hide_divStockDiv();
+            input.focus();
+            setTimeout(() => {
+                getStockLatest( data.symbol,function(res){
+//                  console.log(res);
+                    let content = `<m><table class="chat_stock_table">
+                                    <tr><td colspan=2> <b>$${res.symbol}</b> </td></tr> 
+                                    <tr><td> <b>Open:</b> </td><td class="chat_stock_value"> ${numeral(res.open).format('0,0.00')} </td></tr>
+                                    <tr><td> <b>Close:</b> </td><td class="chat_stock_value"> ${numeral(res.close).format('0,0.00')} </td></tr>
+                                    <tr><td> <b>High:</b> </td><td class="chat_stock_value"> ${numeral(res.high).format('0,0.00')} </td></tr>
+                                    <tr><td> <b>Low:</b> </td><td class="chat_stock_value"> ${numeral(res.low).format('0,0.00')} </td></tr>
+                                    <tr><td> <b>Change:</b> </td><td class="chat_stock_value"> ${numeral(res.change).format('0,0.00')} </td></tr>
+                                    </table></m>&nbsp;`;
+                    input.innerHTML = content;
+                });
+            }, 150);
+        });
+
+        $(inputStockSearch).on('blur', function(c){
+            hide_divStockDiv();
+        });
+
+        $(inputStockSearch).on('keyup', function(e, m, v){
+              if(v.keyCode===27){
+                hide_divStockDiv();
+                $('#message_twemoji')[0].focus();
+              } 
+        })
+
+        function hide_divStockDiv(){
+            $('#divStockDiv').hide(200);
+            inputStockSearch.disable();
+            inputStockSearch.clear();
+            inputStockSearch.empty();
+        }
+
+        function show_divStockDiv(){
+            $('#divStockDiv').show(200);
+            setTimeout(() => {
+                inputStockSearch.enable();
+                $('#inputStockSearch :input[type=text]')[0].focus();
+            }, 200);
+        }
+
+        hide_divStockDiv();
+        // End Stock Data 
 
         // Ralph 2019-05-29
         // This function is to fecth and list a sorts of notification;
@@ -1943,6 +2057,42 @@
                callback(res);
             });
         }
+
+        //This function is used to get all stock list
+        function getStock(callback) {
+            let url = "https://data-api.arbitrage.ph/api/v1/stocks/list";
+            let settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": url,
+                "method": "GET",
+                "dataType": 'json'
+            };
+            $.ajax(settings).done(function (response) {
+               let res = response.data;
+               callback(res);
+            });
+        }
+
+        //This function is used to get stock current state 
+        function getStockLatest(symbol, callback) {
+            let url = "https://data-api.arbitrage.ph/api/v1/stocks/history/latest?stock-exchange=PSE&symbol="+symbol;
+            let settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": url,
+                "method": "GET",
+                "dataType": 'json'
+            };
+            $.ajax(settings).done(function (response) {
+               let res = response.data;
+               callback(res);
+            });
+        }
+
+        
+
+
         //This function is used to  get friend list of user
         function getMembers(callback) {   // get friends list
             resetFriendStart();
@@ -3674,9 +3824,20 @@
             else {
                 mainFileObject = $("#messageFile")[0].files[0];
             }
-            //let modmessage = message.replace(/(<([^>]+)>)/ig, "").replace(/&nbsp;/gi, " ").replace(/&nbsp;/gi, " ").trim();            
+
+            let modmessage = message;
+
+            if(!message.includes('<m>')){
+                modmessage = message.replace(/(<([^>]+)>)/ig, "").replace(/&nbsp;/gi, " ").replace(/&nbsp;/gi, " ").trim();
+            }else{
+                if(message.includes('chat_stock_table')){
+                    //console.log('stock');
+                }else{
+                    modmessage = message.replace(/(<\/?(?:a)[^>]*>)|<[^>]+>/ig, '$1').replace(/&nbsp;/gi, " ").replace(/&nbsp;/gi, " ").trim();
+                }
+            }
+           
             // send message event
-            let modmessage = message.replace(/(<\/?(?:a)[^>]*>)|<[^>]+>/ig, '$1').replace(/&nbsp;/gi, " ").replace(/&nbsp;/gi, " ").trim();
             if ((modmessage === null || modmessage === "") && (file === null || file === "")) {
                 reset();
                 return;

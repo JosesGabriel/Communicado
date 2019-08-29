@@ -199,6 +199,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div id="divMentionDiv">
                                         <input type="text" id="inputMentionSearch">
                                     </div>
+
+                                    <div id="divStockDiv">
+                                        <input type="text" id="inputStockSearch">
+                                    </div>
                                 
                                     <textarea style="max-height: 50px; border: 0"  id="message" type="text" name="message" class="form-control" placeholder="Type your message here..."></textarea>    
                                 
