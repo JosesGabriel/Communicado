@@ -598,7 +598,7 @@
                     <div style="float: left;"  class="m22"></div> 
                     <div style="float: left; margin-left: 5px"  class="m23">
                     <div class="c1">
-                    <div style="font-weight: bold; color: #333; font-size: 12px; line-height: 11px"> ${data.description} </div> 
+                    <div style="font-weight: bold; color: #333; font-size: 12px; line-height: 11px"> $${data.symbol} </div> 
                     <div style="color: #999; font-size: 9px" class="v"> ${ data.display_name } </div> 
                     </div>
                     </div> 
@@ -650,14 +650,21 @@
             input.focus();
             setTimeout(() => {
                 getStockLatest( data.symbol,function(res){
-//                  console.log(res);
+//                  console.log(res); 
+                    let color;
+                    if(res.change==0){ color = "stock_change_none"; }
+                    else if(res.change>0){ color = "stock_change_inc"; }
+                    else if(res.change<0){ color = "stock_change_dec"; }
+                    else { color = "" }
                     let content = `<m><table class="chat_stock_table">
-                                    <tr><td colspan=2> <b>$${res.symbol}</b> </td></tr> 
+                                    <tr><td colspan=2> <b class="${color}">$${res.symbol}</b> </td></tr> 
                                     <tr><td> <b>Open:</b> </td><td class="chat_stock_value"> ${numeral(res.open).format('0,0.00')} </td></tr>
                                     <tr><td> <b>Close:</b> </td><td class="chat_stock_value"> ${numeral(res.close).format('0,0.00')} </td></tr>
                                     <tr><td> <b>High:</b> </td><td class="chat_stock_value"> ${numeral(res.high).format('0,0.00')} </td></tr>
                                     <tr><td> <b>Low:</b> </td><td class="chat_stock_value"> ${numeral(res.low).format('0,0.00')} </td></tr>
-                                    <tr><td> <b>Change:</b> </td><td class="chat_stock_value"> ${numeral(res.change).format('0,0.00')} </td></tr>
+                                    <tr><td> <b>Change:</b> </td><td class="chat_stock_value"> ${res.changestring} </td></tr>
+                                    <tr><td> <b>Volume:</b> </td><td class="chat_stock_value"> ${numeral(res.volume).format('0,0.00')} </td></tr>
+                                    <tr><td> <b>Value:</b> </td><td class="chat_stock_value"> ${numeral(res.value).format('0,0.00')} </td></tr>
                                     </table></m>&nbsp;`;
                     input.innerHTML = content;
                 });
@@ -2076,7 +2083,7 @@
 
         //This function is used to get stock current state 
         function getStockLatest(symbol, callback) {
-            let url = "https://data-api.arbitrage.ph/api/v1/stocks/history/latest?stock-exchange=PSE&symbol="+symbol;
+            let url = "https://data-api.arbitrage.ph/api/v1/stocks/history/latest?exchange=PSE&symbol="+symbol;
             let settings = {
                 "async": true,
                 "crossDomain": true,

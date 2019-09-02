@@ -674,3 +674,15 @@ table.chat_stock_table{
 td.chat_stock_value {
     text-align: right;
 }
+
+b.stock_change_inc{
+    color: #32a932;
+}
+
+b.stock_change_dec{
+    color: #ff5b57;
+}
+
+b.stock_change_none{
+    color: #ffd900;
+}
