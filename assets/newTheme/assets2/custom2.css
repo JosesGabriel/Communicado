@@ -509,6 +509,7 @@ body {
 #newSendMessage{
     margin-top: -27px;
     position: absolute;
+    bottom: 0;
     right: 0;
 }
 .fas.fa-times {
