@@ -1562,11 +1562,12 @@ span.UserNames.group-name.group-name-style.text-center {
     font-size: 16px;
     color: #fffffe;
 }
-span.numbermember {
+span.numbermember, span.par-label {
     color: #bfbfbf;
-    margin-top: -7px;
-    display: block;
+    display: inline;
     font-size: 13px;
+    top: -3px;
+    position: relative;
 }
 #messageForm .form-group.col-md-12.col-xl-10.col-sm-10.col-xs-8 {
     padding: 5px;
