@@ -1109,7 +1109,7 @@ div#attachment {
 .fw-im-isnotme>div>a{color:black;}
 .hamburger-inner, .hamburger-inner::after, .hamburger-inner::before{background-color:#fff;}
 .typing-indicator {
-    background-color: #FFFFFF;
+    background-color: transparent;
     vertical-align: middle;
     text-align: center;
     will-change: transform;
@@ -1139,8 +1139,8 @@ div#attachment {
     bottom: -10px;
 }*/
 .typing-indicator span {
-    height: 15px;
-    width: 15px;
+    height: 8px;
+    width: 8px;
     float: left;
     margin: 0 1px;
     background-color: #40c3df;
