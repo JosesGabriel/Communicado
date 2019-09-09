@@ -686,3 +686,9 @@ b.stock_change_dec{
 b.stock_change_none{
     color: #ffd900;
 }
+tr.chat_stock_header{
+   /* border-bottom: 1px solid gray; */
+}
+hr.hr_divider{
+    margin: 3px;
+}

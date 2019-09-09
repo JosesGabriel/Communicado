@@ -1,0 +1,37 @@
+$symbol : last
+
+<table>
+<tr>
+<td>Change:</td><td> ${res.change} </td>
+<td>Volume:</td><td> ${res.volume} </td>
+</tr>
+
+<tr>
+<td>Percent Change:</td><td> ${res.changepercentage} </td>
+<td>Value:</td><td> ${res.value} </td>
+</tr>
+
+<tr>
+<td>Previous:</td><td> ${res.close} </td>
+<td>Trades:</td><td> ${res.trades} </td>
+</tr>
+
+<tr>
+<td>Open:</td><td> ${res.open} </td>
+<td>Average:</td><td> ${res.average} </td>
+</tr>
+
+<tr>
+<td>High:</td><td> ${res.high} </td>
+<td>52 Week Low:</td><td> ${res.weekyearlow} </td>
+</tr>
+
+<tr>
+<td>Low:</td><td> ${res.low} </td>
+<td>52 Week High:</td><td> ${res.weekyearhigh} </td>
+</tr>
+
+<tr>
+<td colspan=2>Market Cap:</td><td> ${res.marketcap} </td>
+</tr>
+</table>

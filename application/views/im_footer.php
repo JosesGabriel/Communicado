@@ -657,14 +657,21 @@
                     else if(res.change<0){ color = "stock_change_dec"; }
                     else { color = "" }
                     let content = `<m><table class="chat_stock_table">
-                                    <tr><td colspan=2> <b class="${color}">$${res.symbol}</b> </td></tr> 
-                                    <tr><td> <b>Open:</b> </td><td class="chat_stock_value"> ${numeral(res.open).format('0,0.00')} </td></tr>
-                                    <tr><td> <b>Close:</b> </td><td class="chat_stock_value"> ${numeral(res.close).format('0,0.00')} </td></tr>
-                                    <tr><td> <b>High:</b> </td><td class="chat_stock_value"> ${numeral(res.high).format('0,0.00')} </td></tr>
-                                    <tr><td> <b>Low:</b> </td><td class="chat_stock_value"> ${numeral(res.low).format('0,0.00')} </td></tr>
-                                    <tr><td> <b>Change:</b> </td><td class="chat_stock_value"> ${res.changestring} </td></tr>
-                                    <tr><td> <b>Volume:</b> </td><td class="chat_stock_value"> ${numeral(res.volume).format('0,0.00')} </td></tr>
-                                    <tr><td> <b>Value:</b> </td><td class="chat_stock_value"> ${numeral(res.value).format('0,0.00')} </td></tr>
+                                    <tr><td> <b class="${color}">$${res.symbol}</b> </td><td class="chat_stock_value"> <b class="${color}">${numeral(res.close).format(res.last).format('0,0.00')}</b> </td></tr>
+                                    <tr><td colspan=2><hr class="hr_divider"/></td></tr>
+                                    <tr><td><b>Previous:</b></td><td class="chat_stock_value"> ${numeral(res.close).format('0,0.00')} </td></tr>
+                                    <tr><td><b>Change:</b></td><td class="chat_stock_value ${color}"> ${numeral(res.change).format('0,0.00')} </td></tr>
+                                    <tr><td><b>Percent Change:</b></td><td class="chat_stock_value ${color}"> ${numeral(res.changepercentage).format('0,0.00')}% </td></tr>
+                                    <tr><td><b>Open:</b></td><td class="chat_stock_value"> ${numeral(res.open).format('0,0.00')} </td></tr>
+                                    <tr><td><b>Low:</b></td><td class="chat_stock_value"> ${numeral(res.low).format('0,0.00')} </td></tr>
+                                    <tr><td><b>High:</b></td><td class="chat_stock_value"> ${numeral(res.high).format('0,0.00')} </td></tr>
+                                    <tr><td><b>Volume:</b></td><td class="chat_stock_value"> ${numeral(res.volume).format('0,0.00')} </td></tr>
+                                    <tr><td><b>Value:</b></td><td class="chat_stock_value"> ${numeral(res.value).format('0,0.00')} </td></tr>
+                                    <tr><td><b>Trades:</b></td><td class="chat_stock_value"> ${numeral(res.trades).format('0,0')} </td></tr>
+                                    <tr><td><b>Average:</b></td><td class="chat_stock_value"> ${numeral(res.average).format('0,0.00')} </td></tr>
+                                    <tr><td><b>52 Week Low:</b></td><td class="chat_stock_value"> ${numeral(res.weekyearlow).format('0,0.00')} </td></tr>
+                                    <tr><td><b>52 Week High:</b></td><td class="chat_stock_value"> ${numeral(res.weekyearhigh).format('0,0.00')} </td></tr>
+                                    <tr><td><b>Market Cap:</b></td><td class="chat_stock_value"> ${numeral(res.marketcap).format('0,0.00')} </td></tr>
                                     </table></m>&nbsp;`;
                     input.innerHTML = content;
                 });
@@ -3368,8 +3375,8 @@
 
             let numbermembers = totalGroupMembers;
             if(groupObjects[groupId].groupType == 2 || groupObjects[groupId].groupType == 0) {
-                $('.numbermember').html(numbermembers);
-                $('.numbermember').append(" Participants");
+                //$('.numbermember').html(numbermembers);
+                //$('.numbermember').append(" Participants");
             }else if(groupObjects[groupId].groupType == 1){
                 $('.numbermember').html('');
             }
@@ -4758,7 +4765,7 @@
             time[groupId] = message.ios_date_time;
             groupObjects[groupId].lastActive = message.ios_date_time;
             let height = chatBox[0].scrollHeight;
-            chatBox.scrollTop(height);
+            //chatBox.scrollTop(height);
             clampData();
             /*if (activeGroupId === parseInt(data.to)) {
                 let elementData = $("#group_" + activeGroupId).clone();
@@ -4952,7 +4959,7 @@
                 time[activeGroupId] = lastMessage.ios_date_time;
                 lightBox.init();
                 let height = chatBox[0].scrollHeight;
-                chatBox.scrollTop(height);
+                //chatBox.scrollTop(height);
                 clampData();
             }
             //group section
@@ -5006,7 +5013,7 @@
                 html += "                <\/div>";
                 chatBox.append(html);
                 let height = chatBox[0].scrollHeight;
-                chatBox.scrollTop(height);
+                //chatBox.scrollTop(height);
                 presentTypingDiv = $("#group_" + data.groupId + data.userId);
                 if (!mute) {
                     $.playSound("<?php echo base_url('assets/img/typing'); ?>");
@@ -5040,7 +5047,7 @@
                 presentTypingDiv = null;
             }
             let height = chatBox[0].scrollHeight;
-            chatBox.scrollTop(height);
+            //chatBox.scrollTop(height);
         });
         socket.on("reconnect", function () {
             isDisconnected=false;
