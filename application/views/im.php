@@ -177,7 +177,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                                 <div class="sel-right">
                                     <span class="UserNames group-name group-name-style text-center">&nbsp;</span><br>
-                                    <span class="numbermember">&nbsp;</span>
+                                    <span class="numbermember">&nbsp;</span><span class="par-label"> </span>
                                 </div>
                             </div>
                             <div class="col-md-1">

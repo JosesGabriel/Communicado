@@ -509,6 +509,7 @@ body {
 #newSendMessage{
     margin-top: -27px;
     position: absolute;
+    bottom: 0;
     right: 0;
 }
 .fas.fa-times {
@@ -1108,7 +1109,7 @@ div#attachment {
 .fw-im-isnotme>div>a{color:black;}
 .hamburger-inner, .hamburger-inner::after, .hamburger-inner::before{background-color:#fff;}
 .typing-indicator {
-    background-color: #FFFFFF;
+    background-color: transparent;
     vertical-align: middle;
     text-align: center;
     will-change: transform;
@@ -1138,8 +1139,8 @@ div#attachment {
     bottom: -10px;
 }*/
 .typing-indicator span {
-    height: 15px;
-    width: 15px;
+    height: 8px;
+    width: 8px;
     float: left;
     margin: 0 1px;
     background-color: #40c3df;
@@ -1561,11 +1562,12 @@ span.UserNames.group-name.group-name-style.text-center {
     font-size: 16px;
     color: #fffffe;
 }
-span.numbermember {
+span.numbermember, span.par-label {
     color: #bfbfbf;
-    margin-top: -7px;
-    display: block;
+    display: inline;
     font-size: 13px;
+    top: -3px;
+    position: relative;
 }
 #messageForm .form-group.col-md-12.col-xl-10.col-sm-10.col-xs-8 {
     padding: 5px;

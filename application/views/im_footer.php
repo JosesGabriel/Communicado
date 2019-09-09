@@ -3372,13 +3372,29 @@
                 }
             }
 
+            
+            let numbermembers = parseInt(totalGroupMembers);
+            function formatNumber(num) {
+                return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+            }
 
+<<<<<<< HEAD
             let numbermembers = totalGroupMembers;
             if(groupObjects[groupId].groupType == 2 || groupObjects[groupId].groupType == 0) {
                 //$('.numbermember').html(numbermembers);
                 //$('.numbermember').append(" Participants");
+=======
+            let totalmnumbers = numbermembers + 11349;
+            if(groupObjects[groupId].groupType == 2 ) {
+                $('.numbermember').html(formatNumber(totalmnumbers));
+                $('.par-label').html(" Participants");
+>>>>>>> 74546ceac39c1a3107a38417597aa72df76b04ce
             }else if(groupObjects[groupId].groupType == 1){
                 $('.numbermember').html('');
+                $('.par-label').html('');
+            }else if(groupObjects[groupId].groupType == 0){
+                $('.numbermember').html(numbermembers);
+                $('.par-label').html(" Participants");
             }
 
             let appendhtmlimg = groupObjects[groupId].groupImage;
