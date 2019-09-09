@@ -652,25 +652,51 @@
                 getStockLatest( data.symbol,function(res){
 //                  console.log(res); 
                     let color;
-                    if(res.change==0){ color = "stock_change_none"; }
-                    else if(res.change>0){ color = "stock_change_inc"; }
-                    else if(res.change<0){ color = "stock_change_dec"; }
+                    let icon;
+                    let openColor;
+                    if(res.change==0){ 
+                        color = "stock_change_none";
+                        icon = `<span></span>`; 
+                    }
+                    else if(res.change>0){ 
+                        color = "stock_change_inc"; 
+                        icon = `<i class="fa fa-arrow-up stock_change_inc" aria-hidden="true"></i>`;
+                    }
+                    else if(res.change<0){ 
+                        color = "stock_change_dec"; 
+                        icon = `<i class="fa fa-arrow-down stock_change_dec" aria-hidden="true"></i>`;
+                    }
                     else { color = "" }
+
+                    if(res.open == res.close){
+                        openColor = "text-yellow";
+                    }else if(res.open > res.close){
+                        openColor = "text-green";
+                    }else if(res.open < res.close){
+                        openColor = "text-red";
+                    }
+
+                    const _52WkLowColor = (res.weekyearlow > res.last) ? 'text-green' : 'text-red';
+                    const aveColor = (res.average > res.close) ? 'text-green' : 'text-red';
+                    const lowColor = (res.low > res.close) ? 'text-green' : 'text-red';
+                    const highColor = (res.high > res.close) ? 'text-green' : 'text-red';
+                    const _52WkHighColor = (res.weekyearhigh > res.last) ? 'text-green' : 'text-red';
+
                     let content = `<m><table class="chat_stock_table">
-                                    <tr><td> <b class="${color}">$${res.symbol}</b> </td><td class="chat_stock_value"> <b class="${color}">${numeral(res.close).format(res.last).format('0,0.00')}</b> </td></tr>
+                                    <tr><td> <b class="${color}">$${res.symbol}</b> </td><td class="chat_stock_value"> ${icon} <b class="${color}">${numeral(res.last).format('0,0.00')}</b> </td></tr>
                                     <tr><td colspan=2><hr class="hr_divider"/></td></tr>
                                     <tr><td><b>Previous:</b></td><td class="chat_stock_value"> ${numeral(res.close).format('0,0.00')} </td></tr>
                                     <tr><td><b>Change:</b></td><td class="chat_stock_value ${color}"> ${numeral(res.change).format('0,0.00')} </td></tr>
                                     <tr><td><b>Percent Change:</b></td><td class="chat_stock_value ${color}"> ${numeral(res.changepercentage).format('0,0.00')}% </td></tr>
-                                    <tr><td><b>Open:</b></td><td class="chat_stock_value"> ${numeral(res.open).format('0,0.00')} </td></tr>
-                                    <tr><td><b>Low:</b></td><td class="chat_stock_value"> ${numeral(res.low).format('0,0.00')} </td></tr>
-                                    <tr><td><b>High:</b></td><td class="chat_stock_value"> ${numeral(res.high).format('0,0.00')} </td></tr>
+                                    <tr><td><b>Open:</b></td><td class="chat_stock_value ${openColor}"> ${numeral(res.open).format('0,0.00')} </td></tr>
+                                    <tr><td><b>Low:</b></td><td class="chat_stock_value ${lowColor}"> ${numeral(res.low).format('0,0.00')} </td></tr>
+                                    <tr><td><b>High:</b></td><td class="chat_stock_value ${highColor}"> ${numeral(res.high).format('0,0.00')} </td></tr>
                                     <tr><td><b>Volume:</b></td><td class="chat_stock_value"> ${numeral(res.volume).format('0,0.00')} </td></tr>
                                     <tr><td><b>Value:</b></td><td class="chat_stock_value"> ${numeral(res.value).format('0,0.00')} </td></tr>
                                     <tr><td><b>Trades:</b></td><td class="chat_stock_value"> ${numeral(res.trades).format('0,0')} </td></tr>
-                                    <tr><td><b>Average:</b></td><td class="chat_stock_value"> ${numeral(res.average).format('0,0.00')} </td></tr>
-                                    <tr><td><b>52 Week Low:</b></td><td class="chat_stock_value"> ${numeral(res.weekyearlow).format('0,0.00')} </td></tr>
-                                    <tr><td><b>52 Week High:</b></td><td class="chat_stock_value"> ${numeral(res.weekyearhigh).format('0,0.00')} </td></tr>
+                                    <tr><td><b>Average:</b></td><td class="chat_stock_value ${aveColor}"> ${numeral(res.average).format('0,0.00')} </td></tr>
+                                    <tr><td><b>52 Week Low:</b></td><td class="chat_stock_value ${_52WkLowColor}"> ${numeral(res.weekyearlow).format('0,0.00')} </td></tr>
+                                    <tr><td><b>52 Week High:</b></td><td class="chat_stock_value ${_52WkHighColor}"> ${numeral(res.weekyearhigh).format('0,0.00')} </td></tr>
                                     <tr><td><b>Market Cap:</b></td><td class="chat_stock_value"> ${numeral(res.marketcap).format('0,0.00')} </td></tr>
                                     </table></m>&nbsp;`;
                     input.innerHTML = content;

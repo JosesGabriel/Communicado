@@ -651,7 +651,7 @@ div#divStockDiv
     position: absolute;
 }
 div#inputStockSearch {
-height: 100%;
+    height: 100%;
     background: none;
     border: none;
     padding: 0;
@@ -667,27 +667,32 @@ height: 100%;
     width: 100%;
     padding: 11px 15px;
 }
-table.chat_stock_table{
-  //  text-align: right;
-}
 
+table.chat_stock_table{
+   /* text-align: right; */
+   /*background: #0D2539;*/
+}
 td.chat_stock_value {
     text-align: right;
 }
-
-b.stock_change_inc{
+.text-green{
     color: #32a932;
 }
-
-b.stock_change_dec{
+.stock_change_inc{
+    color: #32a932;
+}
+.text-red{
     color: #ff5b57;
 }
-
-b.stock_change_none{
-    color: #ffd900;
+.stock_change_dec{
+    color: #ff5b57;
 }
-tr.chat_stock_header{
-   /* border-bottom: 1px solid gray; */
+.text-yellow{
+    color: #ffd900;
+    /*color: #fff; */
+}
+.stock_change_none{
+    color: #ffd900;
 }
 hr.hr_divider{
     margin: 3px;
