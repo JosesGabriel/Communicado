@@ -660,7 +660,7 @@
                     }
                     else if(res.change>0){ 
                         color = "stock_change_inc"; 
-                        icon = `<i class="fa fa-arrow-up stock_change_inc" aria-hidden="true"></i>`;
+                        icon = `<i class="fa fa-arrow-up" aria-hidden="true"></i>`;
                     }
                     else if(res.change<0){ 
                         color = "stock_change_dec"; 
@@ -683,21 +683,19 @@
                     const _52WkHighColor = (res.weekyearhigh > res.last) ? 'text-green' : 'text-red';
 
                     let content = `<m><table class="chat_stock_table">
-                                    <tr><td> <b class="${color}">$${res.symbol}</b> </td><td class="chat_stock_value"> ${icon} <b class="${color}">${numeral(res.last).format('0,0.00')}</b> </td></tr>
+                                    <tr><td> <b class="stockSymbol">$${res.symbol}</b> </td><td class="chat_stock_value"> ${icon} <b class="${color}">${numeral(res.last).format('0,0.00')}</b><small class="chat_stock_value ${color}"> ${numeral(res.change).format('0,0.00')} </small><small class="chat_stock_value ${color}"> (${numeral(res.changepercentage).format('0,0.00')}%) </small> </td></tr>
                                     <tr><td colspan=2><hr class="hr_divider"/></td></tr>
-                                    <tr><td><b>Previous:</b></td><td class="chat_stock_value"> ${numeral(res.close).format('0,0.00')} </td></tr>
-                                    <tr><td><b>Change:</b></td><td class="chat_stock_value ${color}"> ${numeral(res.change).format('0,0.00')} </td></tr>
-                                    <tr><td><b>Percent Change:</b></td><td class="chat_stock_value ${color}"> ${numeral(res.changepercentage).format('0,0.00')}% </td></tr>
-                                    <tr><td><b>Open:</b></td><td class="chat_stock_value ${openColor}"> ${numeral(res.open).format('0,0.00')} </td></tr>
-                                    <tr><td><b>Low:</b></td><td class="chat_stock_value ${lowColor}"> ${numeral(res.low).format('0,0.00')} </td></tr>
-                                    <tr><td><b>High:</b></td><td class="chat_stock_value ${highColor}"> ${numeral(res.high).format('0,0.00')} </td></tr>
-                                    <tr><td><b>Volume:</b></td><td class="chat_stock_value"> ${numeral(res.volume).format('0,0.00')} </td></tr>
-                                    <tr><td><b>Value:</b></td><td class="chat_stock_value"> ${numeral(res.value).format('0,0.00')} </td></tr>
-                                    <tr><td><b>Trades:</b></td><td class="chat_stock_value"> ${numeral(res.trades).format('0,0')} </td></tr>
-                                    <tr><td><b>Average:</b></td><td class="chat_stock_value ${aveColor}"> ${numeral(res.average).format('0,0.00')} </td></tr>
-                                    <tr><td><b>52 Week Low:</b></td><td class="chat_stock_value ${_52WkLowColor}"> ${numeral(res.weekyearlow).format('0,0.00')} </td></tr>
-                                    <tr><td><b>52 Week High:</b></td><td class="chat_stock_value ${_52WkHighColor}"> ${numeral(res.weekyearhigh).format('0,0.00')} </td></tr>
-                                    <tr><td><b>Market Cap:</b></td><td class="chat_stock_value"> ${numeral(res.marketcap).format('0,0.00')} </td></tr>
+                                    <tr><td>Previous:</td><td class="chat_stock_value"> ${numeral(res.close).format('0,0.00')} </td></tr>
+                                    <tr><td>Open:</td><td class="chat_stock_value ${openColor}"> ${numeral(res.open).format('0,0.00')} </td></tr>
+                                    <tr><td>Low:</td><td class="chat_stock_value ${lowColor}"> ${numeral(res.low).format('0,0.00')} </td></tr>
+                                    <tr><td>High:</td><td class="chat_stock_value ${highColor}"> ${numeral(res.high).format('0,0.00')} </td></tr>
+                                    <tr><td>Volume:</td><td class="chat_stock_value"> ${numeral(res.volume).format('0,0.00')} </td></tr>
+                                    <tr><td>Value:</td><td class="chat_stock_value"> ${numeral(res.value).format('0,0.00')} </td></tr>
+                                    <tr><td>Trades:</td><td class="chat_stock_value"> ${numeral(res.trades).format('0,0')} </td></tr>
+                                    <tr><td>Average:</td><td class="chat_stock_value ${aveColor}"> ${numeral(res.average).format('0,0.00')} </td></tr>
+                                    <tr><td>52 Week Low:</td><td class="chat_stock_value ${_52WkLowColor}"> ${numeral(res.weekyearlow).format('0,0.00')} </td></tr>
+                                    <tr><td>52 Week High:</td><td class="chat_stock_value ${_52WkHighColor}"> ${numeral(res.weekyearhigh).format('0,0.00')} </td></tr>
+                                    <tr><td>Market Cap:</td><td class="chat_stock_value"> ${numeral(res.marketcap).format('0,0.00')} </td></tr>
                                     </table></m>&nbsp;`;
                     input.innerHTML = content;
                 });
@@ -3410,7 +3408,7 @@
                 //$('.numbermember').html(numbermembers);
                 //$('.numbermember').append(" Participants");
 */
-            let totalmnumbers = numbermembers + 11349;
+            let totalmnumbers = numbermembers;
             if(groupObjects[groupId].groupType == 2 ) {
                 $('.numbermember').html(formatNumber(totalmnumbers));
                 $('.par-label').html(" Participants");

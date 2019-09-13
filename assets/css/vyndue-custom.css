@@ -675,6 +675,9 @@ table.chat_stock_table{
 td.chat_stock_value {
     text-align: right;
 }
+.stockSymbol {
+    font-size:1.3em;
+}
 .text-green{
     color: #32a932;
 }
