@@ -689,12 +689,12 @@
                                     <tr><td>Open:</td><td class="chat_stock_value ${openColor}"> ${numeral(res.open).format('0,0.00')} </td></tr>
                                     <tr><td>Low:</td><td class="chat_stock_value ${lowColor}"> ${numeral(res.low).format('0,0.00')} </td></tr>
                                     <tr><td>High:</td><td class="chat_stock_value ${highColor}"> ${numeral(res.high).format('0,0.00')} </td></tr>
-                                    <tr><td>Volume:</td><td class="chat_stock_value"> ${numeral(res.volume).format('0,0.00')} </td></tr>
-                                    <tr><td>Value:</td><td class="chat_stock_value"> ${numeral(res.value).format('0,0.00')} </td></tr>
                                     <tr><td>Trades:</td><td class="chat_stock_value"> ${numeral(res.trades).format('0,0')} </td></tr>
                                     <tr><td>Average:</td><td class="chat_stock_value ${aveColor}"> ${numeral(res.average).format('0,0.00')} </td></tr>
                                     <tr><td>52 Week Low:</td><td class="chat_stock_value ${_52WkLowColor}"> ${numeral(res.weekyearlow).format('0,0.00')} </td></tr>
                                     <tr><td>52 Week High:</td><td class="chat_stock_value ${_52WkHighColor}"> ${numeral(res.weekyearhigh).format('0,0.00')} </td></tr>
+                                    <tr><td>Volume:</td><td class="chat_stock_value"> ${numeral(res.volume).format('0.00 a')} </td></tr>
+                                    <tr><td>Value:</td><td class="chat_stock_value"> ${numeral(res.value).format('0.00 a')} </td></tr>
                                     <tr><td>Market Cap:</td><td class="chat_stock_value"> ${numeral(res.marketcap).format('0,0.00')} </td></tr>
                                     </table></m>&nbsp;`;
                     input.innerHTML = content;
