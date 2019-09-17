@@ -870,6 +870,7 @@ io.on("connection", function (socket) {
                         }
                     }
 
+                    let groupMembersId = [];
 
                     if (receiverId == null) {
                         if (_.has(data, "memberId") && _.isArray(data.memberId) && !empty(data.memberId)) {
@@ -939,9 +940,10 @@ io.on("connection", function (socket) {
 
                     }
                     else {
+                        // get where group_id = ? & user_id = ?
                         // Here
                         let groupMembers = await sMM.Im_group_members_Model.getMembers(receiverId);
-                        let groupMembersIds = [];
+
                         for (let i = 0; i < groupMembers.length; i++) {
                             groupMembersIds.push(parseInt(groupMembers[i].u_id));
                         }
@@ -956,7 +958,8 @@ io.on("connection", function (socket) {
                     }
                     message = emoji.unicodeToImage(data.message);
                     let receiverType = "personal";
-                    let totalReceiver = await sMM.Im_group_members_Model.getTotalGroupMember(receiverId);
+                    let totalReceiver = groupMembersId.length;
+                    // let totalReceiver = await sMM.Im_group_members_Model.getTotalGroupMember(receiverId);
                     if (totalReceiver > 2) {
                         receiverType = "group";
                     }
@@ -964,7 +967,7 @@ io.on("connection", function (socket) {
                     if (oldMessage != null) {
                         await sMM.Im_receiver_Model.deleteByGroupId(receiverId);
                     }
-                    let memberIds = await sMM.Im_group_members_Model.getMembers(receiverId);
+                    // let memberIds = await sMM.Im_group_members_Model.getMembers(receiverId);
                     await sMM.Im_message_Model.insert(senderId, receiverId, message, fileType, null, receiverType, date, time, date_time);
                     let fullMessage = await sMM.Im_message_Model.getRecentMessageWithUpdate(receiverId);
 
@@ -974,7 +977,7 @@ io.on("connection", function (socket) {
 
                     let sendMessageData = {};
                     sendMessageData.to = receiverId;
-                    sendMessageData.receiversId = memberIds;
+                    sendMessageData.receiversId = groupMembersId;
                     sendMessageData.message = fullMessage;
                     sendMessageData.sender = senderInfo;
                     await sendMessage(sendMessageData, socket);
