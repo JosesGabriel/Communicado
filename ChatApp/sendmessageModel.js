@@ -52,7 +52,7 @@ Im_group_members_Model.getTotalGroupMember= async function(g_id){
 };
 
 Im_group_members_Model.getMembers=async function(g_id){
-    let query = "SELECT igm.u_id, u.userSecret FROM im_group_members igm INNER JOIN users u ON igm.u_id = u.userId WHERE igm.g_id = ?";
+    let query = "SELECT igm.u_id, u.userSecret, u.firstName, u.lastName, u.userId, u.userEmail, u.userAddress, u.userMobile, u.userStatus, u.userGender, u.userProfilePicture, u.active FROM im_group_members igm INNER JOIN users u ON igm.u_id = u.userId WHERE igm.g_id = ?";
     let [result,err]=await mysqlCon.execute(query,[g_id]);
     return result;
 };
