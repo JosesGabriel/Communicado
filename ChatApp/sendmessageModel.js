@@ -98,7 +98,7 @@ Im_group_Model.getAdminUserIdbyGroupId=async (g_id)=>{
 };
 
 Im_group_Model.getGroupMaxModerator=async (g_id)=>{
-    let query="select if(count(u_id)>=10,1,0) as maximum from im_group_moderators where g_id=?";
+    let query="select if(count(u_id)>=2,1,0) as maximum from im_group_moderators where g_id=?";
     let[result,err]=await mysqlCon.execute(query,[g_id]);
     return parseInt(result[0].maximum);
 };
