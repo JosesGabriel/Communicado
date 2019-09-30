@@ -97,7 +97,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </div>
                         <div id="vyndue-floatBtn-container_1">
                             <div title="Communities" id="btnCommunities" class="floatBtn-Wrapper">
-                                <i class="fa fa-users" aria-hidden="true"><br><span>Communities</span></i>
+                                <i class="fa fa-users" aria-hidden="true"><br><span>Communitiess</span></i>
                                 
                             </div>
                         </div>
