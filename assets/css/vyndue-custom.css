@@ -524,7 +524,7 @@ label.communitymoderatorlist_label:hover{
     border: 2px solid #142c46
 }
 .card-handler-left {
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 .middle-color {
     background-color: #0b1b2b;
@@ -546,16 +546,16 @@ label.communitymoderatorlist_label:hover{
     padding: 0 0 2px 0;
 }
 .modelbox-bottom-left {
-    padding: 9px 0 0 0;
+    /* padding: 9px 0 0 0; */
 }
 .modelbox-bottom-left:hover {
-    overflow-y: auto;
-}
-.card.card-handler.card-handler-bottom-left {
-
+    /* overflow-y: auto; */
 }
 .card.card-handler.card-handler-middle-center {
-
+    height: 100%;
+}
+.card-handler-in.card-handler-middle {
+    height: 100%;
 }
 .notif-cont {
     padding: 0 5px;
@@ -586,7 +586,7 @@ button.btn-xs.btn-warning.pull-right.communitylist_btn {
     margin: 3px 12px;
     color: #d8d8d8;
 }
-@media only screen and (max-height: 667px) {
+/* @media only screen and (max-height: 667px) {
     .modelbox-bottom-left {
         max-height: 63vh;
     }
@@ -625,7 +625,7 @@ button.btn-xs.btn-warning.pull-right.communitylist_btn {
     .modelbox-bottom-left {
         max-height: 18vh;
     }
-}
+} */
 
 div#divStockDiv
 {
@@ -699,4 +699,7 @@ td.chat_stock_value {
 }
 hr.hr_divider{
     margin: 3px;
+}
+.leftSection .card.card-handler:nth-child(1) {
+    height: 187px;
 }

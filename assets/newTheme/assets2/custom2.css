@@ -1,6 +1,7 @@
 html {
     background: #0d1f33;
     margin-right: 0 !important;
+    height: 100%;
 }
 body {
     color: #fffffe;
@@ -926,10 +927,13 @@ div#message_twemoji {
     cursor:pointer;
 }
  #thumbnail{
-    float:left;
-    height: 148px;
+    float: left;
+    height: 100%;
     line-height: 147px;
-    display: inline-block;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
  #thumbnail #tImg_blank{
     position:relative;
@@ -939,15 +943,12 @@ div#message_twemoji {
      display: none;
 }
  #thumbnail #tImg{
-    position:relative;
-    z-index:0;
-    width:100%;
-    border-radius: 10px 0px 0px 10px;
-    height: 148px;
-    width:150px;
+    border-radius: 0;
+    height: auto;
+    width: 150px;
 }
 #texts {
-    height: 150px;
+    height: 109px;
     border: 1px solid #142c46;
     width: 100%;
     background-color: transparent;
@@ -960,18 +961,18 @@ div#message_twemoji {
     cursor:pointer;
     margin-bottom:10px;
     margin-top: 10px;
-    color:black;
+    color:#fff;
     text-align:left !important;
     text-align:-webkit-left !important;
     text-align:-moz-left !important;
 }
  #desc{
     cursor:pointer;
-	background-color:#fff;
+	background-color:#0d2539;
     font-size:11px;
     margin-bottom:10px;
     overflow:hidden;
-    color:black;
+    color:#fff;
     text-align:left !important;
     padding-left: 11px;
     padding-right: 10px;
@@ -1044,7 +1045,7 @@ div#attachment {
     margin-top: 0px;
     */
     position: relative;
-     bottom: -20px;
+     bottom: -9px;
 }
  @media (max-width:439px) and (min-width:300px){
     .fw-im-isme .fw-im-attachments{
@@ -1210,6 +1211,7 @@ div#attachment {
 .memberActive{border:3px solid #25ae5f;}
 .controlOverflow{
     overflow: hidden !important;
+    height: 100%;
 }
 @media (max-width:439px) and (min-width:320px){
     .fw-im-message-author-name{
@@ -1434,11 +1436,9 @@ div#attachment {
 	border-color: #00B7FF !important;
 }
 .fw-im-isme .fw-im-message-text {
-	color:#fffffe;
-	background-color: #f56d3d;
-	background-image: linear-gradient(#405DE6, #5851DB, #833AB4, #C13584,#E1306C,#FD1D1D,#F56040,#F77737,#FCAF45,#FFDC80);
-	background-attachment: fixed;
-	border-radius: 13px 0 13px 13px;
+	color: #fffffe;
+    background-color: #0d2539 !important;
+    border-radius: 13px 0 13px 13px;
 }
 .fw-im-isnotme .fw-im-message-text {
 	color: #fffffe;
@@ -1459,12 +1459,6 @@ div#attachment {
 }
 ul#groups {
     background: transparent;
-}
-#chatBox {
-	/*background-image:url('../../img/chat_bg.png');*/ 
-	background-color: #0d1f33;
-	color: white;
-	padding-bottom: 52px;
 }
  .chat-search{
 	position:relative;
@@ -1573,7 +1567,7 @@ span.numbermember, span.par-label {
     padding: 5px;
     padding-bottom: 10px;
     margin: 0;
-    margin-top: -28px;
+    padding-top: 24px;
 }
 img.imgst {
     width: 45px;
@@ -1889,7 +1883,7 @@ div#inviteLinkBtn #inviteLink:hover {
 }
 #chatBox {
     background-color: #0b1b2b;
-    padding-bottom: 50px;
+    padding-bottom: 10px;
     margin-top: 0;
     padding-top: 10px;
 }

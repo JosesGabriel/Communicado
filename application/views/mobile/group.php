@@ -21,7 +21,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                    <div class="col-md-12" style="padding: 0;font-size: 25px;font-weight: bold"><span class="" style="padding: 0;cursor: pointer;"><i class="ico-new-message" style="color: #388ded" ></i></span></div>
                 </div>
             </div>
-        <div style="float:left; width: 100%"  id="groupDiv">
+        <div style="width: 100%"  id="groupDiv">
             <ul class="persons" id="groups" >
 
             </ul>

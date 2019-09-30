@@ -97,7 +97,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </div>
                         <div id="vyndue-floatBtn-container_1">
                             <div title="Communities" id="btnCommunities" class="floatBtn-Wrapper">
-                                <i class="fa fa-users" aria-hidden="true"><br><span>Commasdasdasdasdasunitiess</span></i>
+                                <i class="fa fa-users" aria-hidden="true"><br><span>Communities</span></i>
                                 
                             </div>
                         </div>
@@ -156,7 +156,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
             <div class="card card-handler card-handler-bottom-left">
                 <div class="card-handler-in card-handler-left modelbox-bottom-left">
-                    <div style="float:left; width: 100%" id="groupDiv">
+                    <div style="width: 100%" id="groupDiv">
                         <ul class="persons" id="groups"></ul>
                     </div>
                 </div>

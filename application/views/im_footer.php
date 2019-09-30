@@ -189,7 +189,7 @@
                 //$("body").css({"display": "inline-block"});
             }
             $(".chat").css({"height": (viewHeight - 170)});
-            $('#groups').css({"height": (viewHeight - 110)});
+            $('#groups').css({"height": (viewHeight - 187)});
             $(".rightSection").css({"height": (viewHeight - 50)});
             //$('.personsList').css({"height":(viewHeight-250)});
         }).trigger("resize");
