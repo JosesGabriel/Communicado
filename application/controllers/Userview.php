@@ -117,7 +117,7 @@ class Userview extends CI_Controller
                 if ($this->User_Model->isValidToken($resToken)) {
                     $this->load->view('layout/header');
 
-                    $this->load->view('layout/navbar');
+                    $this->load->view('layout/navbar_simple');
 
                     $this->load->view('im', $data);
 
@@ -131,7 +131,7 @@ class Userview extends CI_Controller
                 if ($resToken != null || trim($resToken) != '') {
                     $this->load->view('layout/header');
 
-                    $this->load->view('layout/navbar');
+                    $this->load->view('layout/navbar_simple');
 
                     $this->load->view('im', $data);
 

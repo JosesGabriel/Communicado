@@ -171,7 +171,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="chat-search col-md-12 groupNameDiv" style="text-align: left; padding-bottom: 21px;">
                         <div class="col-md-11">
                                 <div class="sel-left">
-                                    <div class="imgselecteds ">
+                                    <div class="imgselecteds">
                                         
                                     </div>
                                 </div>

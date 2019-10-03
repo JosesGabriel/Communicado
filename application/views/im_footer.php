@@ -188,8 +188,8 @@
                 $(".rightSection").css({"display": "inline-block"});
                 //$("body").css({"display": "inline-block"});
             }
-            $(".chat").css({"height": (viewHeight - 170)});
-            $('#groups').css({"height": (viewHeight - 187)});
+            $(".chat").css({"height": (viewHeight - 230)});
+            $('#groups').css({"height": (viewHeight - 275)});
             $(".rightSection").css({"height": (viewHeight - 50)});
             //$('.personsList').css({"height":(viewHeight-250)});
         }).trigger("resize");
@@ -2098,7 +2098,7 @@
 
         //This function is used to get all stock list
         function getStock(callback) {
-            let url = "https://data-api.arbitrage.ph/api/v1/stocks/list";
+            let url = "https://dev-v1.arbitrage.ph/wp-json/data-api/v1/stocks/list";
             let settings = {
                 "async": true,
                 "crossDomain": true,
@@ -2114,7 +2114,7 @@
 
         //This function is used to get stock current state 
         function getStockLatest(symbol, callback) {
-            let url = "https://data-api.arbitrage.ph/api/v1/stocks/history/latest?exchange=PSE&symbol="+symbol;
+            let url = "https://dev-v1.arbitrage.ph/wp-json/data-api/v1/stocks/history/latest?exchange=PSE&symbol="+symbol;
             let settings = {
                 "async": true,
                 "crossDomain": true,
@@ -5484,16 +5484,10 @@
         });
     });
 </script>
-<!-- <script src="https://code.jquery.com/jquery-1.10.2.js"></script> -->
 <script type="text/javascript">
     $(document).ready(function(){
-        // var els = jQuery('.fw-im-isme .fw-im-message-author img').attr('src');
-
-        // console.log(numItems);
         $('.searchGroupInput').prepend('<i class="fas fa-search"></i>');
-    });
-    $(document).ready(function(){
-        // $('.rightSection').hide();
+
         $('#nav-icon1').click(function(){
             $(this).toggleClass('open');
             var rhidesection = $('.rightSection').hasClass('hideshowme');
@@ -5512,56 +5506,18 @@
         $('#nav-icon1').click(function(){
             $('.middleSection').toggleClass('tosix');
         });
-        // $('.vyndue-floatBtn-container_3').click(function(){
-        //     $('div#newMessageText_icon_picker').append('<span>Emoji</span>');
-        // });
 
-    });
-    // $(document).ready(function(){
-    //     $('#nav-icon3-a').click(function(){
-    //         $(this).toggleClass('open');
-    //     });
-    // //         // $('.groupInfoContent .optionHubar').hide();
-    // //     $('.himea').hide();
-    // //     $('#nav-icon3-a').click(function(){
-    // //         $('.himea').toggle();
-    // //     });
-    // });
-
-        $(document).ready(function(){
-            $('.attachment').hide();
-            $('#nav-icon3').click(function(){
-                $(this).toggleClass('open');
-                $('.attachment').toggle('hideshowme');
-            });
-            $('#ImageAttachmentList').hide();
-            $('#nav-icon3-c').click(function(){
-                $(this).toggleClass('open');
-                $('#ImageAttachmentList').toggle('lllx');
-            });
+        $('.attachment').hide();
+        $('#nav-icon3').click(function(){
+            $(this).toggleClass('open');
+            $('.attachment').toggle('hideshowme');
         });
-    // $(document).ready(function(){
-    //     $('#unmute').mouseenter(function(){
-    //         $('.x1x2-1').show().addClass('swmpls');
-    //     });
-    //     $('#mute').mouseenter(function(){
-    //         $('.x1x2-2').show().addClass('swmpls');
-    //     });
-    //     $('#leaveGroup').mouseenter(function(){
-    //         $('.x1x2-3').show().addClass('swmpls');
-    //     });
-    // });
-    // $(document).ready(function(){
-    //     $('#unmute').mouseleave(function(){
-    //         $('.x1x2-1').hide().removeClass('swmpls');
-    //     });
-    //     $('#mute').mouseleave(function(){
-    //         $('.x1x2-2').hide().removeClass('swmpls');
-    //     });
-    //     $('#leaveGroup').mouseleave(function(){
-    //         $('.x1x2-3').hide().removeClass('swmpls');
-    //     });
-    // });
+        $('#ImageAttachmentList').hide();
+        $('#nav-icon3-c').click(function(){
+            $(this).toggleClass('open');
+            $('#ImageAttachmentList').toggle('lllx');
+        });
+    });
 </script>
 </body>
 </html>

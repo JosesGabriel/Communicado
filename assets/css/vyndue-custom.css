@@ -703,3 +703,10 @@ hr.hr_divider{
 .leftSection .card.card-handler:nth-child(1) {
     height: 187px;
 }
+
+img#arby_logo_header{
+    width: 180px !important;
+    height: auto;
+    margin-top: -3px;
+    margin-left: 30px;
+}
