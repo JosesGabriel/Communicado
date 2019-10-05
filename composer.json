@@ -14,7 +14,8 @@
 		"php": ">=5.2.4",
 		"wisembly/elephant.io": "^3.3",
 		"emojione/emojione": "^3.1",
-		"lcobucci/jwt": "^3.3"
+		"lcobucci/jwt": "^3.3",
+		"guzzlehttp/guzzle": "^6.3"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
