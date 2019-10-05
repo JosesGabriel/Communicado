@@ -1,6 +1,6 @@
 <?php
 require APPPATH .'/libraries/REST_Controller.php';
-require  APPPATH .'/helper-classes/guzzle-class.php';
+require APPPATH .'/helper-classes/guzzle-class.php';
 
 class DataApi extends REST_Controller
 {   // administrator controller
@@ -17,6 +17,9 @@ class DataApi extends REST_Controller
 
     public function index_get()
     {
+        
+        $this->guzzleClient->test();
+
         $resToken = $this->session->userdata('responseToken');
         if ($this->session->userdata('session_token') != null) { // login
             $response = array(
@@ -41,8 +44,8 @@ class DataApi extends REST_Controller
     }
 
     public function stocklist_get(){
-        if (!isUserLoggedIn()) {
-            $response = array(
+        if (!$this->isUserLoggedIn()) {
+            $response = array(  
                 'status' => array(
                     'code' => REST_Controller::HTTP_UNAUTHORIZED,
                     'message' => 'Unauthorized Access!',
@@ -53,9 +56,8 @@ class DataApi extends REST_Controller
             $this->response($response, REST_Controller::HTTP_UNAUTHORIZED);
         }
 
-        $result = $this->forwardRequest("https://data-api.arbitrage.ph/v1/stocks/list");
-
-        return $result;
+        $result = $this->forwardRequest("https://data-api.arbitrage.ph/api/v1/stocks/list");
+        $this->response(json_decode($result->content), $result->status_code);
     }
 
     public function history_get($exchange, $symbol){
@@ -69,8 +71,8 @@ class DataApi extends REST_Controller
                 "Authorization" => "Bearer {$this->client_secret}",
                 ]
             ]);
-
-        return json_decode($request->content);
+ 
+         return $request;
     }
 
     public function isUserLoggedIn(){

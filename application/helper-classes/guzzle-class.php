@@ -65,4 +65,8 @@ class GuzzleRequest
         return $this;
     }
     //endregion Helpers
+
+    public function test(){
+        die('testing test');
+    }
 }
