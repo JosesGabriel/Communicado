@@ -55,3 +55,7 @@ $route['translate_uri_dashes'] = TRUE;
 
 //capture activate link
 $route['activate.php'] = 'activate';
+
+$route['data-api'] = 'dataapi';
+$route['data-api/stocklist'] = 'dataapi/stocklist';
+$route['data-api/history/(:any)/(:any)'] = 'dataapi/history/$1/$2';
