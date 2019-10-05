@@ -4300,7 +4300,10 @@
             }
             ret.next = (ret.page==ret.last_page) ? 0 : 1;
             let html = `<span class="list-group-item list-group-item-info row">
-                    <ul class="grplist col-md-6"><span class="arbitrage-button arbitrage-button--info" id="createCommunity"><i class="fa fa-plus-circle fa-fw"></i> Create Community</span></ul>
+                    <ul class="grplist col-md-6">
+                    <!--<span class="arbitrage-button arbitrage-button--info" id="createCommunity">
+                        <i class="fa fa-plus-circle fa-fw"></i> Create Community</span>-->
+                    </ul>
                     <ul class="pager col-md-6" style="margin:0;">
                         <li ${ (!ret.prev) ? 'class="disabled"' : '' }><a href="#" data-page="${ret.prev_page}" data-prev="${ (ret.prev) ? 1 : 0  }" id="communityPrev"><i class="fas fa-chevron-circle-left"></i></a></li>
                         <li ${ (!ret.next) ? 'class="disabled"' : '' }><a href="#" data-page="${ret.next_page}" data-next="${ (ret.next) ? 1 : 0  }" id="communityNext"><i class="fas fa-chevron-circle-right"></i></a></li>
