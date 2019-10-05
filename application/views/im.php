@@ -82,76 +82,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <!-- START LEFT SECTION -->
         <div class="leftSection col-xl-3 col-md-3 col-sm-12 col-xs-12" style="padding: 0;">
             <div class="card card-handler">
-            <div class="card-handler-in modelbox-top-left-padding">
-                <!-- profile section-->
-                <div class="profile_container">
-                    <span class="prof_image_container"><img src="" alt="" class="prof_image" /></span>
-                    <span class="prof_name"></span>
-                </div>
-                <hr class="style14 style12">
-                <div class="notif-cont">
-                        <div id="vyndue-floatBtn-container_3">   
-                            <div title="New Message" id="newMessage" class="floatBtn-Wrapper">
-                                <i class="fas fa-envelope" aria-hidden="true"><br><span>New Message</span></i>
-                            </div>
-                        </div>
-                        <div id="vyndue-floatBtn-container_1">
-                            <div title="Communities" id="btnCommunities" class="floatBtn-Wrapper">
-                                <i class="fa fa-users" aria-hidden="true"><br><span>Communities</span></i>
-                                
-                            </div>
-                        </div>
-                        <div id="vyndue-floatBtn-container_2">
-                            <div title="Notifications" id="btnNotifications" class="floatBtn-Wrapper">
-                                <i class="fa fa-bell" aria-hidden="true"><span class="badgenotification"></span><br><span>Notifications</span></i>
-                                
-                            </div>
-                        </div>
-                        <div style="display:none;" id="vyndue-floatBtn-container_4">
-                            <div title="Settings" id="btnSettings" class="floatBtn-Wrapper">
-                                <i class="fa fa-gear" aria-hidden="true"><br><span>Settings</span></i>
-                                
-                            </div>
-                        </div>
-                        <!-- <hr class="style14 style11"> -->
+                <div class="card-handler-in modelbox-top-left-padding">
+                    <!-- profile section-->
+                    <div class="profile_container">
+                        <span class="prof_image_container"><img src="" alt="" class="prof_image" /></span>
+                        <span class="prof_name"></span>
                     </div>
-                <!-- chat header start -->
-                <div class="chat-search" id="convStart">
-    
-                <input type="text" id="searchGroupInput">
-                    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-                    
-                    <!--
-                    <textarea style="max-height: 100px; height: 90px border: 0"  id="newMessageText" type="text" name="message" class="form-control" placeholder="Your message....."></textarea>
-                    -->
-                    <!-- 
-                    <div style="display:none;" class=" col-md-2 col-sm-2 col-xs-2" id="unreadMessage" title="Unread Messages">
-                        <div class="col-md-12" style="padding: 0;font-size: 25px;font-weight: bold">
-                            <span class="" style="padding: 0;cursor: pointer;">
-                                <i class="ico-pending-message" style="color: #388ded" ></i>
-                            </span>
-                        </div>
-                    </div>
-                    -->
-                    
-                    <!--
-                    <div class=" col-md-10 col-sm-10 col-xs-10" id="" style="padding: 6px 0 0 5px;text-align: left;">
-                        <div style="padding: 0;font-size: 16px;font-weight: bold">Vyndue Messenger</div>
-                </div>
-                -->
-                    
-                    <!--
-                    <div class=" col-md-2 col-sm-2 col-xs-2" id="newMessage" title="New Message" style="padding: 0;text-align: right;">
-                        <div class="col-md-12" style="padding: 0;font-size: 25px;font-weight: bold">
-                            <span class="" style="padding: 0;cursor: pointer;">
-                                    <i class="ico-new-message" style="color: #388ded" ></i>
-                            </span>
-                        </div>
-                    </div>-->
-                
-                </div>
-                <!-- chat header end -->
-                    
+                        
                 </div>
             </div>
             <div class="card card-handler card-handler-bottom-left">
@@ -318,7 +255,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                     <div class="col-md-12 col-xl-12 col-xs-12 col-sm-12 hidden" id="imageAttachment">
                         <div class="pad10bgradius">
-                            <div class="sectionName text-center" >Shared Images<div id='nav-icon3-c'><span></span><span></span><span></span></div></div>
+                            <div class="sectionName text-center">Shared Images<div id='nav-icon3-c'><span></span><span></span><span></span></div></div>
                             <div class="row ol-lightbox-gallery" style="list-style: none;padding: 0;" id="ImageAttachmentList" >
                             </div>
                         </div>

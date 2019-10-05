@@ -10,61 +10,38 @@
                 <!-- #####Begin logo wrapper-->
                 <div class="logo-wrapper">
                     <a href="https://arbitrage.ph/">
-                        <img src="<?php echo base_url('assets/img/arbitrage_horiz.png');?>" id="arby_logo_header"> 
+                        <img src="<?php echo base_url('assets/img/arbi_icon.png');?>" id="arby_logo_header"> 
                     </a>
                 </div>
-                <!-- #####End logo wrapper-->
-                <!-- #####Begin primary menu-->
-                <ul id="primary-menu">
-                    <!-- #####Begin menu item-->
-                    <li class="mega-menu">
-                        <!-- 
-                        <a id="profileLink" href="<?=base_url('userview/profile')?>" target="_blank">
-                            <span class="navUserImg"><img id="userImageTop" src="<?php echo base_url('assets/img/download.png') ?>"> </span>
-                            <span id="userNameTop" class="bold">...</span>
-                        </a>
-                        -->
-                        <!--
-                        <span id="profileLink">
-                            <span class="navUserImg"><img id="userImageTop" src="<?php echo base_url('assets/img/download.png') ?>"> </span>
-                            <span id="userNameTop" class="bold">...</span>
-                        </span>
-                        -->
-                    </li>
-                    <!-- #####Begin menu item-->
-                    <!--
-                    <li class="mega-menu"><a href="<?=base_url('userview/logout')?>" title="Log Out" class="bold"><span>Log Out</span></a>
-                    -->
-                        <!-- #####Begin megamenu-->
-                        <!-- #####End megamenu-->
-                    </li>
 
-                    <!-- #####End menu item-->
-                </ul>
-                <!-- #####End primary menu-->
-                <div class="header-icons">
-                    <!-- #####Begin cart-->
-
-                    <!-- #####End cart-->
-                    <!-- #####Begin trigger for search-->
-
-                    <!-- #####End trigger for search-->
-                    <!-- #####Begin mobile menu trigger-->
-                    <div class="ol-mobile-trigger hamburger hamburger--elastic">
-                        <div class="hamburger-box">
-                            <div class="hamburger-inner"></div>
-                        </div>
-                    </div>
-                    <!-- #####End mobile menu trigger-->
-
-                    <!-- #####Begin icons beside menu-->
-
-                    <!-- #####End icons beside menu-->
+                <!-- chat header start -->
+                <div class="chat-search" id="convStart">
+                   <input type="text" id="searchGroupInput">
                 </div>
-              </div>
+                <!-- chat header end -->
+
+                <div class="notif-cont" id="navbar_menu">
+                        <div id="vyndue-floatBtn-container_3">   
+                            <div title="New Message" id="newMessage" class="floatBtn-Wrapper">
+                                <i class="fas fa-envelope" aria-hidden="true"><br><span>New Message</span></i>
+                            </div>
+                        </div>
+                        <div id="vyndue-floatBtn-container_1">
+                            <div title="Communities" id="btnCommunities" class="floatBtn-Wrapper">
+                                <i class="fa fa-users" aria-hidden="true"><br><span>Communities</span></i>
+                                
+                            </div>
+                        </div>
+                        <div id="vyndue-floatBtn-container_2">
+                            <div title="Notifications" id="btnNotifications" class="floatBtn-Wrapper">
+                                <i class="fa fa-bell" aria-hidden="true"><span class="badgenotification"></span><br><span>Notifications</span></i>
+                                
+                            </div>
+                        </div>
+                </div>
+
+                </div>
             </div>
-            <div class="border-colored"></div>
-            <!-- #####End header main area-->
         </div>
     </header>
     

@@ -701,12 +701,36 @@ hr.hr_divider{
     margin: 3px;
 }
 .leftSection .card.card-handler:nth-child(1) {
-    height: 187px;
+    height: 70px;
 }
 
 img#arby_logo_header{
-    width: 180px !important;
-    height: auto;
-    margin-top: -3px;
-    margin-left: 30px;
+    position: absolute;
+    min-height: 50px !important;
+    height: 50px;
+    margin-left: 15px;
+    margin-top: 3px;
+}
+
+#createCommunity {
+    border: #9C27B0 solid 2px;
+    border-radius: 20px;
+    color: #9C27B0;
+}
+#createCommunity:hover {
+    background: #9C27B0;
+    color: #fff;
+    transition-duration: 300ms;
+}
+
+div#navbar_menu{
+    width: 300px;
+    position: absolute;
+    right: 18px;
+    top: 11px;
+}
+
+div#convStart{
+    width: 300px;
+    margin-left: 60px;
 }
