@@ -722,36 +722,37 @@ io.on("connection", function (socket) {
     }
     
     socket.on('invitationaccept', function(data){
+        //console.log(data);
         let result = InvitationAcceptNotification(data);
         result.then(response => {
-          //  if(parseInt(response.active)){
+            //console.log('response from fetch')
+            //console.log(response);
+            if(parseInt(response.active)){
                 users[response.socketId].emit("notifyUser", response);
-          //  } 
+            } 
         });
     });
+
     async function InvitationAcceptNotification(data) {
-        // await sMM.Im_notifications_Model.insert(u_id,r_id,g_id,t_id);
-        //console.log('admin_id');
-        //console.log(data.admin_id);
-        //console.log('mod_id');
-        //console.log(data.generator_id);
-        await sMM.Im_notifications_Model.insert(data.user_id,data.admin_id,data.group_id,'9');
-        if(data.admin_id != data.generator_id)
-            await sMM.Im_notifications_Model.insert(data.user_id,data.generator_id,data.group_id,'9');
+        let n_id = 0;
+        if(data.generator_id>0){
+            n_id = await sMM.Im_notifications_Model.insert(data.user_id,data.generator_id,data.group_id,9);
+        }else{
+            n_id = await sMM.Im_notifications_Model.insert(data.user_id,data.admin_id,data.group_id,9);
+        }
+        let result = await sMM.Im_notifications_Model.fetchDetails(n_id);
+        return result;
     }
 
 
     socket.on('communitymoderatorProcess', function (data){
-        
         //console.log(data);
-
         let result = CommunityModeratortNotification(data);
         result.then(response => {
             if(parseInt(response.active)){
                 users[response.socketId].emit("notifyUser", response);
             } 
         });
-    
     });
 
     async function CommunityModeratortNotification(data) {
