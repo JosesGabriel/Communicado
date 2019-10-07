@@ -2098,7 +2098,7 @@
 
         //This function is used to get all stock list
         function getStock(callback) {
-            let url = "https://dev-v1.arbitrage.ph/wp-json/data-api/v1/stocks/list";
+            let url = "/data-api/stocklist/";
             let settings = {
                 "async": true,
                 "crossDomain": true,
@@ -2114,7 +2114,7 @@
 
         //This function is used to get stock current state 
         function getStockLatest(symbol, callback) {
-            let url = "https://dev-v1.arbitrage.ph/wp-json/data-api/v1/stocks/history/latest?exchange=PSE&symbol="+symbol;
+            let url = "/data-api/history/PSE/" + symbol;
             let settings = {
                 "async": true,
                 "crossDomain": true,
@@ -2127,9 +2127,6 @@
                callback(res);
             });
         }
-
-        
-
 
         //This function is used to  get friend list of user
         function getMembers(callback) {   // get friends list
@@ -3754,11 +3751,11 @@
                     $data = {user_id: $response.user_id, group_id: $response.group_id, admin_id: $response.admin_id.createdBy, generator_id: $response.generator_id};
                     socket.emit("invitationaccept",$data);
                     // location.href="<?php echo base_url('userview/im'); ?>"; //IF LOCAL TESTING
-                    location.href="https://arbitrage.ph/vyndue/";    //LIVE TESTING
+                    location.href="https://vyndue.com/userview/im";    //LIVE TESTING
                 }
                 else{
                     toastr.error($response);
-                    location.href="https://arbitrage.ph/vyndue/";
+                    location.href="https://vyndue.com/userview/im";
                 }
             })
         });

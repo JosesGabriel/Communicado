@@ -14,11 +14,11 @@
                     </a>
                 </div>
 
-                <!-- chat header start -->
-                <div class="chat-search" id="convStart">
-                   <input type="text" id="searchGroupInput">
-                </div>
-                <!-- chat header end -->
+            <!-- chat header start -->
+            <div class="chat-search" id="convStart">
+                <input type="text" id="searchGroupInput" style="color:#fff !important">
+            </div>
+            <!-- chat header end -->
 
                 <div class="notif-cont" id="navbar_menu">
                         <div id="vyndue-floatBtn-container_3">   
@@ -41,7 +41,9 @@
                 </div>
 
                 </div>
+ 
             </div>
+            <div class="border-colored"></div>
         </div>
     </header>
     

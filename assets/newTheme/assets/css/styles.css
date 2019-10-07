@@ -14158,7 +14158,8 @@ a {
     overscroll-behavior: contain;
 }
 .h-50.vyndueheader { 
-    background-color: #0d1f33;
+    /*background-color: #0d1f33;*/
+    background-color: #213F58;
 }
 .border-colored {
     height: 4px;

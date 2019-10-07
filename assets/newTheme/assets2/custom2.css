@@ -1914,9 +1914,9 @@ header#main-header {
 }
 i.fas.fa-search {
     float: left;
-    color: #414f5a !important;
+    /* color: #414f5a !important; */
     font-size: 15px;
-    margin-top: 2px;
+    margin-top: 4px;
     margin-right: 8px;
 }
 /* Icon 1 */

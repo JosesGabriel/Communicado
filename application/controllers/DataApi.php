@@ -2,7 +2,7 @@
 require APPPATH .'/libraries/REST_Controller.php';
 require APPPATH .'/helper-classes/guzzle-class.php';
 
-class DataApi extends REST_Controller
+class Dataapi extends REST_Controller
 {   // administrator controller
     protected $guzzleClient;
     protected $dataBaseUrl;
@@ -63,7 +63,7 @@ class DataApi extends REST_Controller
             $this->response($response, REST_Controller::HTTP_UNAUTHORIZED);
         }
 
-        $request = $this->guzzleClient->request("GET", $url, [
+        $result = $this->guzzleClient->request("GET", $url, [
             "headers" => [
                 "Content-type" => "application/json",
                 "Authorization" => "Bearer {$this->client_secret}",

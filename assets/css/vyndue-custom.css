@@ -1,11 +1,11 @@
 .searchGroupInput {
-    background-color: #0f111d;
-    border: 1px solid #1e3554 !important;
+    background-color: #4E6A85;
+    border: 1px solid #3C8098 !important;
     border-radius: 35px !important;
-    height: 40px;
-    padding: 8px 12px 8px 12px;
+    height: 32px;
+    padding: 4px 12px 8px 12px;
     position: relative;
-    color: #fffffe;
+    color: #fff !important;
     box-shadow: none !important;
 }
 .ms-res-ctn .ms-res-group{
@@ -706,10 +706,10 @@ hr.hr_divider{
 
 img#arby_logo_header{
     position: absolute;
-    min-height: 50px !important;
-    height: 50px;
-    margin-left: 15px;
-    margin-top: 3px;
+    min-height: 37px !important;
+    height: 35px;
+    margin-left: 7px;
+    margin-top: 8px;
 }
 
 #createCommunity {
@@ -731,6 +731,6 @@ div#navbar_menu{
 }
 
 div#convStart{
-    width: 300px;
-    margin-left: 60px;
+    width: 270px;
+    margin-left: 40px;
 }
