@@ -27,7 +27,7 @@
             var token = location.search.split('token=')[1];
             if(token.length){
                 //console.log(token);
-                location.href="https://vyndue.com/userview/im?token=" + token;
+                location.href="<?=MAIN_URL?>/userview/im?token=" + token;
             }
            
     });

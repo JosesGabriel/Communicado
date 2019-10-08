@@ -37,10 +37,18 @@
         //console.log('vyndue readyy')
         sendMessage({key: 'ready', data: {}});
 
+        // Initialize function on load
         $(window).on('message', function (e) {
-            var data = e.originalEvent.data;
-            //console.log(window);
-           // window.promptChat(data.data);
+            //var data = e.originalEvent.data;
+            var token = location.search.split('token=')[1];
+            var us = location.search.split('us=')[1];
+            if(token){
+                window.inviteLinkValidator(token);
+                return;
+            }else if(us){
+                window.promptChat(us);    
+                return;
+            }
         });
 
         let t = null;
@@ -1423,13 +1431,13 @@
             if (group.messageType === "text") {
                 let recentMessage = group.recentMessage;
                 if (recentMessage.includes('🐂')){
-                        // var str = 'You: <img class="emoj" src="https://vyndue.com/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">'
-                        recentMessage = recentMessage.replace(/🐂/g,'<img class="emoj" src="https://vyndue.com/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png" style="border-radius: 0;background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">');
+                        // var str = 'You: <img class="emoj" src="<?=MAIN_URL?>/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">'
+                        recentMessage = recentMessage.replace(/🐂/g,'<img class="emoj" src="<?=MAIN_URL?>/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png" style="border-radius: 0;background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">');
                         // console.log("test2");
                         // recentMessage = str;
                 }else if (recentMessage.includes('🐻')){
-                        // var str = 'You: <img class="emoj" src="https://vyndue.com/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">'
-                        recentMessage = recentMessage.replace(/🐻/g,'<img class="emoj" src="https://vyndue.com/assets/newTheme/assets/js/twemoji/2/72x72/1f43b.png" style="border-radius: 0;background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">');
+                        // var str = 'You: <img class="emoj" src="<?=MAIN_URL?>/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">'
+                        recentMessage = recentMessage.replace(/🐻/g,'<img class="emoj" src="<?=MAIN_URL?>/assets/newTheme/assets/js/twemoji/2/72x72/1f43b.png" style="border-radius: 0;background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">');
                         // console.log("test2");
                         // recentMessage = str;
                 }
@@ -1490,14 +1498,14 @@
                 if (groups[i].messageType === "text") {
                     let recentMessage = groups[i].recentMessage;
                     if (recentMessage.includes('🐂')){
-                        // var str = 'You: <img class="emoj" src="https://vyndue.com/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">'
-                        recentMessage = recentMessage.replace(/🐂/g,'<img class="emoj" src="https://vyndue.com/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">');
+                        // var str = 'You: <img class="emoj" src="<?=MAIN_URL?>/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">'
+                        recentMessage = recentMessage.replace(/🐂/g,'<img class="emoj" src="<?=MAIN_URL?>/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">');
                         // console.log("test2");
                         // recentMessage = str;
                     }
                     else if (recentMessage.includes('🐻')){
-                            // var str = 'You: <img class="emoj" src="https://vyndue.com/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">'
-                            recentMessage = recentMessage.replace(/🐻/g,'<img class="emoj" src="https://vyndue.com/assets/newTheme/assets/js/twemoji/2/72x72/1f43b.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">');
+                            // var str = 'You: <img class="emoj" src="<?=MAIN_URL?>/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">'
+                            recentMessage = recentMessage.replace(/🐻/g,'<img class="emoj" src="<?=MAIN_URL?>/assets/newTheme/assets/js/twemoji/2/72x72/1f43b.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">');
                             // console.log("test2");
                             // recentMessage = str;
                     }
@@ -1576,19 +1584,19 @@
                     //console.log(recentMessage);
                     // let message = data[i].message;
                     if (recentMessage.includes('🐂')){
-                        // var str = 'You: <img class="emoj" src="https://vyndue.com/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">'
-                        recentMessage = recentMessage.replace(/🐂/g,'<img class="emoj" src="https://vyndue.com/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">');
+                        // var str = 'You: <img class="emoj" src="<?=MAIN_URL?>/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">'
+                        recentMessage = recentMessage.replace(/🐂/g,'<img class="emoj" src="<?=MAIN_URL?>/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">');
                         // console.log("test2");
                         // recentMessage = str;
                     }
                     else if (recentMessage.includes('🐻')){
-                            // var str = 'You: <img class="emoj" src="https://vyndue.com/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">'
-                            recentMessage = recentMessage.replace(/🐻/g,'<img class="emoj" src="https://vyndue.com/assets/newTheme/assets/js/twemoji/2/72x72/1f43b.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">');
+                            // var str = 'You: <img class="emoj" src="<?=MAIN_URL?>/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">'
+                            recentMessage = recentMessage.replace(/🐻/g,'<img class="emoj" src="<?=MAIN_URL?>/assets/newTheme/assets/js/twemoji/2/72x72/1f43b.png" style="background: none;width: 20px !important;height: 20px !important;display: inline-block;float: none;">');
                             // console.log("test2");
                             // recentMessage = str;
                     }
                     // if(message.message == '&#x1f402'){
-                    //     message.message = '<img src="https://vyndue.com/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png">';
+                    //     message.message = '<img src="<?=MAIN_URL?>/assets/newTheme/assets/js/twemoji/2/72x72/1f402.png">';
                     // }
                     // console.log(groups[i]);
                     if (recentMessage === null) {
@@ -2099,11 +2107,24 @@
         //This function is used to get all stock list
         function getStock(callback) {
             let url = "/data-api/stocklist/";
+            let form=new FormData();
+            form.append("groupId", activeGroupId);
+            form.append("userId", userId);
             let settings = {
                 "async": true,
                 "crossDomain": true,
                 "url": url,
-                "method": "GET",
+                "method": "POST",
+                "headers": {
+                    "authorization": "Basic YWRtaW46MTIzNA==",
+                    "Authorizationkeyfortoken": String(responce),
+                    "cache-control": "no-cache",
+                    "postman-token": "2a391657-45a9-1a7b-9a67-9b16b0dda13a"
+                },
+                "processData": false,
+                "contentType": false,
+                "mimeType": "multipart/form-data",
+                "data": form,
                 "dataType": 'json'
             };
             $.ajax(settings).done(function (response) {
@@ -2114,16 +2135,30 @@
 
         //This function is used to get stock current state 
         function getStockLatest(symbol, callback) {
-            let url = "/data-api/history/PSE/" + symbol;
+            let url = "/data-api/history/";
+            let form=new FormData();
+            form.append("exchange", 'PSE');
+            form.append("symbol", symbol);
             let settings = {
                 "async": true,
                 "crossDomain": true,
                 "url": url,
-                "method": "GET",
+                "method": "POST",
+                "headers": {
+                    "authorization": "Basic YWRtaW46MTIzNA==",
+                    "Authorizationkeyfortoken": String(responce),
+                    "cache-control": "no-cache",
+                    "postman-token": "2a391657-45a9-1a7b-9a67-9b16b0dda13a"
+                },
+                "processData": false,
+                "contentType": false,
+                "mimeType": "multipart/form-data",
+                "data": form,
                 "dataType": 'json'
             };
             $.ajax(settings).done(function (response) {
                let res = response.data;
+               console.log(res);
                callback(res);
             });
         }
@@ -2156,12 +2191,9 @@
         }
 
         // callback function to get user info by its username
-        window.promptChat = function(name) {
-            return;
-            var username = name.substring(3);
-            //var username = location.search.split('us=')[1];
+        window.promptChat = function(username) {
+            //return;
             if(!username.length) return;
-            
             let url = "<?php echo base_url('user/hasConversation_byUserSecret?username='); ?>" + username;
             if (ID_BASED) {
                 url = "<?php echo base_url('user/hasConversation_byUserSecret?username='); ?>" + username + "&userId=" + userId;
@@ -2181,11 +2213,13 @@
                 "dataType": 'json'
             };
             $.ajax(settings).done(function (response) {
+                //console.log(response);
                 var groupId = response.response.groupId;
                 var fid = response.response.fid;
                 var mingled = response.response.mingled;
                 if(!mingled){
                     //alert("Error: You are not mingled with this person");
+                    //toastr.warning('You are not mingled with this person');
                     console.log("Error: You are not mingled with this person");
                     return;
                 }
@@ -2202,6 +2236,49 @@
                         }, 1000);
                 }
             });
+        }
+
+        /* Start of Invitation Link */
+        window.inviteLinkValidator = function(token) {
+            if(!token.length) return;
+            let userData = jwt_decode(localStorage.getItem("_r"));
+            let form=new FormData();
+            form.append("userId", userData['userId']);
+            form.append("token", token);
+            let settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": "<?php echo base_url('imApi/inviteActivate'); ?>",
+                "method": "POST",
+                "headers": {
+                    "authorization": "Basic YWRtaW46MTIzNA==",
+                    "Authorizationkeyfortoken": String(responce),
+                    "cache-control": "no-cache",
+                    "postman-token": "2a391657-45a9-1a7b-9a67-9b16b0dda13a"
+                },
+                "processData": false,
+                "contentType": false,
+                "mimeType": "multipart/form-data",
+                "data": form,
+                "error": function (e) {
+                    let err = JSON.parse(e.responseText);
+                    // toastr.error(e);
+                },
+            };
+            $.ajax(settings ).done(function (response) {
+                $response = JSON.parse(response);
+                //console.log(response);
+                if($response.message){
+                    toastr.success($response.message);
+                    $data = {user_id: $response.user_id, group_id: $response.group_id, admin_id: $response.admin_id.createdBy, generator_id: $response.generator_id};
+                    socket.emit("invitationaccept",$data);
+                }else{
+                    toastr.warning('You are already exists in the community!');
+                }
+                setTimeout(() => {
+                    location.href="<?=MAIN_URL?>/userview/im";    //LIVE TESTING
+                },5000); 
+            })
         }
 
         //This function is used to clear the current chat box for retrieving new message for the new group
@@ -3715,50 +3792,7 @@
             })
         });
 
-        $('#inviteLinkValidator').on('click', function(){
-            let userData = jwt_decode(localStorage.getItem("_r"));
 
-            const urlParams = new URLSearchParams(window.location.search);
-            const token = urlParams.get('token');
-
-            let form=new FormData();
-            form.append("userId", userData['userId']);
-            form.append("token", token);
-            let settings = {
-                "async": true,
-                "crossDomain": true,
-                "url": "<?php echo base_url('imApi/inviteActivate'); ?>",
-                "method": "POST",
-                "headers": {
-                    "authorization": "Basic YWRtaW46MTIzNA==",
-                    "Authorizationkeyfortoken": String(responce),
-                    "cache-control": "no-cache",
-                    "postman-token": "2a391657-45a9-1a7b-9a67-9b16b0dda13a"
-                },
-                "processData": false,
-                "contentType": false,
-                "mimeType": "multipart/form-data",
-                "data": form,
-                "error": function (e) {
-                    let err = JSON.parse(e.responseText);
-                    // toastr.error(e);
-                },
-            };
-            $.ajax(settings).done(function (response) {
-                $response = JSON.parse(response);
-                if($response.success) {
-                    toastr.success($response.message);
-                    $data = {user_id: $response.user_id, group_id: $response.group_id, admin_id: $response.admin_id.createdBy, generator_id: $response.generator_id};
-                    socket.emit("invitationaccept",$data);
-                    // location.href="<?php echo base_url('userview/im'); ?>"; //IF LOCAL TESTING
-                    location.href="https://vyndue.com/userview/im";    //LIVE TESTING
-                }
-                else{
-                    toastr.error($response);
-                    location.href="https://vyndue.com/userview/im";
-                }
-            })
-        });
         // getmembers creating a new conversation, found at the left side bar
         $('#newMessage').on("click", function (e) {
             resetNewMessage();
@@ -4804,7 +4838,7 @@
             time[groupId] = message.ios_date_time;
             groupObjects[groupId].lastActive = message.ios_date_time;
             let height = chatBox[0].scrollHeight;
-            //chatBox.scrollTop(height);
+            chatBox.scrollTop(height); // force new message scroll down
             clampData();
             /*if (activeGroupId === parseInt(data.to)) {
                 let elementData = $("#group_" + activeGroupId).clone();
@@ -5418,9 +5452,6 @@
             $('#group_' + group.groupId).addClass('active');
         });
         socket.on("updateGroupImage",function (data){
-
-//            console.log('update image');
- //           console.log(data);
 
             groupObjects[data.g_id].groupImage=data.imageData;
             createGroupImage(data.g_id);

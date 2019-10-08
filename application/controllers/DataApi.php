@@ -13,12 +13,8 @@ class Dataapi extends REST_Controller
         $this->guzzleClient = new GuzzleRequest();
         $this->client_secret = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfbmFtZSI6IjRSQjErUjQ5MyJ9.SZzdF4-L3TwqaGxfb8sR-xeBWWHmGyM4SCuBc1ffWUs';
         $this->dataBaseUrl = 'https://data-api.arbitrage.ph';
-        $this->load->model('User_Model');
         $this->load->library('session');
-    }
-
-    public function index_get()
-    {
+  
         if (!$this->isUserLoggedIn()) { // login
             $response = array(
                 'status' => array(
@@ -31,22 +27,17 @@ class Dataapi extends REST_Controller
             $this->response($response, REST_Controller::HTTP_UNAUTHORIZED);
         }
 
-        $response = array(
-            'status' => array(
-                'code' => REST_Controller::HTTP_OK,
-                'message' => 'OK'
-            ),
-            'response' => [],
-        );
-        $this->response($response, REST_Controller::HTTP_OK);
     }
 
-    public function stocklist_get(){
-        $this->forwardRequest("{$this->dataBaseUrl}/api/v1/stocks/list");
-       
+    public function stocklist_post()
+    {
+        $this->forwardRequest("{$this->dataBaseUrl}/api/v1/stocks/list");  
     }
 
-    public function history_get($exchange, $symbol){
+    public function history_post()
+    {
+        $exchange = $this->post('exchange', true);
+        $symbol = $this->post('symbol', true);
         $this->forwardRequest("{$this->dataBaseUrl}/api/v1/stocks/history/latest?exchange={$exchange}&symbol={$symbol}");
     }
 
@@ -82,4 +73,5 @@ class Dataapi extends REST_Controller
 
         return true;
     }
+
 }

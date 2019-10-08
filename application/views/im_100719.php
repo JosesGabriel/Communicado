@@ -1,3 +1,82 @@
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+?>
+    <style>
+    <?php if (isset($_GET['b'])) {
+    $getrand = $_GET['b'];
+    $get_bgfimage = 'loginbg'.$getrand.'.jpg'; ?>
+        html {background: url("<?php echo $homeurlgen; ?>/images/<?php echo $get_bgfimage; ?>") 50% 0 no-repeat #2c3e50 fixed;background-size: cover;}
+    <?php alert($homeurlgen);
+} ?>
+    html {margin-top: 0 !important;}
+    #wpadminbar {
+        display: none !important;
+        z-index: -1 !important;
+    }
+    #preloader {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #0d1f33;
+        z-index: 999999;
+        /* height: 100%; */
+        /* overflow: hidden; */
+    }
+    #status {
+        width: 50px;
+        height: 50px;
+        position: absolute;
+        left: 50%;
+        top: 35%;
+        background-image: url(<?php echo $homeurlgen; ?>/images/arb_preloader.svg);
+        background-size:50px;
+        background-repeat: no-repeat;
+        background-position: center;
+        margin: -25px 0 0 -25px;
+    }
+    #status_txt {
+        width:100%;
+        position: absolute;
+        top:50%;
+        left:0;
+        z-index:99;
+        color:#fff;
+        text-align:center;
+        font-size:11px;
+    }
+    .page-template-template-login a:hover {
+        color:#FFFFFF;
+        text-decoration: underline;
+    }
+    body, #page-container {background-color: transparent !important;}
+    span.um-field-checkbox-option {
+        display: none;
+    }
+    </style>
+<link href="https://arbitrage.ph/assets/css/preloader.css" rel="stylesheet">
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+    <script language="javascript">
+    
+        jQuery(window).on('load', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            if(token) {
+                $('#inviteLinkValidator').click();
+            }
+            jQuery("#status, #status_txt").fadeOut();
+            jQuery("#preloader").delay(300).fadeOut("fast");
+        })
+    </script>
+    <div id="preloader">
+        <div id="status">&nbsp;</div>
+        <div id="status_txt"></div>
+    </div>
+
 <section class="page-contents">
         <input type="hidden" id="inviteLinkValidator">
         <!-- START LEFT SECTION -->
@@ -181,13 +260,33 @@
                             </div>
                         </div>
                     </div>
-        
+                    <!--<div class="col-md-12 col-xl-12 col-xs-12 col-sm-12 text-center pad-2 rightBorder" style="padding-bottom: 5px" >
+                        <div class="preview be-user-info" style="font-size: 10px; padding-bottom:5px;border-bottom:1px solid rgba(0, 0, 0, .10) "></div>
+                    </div>-->
+                    <!-- <div class='Menuselupper'><div id='nav-icon3-a'><span></span><span></span><span></span></div></div> -->
+
+
+
                     </div>
                     <div class="xcvz"></div>
                 </div>
             </div>
         </div>
-       
+
+        <!--
+        <div class=" col-md-2 col-sm-2 col-xs-2" id="newMessage" title="New Message" style="padding: 0;text-align: right;">
+            <div class="col-md-12" style="padding: 0;font-size: 25px;font-weight: bold">
+                <span class="" style="padding: 0;cursor: pointer;">
+                        <i class="ico-new-message" style="color: #388ded" ></i>
+                </span>
+            </div>
+        </div>-->
+<!-- 
+        <div title="Get Messages" id="unreadMessage" class="floatBtn-Wrapper">
+                <i class="fa fa-refresh" aria-hidden="true"></i>
+                <span>Get Messages</span>
+            </div> -->
+        
 </section>
 
 
@@ -290,6 +389,7 @@
                     <div class="flex">
                         <input type="text" id="invitationLink" multiple class="invitationLinkBox form-control" readonly>
                         <div class="invitationLinkCopyBtn_btn">
+                            <!-- <i class="far fa-clipboard"></i> -->
                             <input type="button" value="Copy link" class="invitationLinkCopyBtn" id="invitationLinkCopyBtn">
                         </div>
                     </div>
@@ -311,6 +411,7 @@
                         <input type="text" id="groupName" class="form-control" placeholder="Community Name" required="required">
                     </div>
                     <div class="modal-footer">
+                        <!-- <button type="button" class="btn btn-small btn-round btn-skin-green"  data-toggle="modal" id="changeNameBtn"><i class="fas fa-save"></i>Save</button> -->
                         <button class="arbitrage-button arbitrage-button--primary" data-toggle="modal" id="changeNameBtn"><i class="fas fa-save"></i> Save</button>
                     </div>
                 </div>

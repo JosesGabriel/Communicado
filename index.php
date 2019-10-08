@@ -60,7 +60,7 @@
     define('MINIFY_SOURCE', false);    //minify javascript and html
     define('APPLICATION_NAME', 'Vyndue');
     define('ARBITRAGE', 'https://arbitrage.ph');
-    define('MAIN_URL', 'https://vyndue.com');
+    define('MAIN_URL', 'http://dev.vyndue.com');
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING

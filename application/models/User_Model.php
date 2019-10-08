@@ -827,6 +827,14 @@ class User_Model extends CI_Model
         return $profileData;
     }
 
+    public function getSocketIdbyUserId($user_id){
+
+        $query = $this->db->query("SELECT `socketId` from im_usersocket where `userId` = $user_id limit 1");
+
+        return $query->row()->socketId;
+
+    }
+
     //region For API
     public function fetchByEmail($email = '')
     {
@@ -849,6 +857,7 @@ class User_Model extends CI_Model
 
         return $this->db->trans_status();
     }
+    
 
     //endregion For API
 

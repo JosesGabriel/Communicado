@@ -24,6 +24,7 @@ class ImApi extends REST_Controller
         $this->load->model('Im_group_invitation_usage_Model');
         $this->load->helper('string');
 
+        
         if (!ID_LOGIN) {
             $headers = apache_request_headers();
             if (isset($headers['Authorizationkeyfortoken'])) {
@@ -52,9 +53,10 @@ class ImApi extends REST_Controller
                 return;
             }
         }
+           
     }
 
-    public function index_get()
+    public function index()
     {
         $g_id = $this->get('groupId', true);
         //$groupFiles=$this->Im_message_Model->getGroupFiles($g_id);
@@ -2272,7 +2274,8 @@ class ImApi extends REST_Controller
                             'user_id' => $u_id,
                             'generator_id' => $generator_id,
                             'group_id' => $g_id,
-                            'admin_id' => $admin_id,
+                            'admin_id' => $admin_id
+                           // 'socketId' => $this->User_Model->getSocketIdbyUserId($admin_id)
                         );
                         $this->response($response, REST_Controller::HTTP_OK);
                     } else {
