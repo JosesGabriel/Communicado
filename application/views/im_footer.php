@@ -85,7 +85,7 @@
             // set all mention link 
             let hrefAll = $('.fw-im-message-text').find('a[class="mention"]');
             $(hrefAll).each(function(){
-                var href = "<?=ARBITRAGE.'/user/'; ?>" + $(this).attr('data-username')+"/";
+                var href = "<?=ARBITRAGE.'/user/'; ?>" + $(this).attr('data-userlogin')+"/";
                 $(this).attr("href",href);
                 $(this).attr("target","_blank");
             });
@@ -520,8 +520,8 @@
                     <div style="float: left;"  class="m22"><img style="width: 25px;height: 25px" src=" ${data.picture} " /></div> 
                     <div style="float: left; margin-left: 5px"  class="m23">
                     <div class="c1">
-                    <div style="font-weight: bold; color: #333; font-size: 12px; line-height: 11px"> ${data.name} </div> 
-                    <div style="color: #999; font-size: 9px" class="v"> @${ data.username } </div> 
+                    <div style="font-weight: bold; color: #333; font-size: 12px; line-height: 11px"> ${data.name} </div>  
+                    <div style="color: #999; font-size: 9px" class="v"> @${ data.username } </div>
                     </div>
                     </div> 
                     </div><div style="clear:both;"></div>`; 
@@ -537,7 +537,8 @@
                         name: res[i].name,
                         picture: res[i].picture,
                         username: res[i].usersecret,
-                        email: res[i].email
+                        email: res[i].email,
+                        userlogin: res[i].user_login,
                     };
                     q.push(md);
                 }
@@ -554,7 +555,7 @@
             input.focus();
             setTimeout(() => {
                 let content = input.innerHTML.slice(0, input.innerHTML.length-1);
-                let newcontent = content + '<m><a href="#" data-username="'+ data.username +'" class="mention">@' + data.name + '</a></m>&nbsp;';                
+                let newcontent = content + '<m><a href="#" data-userlogin="'+ data.userlogin +'" data-username="'+ data.username +'" class="mention">@' + data.name + '</a></m>&nbsp;';                
                 input.innerHTML = newcontent;
             }, 150);
         });
@@ -1059,7 +1060,7 @@
                 for (let i = 0; i < data.length; i++) {
                    html += `<a style="color:black;cursor: default;" data-group-id="${data[i].group_id}" data-username="${data[i].username}" class="list-group-item"> 
                         <img src="${ data[i].picture }" class="joinrequestlist_thumbnail">  
-                        <label data-username="${data[i].username}" title="View Profile" class="joinrequestlist_label">${ data[i].name }</label> 
+                        <label data-username="${data[i].username}" data-userlogin="${data[i].userlogin}" title="View Profile" class="joinrequestlist_label">${ data[i].name }</label> 
                         <button title="Disapprove" type="button" 
                             data-group-id="${data[i].group_id}" data-username="${data[i].username}" 
                             data-id="${data[i].id}" data-name="${data[i].name}"
@@ -1079,7 +1080,7 @@
         }
 
         $(document).on('click', 'label.joinrequestlist_label', function (e) {
-            let url = "<?=ARBITRAGE.'/user/'; ?>"+ $(this).data('username') + "/";
+            let url = "<?=ARBITRAGE.'/user/'; ?>"+ $(this).data('userlogin') + "/";
             window.open(url.replace(' ',''), "_blank");
             e.preventDefault();
         });
@@ -1804,7 +1805,10 @@
                     html += "<img class='' id='member_" + members[i].userId + "' src=\"" + members[i].profilePictureUrl + "\" alt=\"\" \/><span class='memberStatus memberOffline'></span>";
                 }
                 html += "<span  class=\"name\"><div><a href='https://arbitrage.ph/getuser/?hsh=<?php echo $hash; ?>&eml=" + members[i].userEmail + "'  target='_self'>" + members[i].firstName + " " + members[i].lastName +"<\/a><\/div><\/span>";
-                html += "<span class='vyndue_at_email'><a href='https://arbitrage.ph/getuser/?hsh=<?php echo $hash; ?>&eml=" + members[i].userEmail + "' target='_self'>View Profile<\/a><\/span>";   
+                
+                if (members[i].user_login){
+                    html += "<span class='vyndue_at_email'><a href='https://arbitrage.ph/user/" + members[i].user_login + "' target='_self'>View Profile<\/a><\/span>";   
+                }
 
                 switch (userlevel) {
                     case 1: // admin

@@ -29,19 +29,54 @@ class Auth extends Api
 
         //region Existence check
         $token = $this->jwtbuilder->getToken();
-        $user_secret = $token->getClaim('user_secret');
-        $user = $this->User_Model->fetchBySecret($user_secret);
 
-        if (!isset($user[0])) {
-            $this->respond([
-                'status' => 404,
-                'message' => 'User not found.',
-            ]);
+        // echo "<pre>";
+        // print_r($token->getClaims());
+        // exit;
+
+        // initialize all claims
+        $user_login = $token->getClaim('user_login');        
+        $id = $token->getClaim('id');  // Arbi user id
+        $userSecret = $token->getClaim('user_secret');
+        $firstName = $token->getClaim('first_name'); 
+        $lastName = $token->getClaim('last_name');
+        $userEmail = $token->getClaim('email');
+        $userProfilePicture = 'https://arbitrage.ph/wp-content/uploads/ultimatemember/'.intval($id).'/profile_photo.png';
+        $default_password = '123456';
+        $userPassword = password_hash($default_password, PASSWORD_BCRYPT); 
+
+        if (!$this->User_Model->ifExist($userEmail)) {
+            // if not register
+            $this->User_Model->insert_entry_v2($userSecret, 
+                $firstName, 
+                $lastName, 
+                $userEmail, 
+                $userPassword, 
+                NULL, 
+                NULL, 
+                1, 1,
+                $userProfilePicture,
+                $user_login);
+        
+            // add user in public group
+            $this->User_Model->insertInPublicGroup($userEmail); 
         }
+        // if (!isset($user[0])) {
+        //     $this->respond([
+        //         'status' => 404,
+        //         'message' => 'User not found.',
+        //     ]);
+        // }
         //endregion Existence check
 
         //region User validation
-        $user = $user[0];
+        $record = $this->User_Model->fetchBySecret($userSecret);
+        $user = $record[0];
+
+        // echo "<pre>";
+        // print_r($user);
+        // exit;
+
         $email = $user['userEmail'];
 
         if (!$this->User_Model->checkVerification($email)) {
@@ -59,7 +94,7 @@ class Auth extends Api
         }
         //endregion User validation
 
-        $this->User_Model->activate_entry($email);
+       // $this->User_Model->activate_entry($email);
 
         if(!ID_LOGIN){
             $login_token = $this->User_Model->getToken($email);
@@ -77,10 +112,8 @@ class Auth extends Api
         //     "response" => $login_token,
         //     "type"=>$type
         // );
-        
-        // add user in public group
-        $this->User_Model->insertInPublicGroup($email);
-        
+        $this->User_Model->update_arby_userlogin($user['userId'], $user_login);
+
         $this->load->view('login', compact('login_token', 'type'));
     }
 

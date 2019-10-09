@@ -61,7 +61,8 @@ class Im_group_requests_Model extends CI_Model
     public function joinrequestList($g_id)
     {
         $sql = "SELECT u.userid as id, concat(u.firstName,' ',u.lastName) as name,
-            u.userProfilePicture as picture, u.userEmail as email, u.userSecret, g.g_id as group_id
+            u.userProfilePicture as picture, u.userEmail as email, u.userSecret, g.g_id as group_id,
+            u.user_login 
             from im_group_requests as r
             inner join im_group as g on r.g_id = g.g_id
             inner join users as u on r.u_id = u.userId
@@ -86,6 +87,7 @@ class Im_group_requests_Model extends CI_Model
                 'picture' => $picture,
                 'group_id' => (int) $user->group_id,
                 'username' => $user->userSecret,
+                'userlogin' => $user->user_login,
             );
             $records[] = $data;
         }

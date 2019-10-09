@@ -178,7 +178,7 @@ class Im_group_members_Model extends CI_Model
         $records = [];
         $picture = '';
         $query = $this->db->query("SELECT u.userid as id, concat(u.firstName,' ',u.lastName) as name,
-        u.userEmail as email, u.userProfilePicture as picture, u.userSecret  
+        u.userEmail as email, u.userProfilePicture as picture, u.userSecret, u.user_login  
         FROM im_group_members as gm 
         inner join users as u on gm.u_id = u.userid
         where gm.g_id=$g_id and gm.u_id not in ($u_id,2)");
@@ -198,6 +198,7 @@ class Im_group_members_Model extends CI_Model
                 'email' => $user->email,
                 'picture' => $picture,
                 'usersecret' => $user->userSecret,
+                'user_login' => $user->user_login,
             );
             $records[] = $data;
         }

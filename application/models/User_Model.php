@@ -281,6 +281,32 @@ class User_Model extends CI_Model
         $this->db->insert('users', $this);
     }
 
+
+    public function insert_entry_v2($clientSecret, $firstName, $lastName, $userEmail, $userPassword, $userAddress, $userMobile, $userType, $userStatus, $profile_url, $user_login)
+    {
+        if ($userPassword == null) {
+            $changedPassword = null;
+        } else {
+            $changedPassword = password_hash($userPassword, PASSWORD_BCRYPT); // default cost for BCRYPT to 12
+        }
+        $this->userSecret = $clientSecret;
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
+        $this->userEmail = $userEmail;
+        $this->userPassword = $changedPassword;
+        $this->userAddress = $userAddress;
+        $this->userMobile = $userMobile;
+        $this->userType = 1;
+        $this->userStatus = 1;
+        $this->userVerification = 1;
+        $this->lastModified = date('Y-m-d G:i:s');
+        
+        $this->userProfilePicture = $profile_url;
+        $this->user_login = $user_login;
+        
+        $this->db->insert('users', $this);
+    }
+
     public function update_entry($userId, $firstName, $lastName, $userMobile, $userAddress, $userDateOfBirth, $userGender)
     {
         //$changedPassword= $this->encrypt->encode($userPassword);
@@ -821,6 +847,7 @@ class User_Model extends CI_Model
                'userGender' => $query->row('userGender'), //optional
                'profilePictureUrl' => $url, // required
                'active' => (int) $query->row('active'),
+               'user_login' => $query->row('user_login'),
                'moderator' => (intval($query->row('u_id')) > 0 ? 1 : 0), // required. checks user is currently login(active) or not
            );
 
@@ -858,7 +885,14 @@ class User_Model extends CI_Model
         return $this->db->trans_status();
     }
     
-
+    public function update_arby_userlogin($userId, $userLogin)
+    {
+        $changes = array(
+            'user_login' => $userLogin
+        );
+        $this->db->where('userId', $userId);
+        $this->db->update('users', $changes);
+    }
     //endregion For API
 
     //endregion For API
