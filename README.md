@@ -1,5 +1,5 @@
 # Communicado
-Messaging Platform written in CodeIgniter & Node
+###### Messaging Platform written in CodeIgniter & Node
 
 
 Instructions: 
