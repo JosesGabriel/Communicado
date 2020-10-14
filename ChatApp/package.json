@@ -22,7 +22,7 @@
     "jquery": "^3.1.1",
     "jwt-decode": "^2.1.0",
     "jwt-simple": "^0.5.1",
-    "lodash": "^4.17.5",
+    "lodash": "^4.17.19",
     "meta-extractor": "^1.4.0",
     "moment": "^2.22.2",
     "morgan": "^1.9.0",
