@@ -1,7 +1,6 @@
-# Messaging Platform written in Node + CodeIgniter
+# Communicado
+Messaging Platform written in CodeIgniter & Node
 
-
-**Arbitrage Chat Application**
 
 Instructions: 
 
