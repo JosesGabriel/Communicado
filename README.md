@@ -1,10 +1,9 @@
 # Communicado
-###### Messaging Platform written in CodeIgniter & Node
+### Messaging Platform written in CodeIgniter & Node
 
 
-Instructions: 
-
-How to run Vyndue App in Local Machine 
+###### How to run in Local Machine
+___
 
 **clone vydnue app in gitlab / github** 
  - `cd vyndue-chat-app` folder
