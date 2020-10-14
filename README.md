@@ -1,4 +1,6 @@
-# Vyndue
+# Messaging Platform written in Node + CodeIgniter
+
+
 **Arbitrage Chat Application**
 
 Instructions: 
