@@ -32,6 +32,6 @@
     "node-fetch": "^2.6.0",
     "probe-image-size": "^4.0.0",
     "serve-favicon": "^2.5.0",
-    "socket.io": "^2.1.1"
+    "socket.io": "^2.5.0"
   }
 }
