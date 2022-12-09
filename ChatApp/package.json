@@ -14,7 +14,7 @@
     "cookie-parser": "~1.4.3",
     "debug": "^3.1.0",
     "emoji-exists": "^1.0.1",
-    "express": "^4.16.3",
+    "express": "^4.17.3",
     "get-urls": "^7.0.0",
     "got": "^7.1.0",
     "is-empty": "^1.2.0",
