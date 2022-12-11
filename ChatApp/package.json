@@ -10,11 +10,11 @@
   "dependencies": {
     "anchorme": "^1.0.4",
     "bignumber.js": "^4.1.0",
-    "body-parser": "^1.18.3",
+    "body-parser": "^1.20.1",
     "cookie-parser": "~1.4.3",
     "debug": "^3.1.0",
     "emoji-exists": "^1.0.1",
-    "express": "^4.16.3",
+    "express": "^4.18.2",
     "get-urls": "^7.0.0",
     "got": "^7.1.0",
     "is-empty": "^1.2.0",
